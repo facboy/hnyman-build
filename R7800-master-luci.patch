@@ -1,0 +1,109 @@
+diff --git a/applications/luci-app-statistics/root/etc/config/luci_statistics b/applications/luci-app-statistics/root/etc/config/luci_statistics
+index 0fd68595f..33dd9d10f 100644
+--- a/applications/luci-app-statistics/root/etc/config/luci_statistics
++++ b/applications/luci-app-statistics/root/etc/config/luci_statistics
+@@ -60,7 +60,7 @@ config statistics 'collectd_apcups'
+ 	option Port '3551'
+ 
+ config statistics 'collectd_conntrack'
+-	option enable '0'
++	option enable '1'
+ 
+ config statistics 'collectd_contextswitch'
+ 	option enable '0'
+@@ -69,7 +69,8 @@ config statistics 'collectd_cpu'
+ 	option enable '1'
+ 
+ config statistics 'collectd_cpufreq'
+-	option enable '0'
++	option enable '1'
++	option ExtraItems '1'
+ 
+ config statistics 'collectd_curl'
+ 	option enable '0'
+@@ -92,16 +93,16 @@ config statistics 'collectd_dns'
+ 	option IgnoreSources '127.0.0.1'
+ 
+ config statistics 'collectd_entropy'
+-	option enable '0'
++	option enable '1'
+ 
+ config statistics 'collectd_exec'
+ 	option enable '0'
+ 
+ #example for sqm_collect plugin
+-#config collectd_exec_input
+-#        option cmduser 'nobody'
+-#        option cmdgroup 'nogroup'
+-#        option cmdline '/usr/libexec/collectd/sqm_collectd.sh eth0 ifb4eth0'
++config collectd_exec_input
++        option cmduser 'nobody'
++        option cmdgroup 'nogroup'
++        option cmdline '/usr/libexec/collectd/sqm_collectd.sh eth0.2'
+ 
+ config statistics 'collectd_interface'
+ 	option enable '1'
+@@ -179,9 +180,9 @@ config statistics 'collectd_tcpconns'
+ 	option LocalPorts '22 80'
+ 
+ config statistics 'collectd_thermal'
+-	option enable '0'
+-	option IgnoreSelected '0'
+-	option Device ''
++	option enable '1'
++	option IgnoreSelected '1'
++	option Device 'cooling_device0 cooling_device1'
+ 
+ config statistics 'collectd_uptime'
+ 	option enable '0'
+diff --git a/modules/luci-base/root/etc/config/luci b/modules/luci-base/root/etc/config/luci
+index 46947ae4c..2bd9b85f5 100644
+--- a/modules/luci-base/root/etc/config/luci
++++ b/modules/luci-base/root/etc/config/luci
+@@ -23,6 +23,7 @@ config internal ccache
+ 	option enable 1
+ 		
+ config internal themes
++	option Bootstrap '/luci-static/bootstrap'
+ 
+ config internal apply
+ 	option rollback 90
+diff --git a/themes/luci-theme-bootstrap/root/etc/uci-defaults/30_luci-theme-bootstrap b/themes/luci-theme-bootstrap/root/etc/uci-defaults/30_luci-theme-bootstrap
+index 4381a15c2..45784f68a 100755
+--- a/themes/luci-theme-bootstrap/root/etc/uci-defaults/30_luci-theme-bootstrap
++++ b/themes/luci-theme-bootstrap/root/etc/uci-defaults/30_luci-theme-bootstrap
+@@ -4,7 +4,7 @@ if [ "$PKG_UPGRADE" != 1 ]; then
+ 	uci get luci.themes.Bootstrap >/dev/null 2>&1 || \
+ 	uci batch <<-EOF
+ 		set luci.themes.Bootstrap=/luci-static/bootstrap
+-		set luci.main.mediaurlbase=/luci-static/bootstrap
++#		set luci.main.mediaurlbase=/luci-static/bootstrap
+ 		commit luci
+ 	EOF
+ fi
+diff --git a/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material b/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
+index 7f07239ec..e7c376df8 100755
+--- a/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
++++ b/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
+@@ -4,7 +4,7 @@ if [ "$PKG_UPGRADE" != 1 ]; then
+ 	uci get luci.themes.Material >/dev/null 2>&1 || \
+ 	uci batch <<-EOF
+ 		set luci.themes.Material=/luci-static/material
+-		set luci.main.mediaurlbase=/luci-static/material
++#		set luci.main.mediaurlbase=/luci-static/material
+ 		commit luci
+ 	EOF
+ fi
+diff --git a/themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020 b/themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020
+index 7c49acfda..07d87b395 100755
+--- a/themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020
++++ b/themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020
+@@ -4,7 +4,7 @@ if [ "$PKG_UPGRADE" != 1 ]; then
+ 	uci get luci.themes.OpenWrt2020 >/dev/null 2>&1 || \
+ 	uci batch <<-EOF
+ 		set luci.themes.OpenWrt2020=/luci-static/openwrt2020
+-		set luci.main.mediaurlbase=/luci-static/openwrt2020
++#		set luci.main.mediaurlbase=/luci-static/openwrt2020
+ 		commit luci
+ 	EOF
+ fi

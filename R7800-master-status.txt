@@ -1,0 +1,63 @@
+master-r13768-f632747704-20200709-1416
+
+######################################################
+
+origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
+* master
+2020-07-09 f632747 mediatek: fix bashism in gen_banana_pi_im
+A  .config.init
+M  .gitignore
+M  feeds.conf.default
+A  files/etc/Compile_info.txt
+A  files/etc/applyHNsettings.sh
+A  files/etc/checksettings.sh
+A  files/etc/config/fstab
+A  files/etc/hotplug.d/ntp/20-ntpd-logger
+A  files/etc/lan-repeater.sh
+A  files/etc/restoreStats.sh
+A  files/etc/saveHNsettings.sh
+A  files/etc/storeStats.sh
+A  hnscripts/copyPackages2tmp.sh
+A  hnscripts/createbuildinfo.sh
+A  hnscripts/kernelcompile.sh
+A  hnscripts/mountNcopy.sh
+A  hnscripts/newBuildroot.sh
+A  hnscripts/parallelcompile.sh
+A  hnscripts/singlecompile.sh
+A  hnscripts/timestampVersion.sh
+A  hnscripts/updateNmake.sh
+M  package/base-files/files/bin/config_generate
+M  package/base-files/files/etc/rc.button/reset
+M  package/network/ipv6/6in4/files/6in4.sh
+M  package/network/services/dnsmasq/files/dhcp.conf
+M  package/network/services/hostapd/files/hostapd.sh
+M  package/network/services/hostapd/files/wps-hotplug.sh
+M  package/network/services/odhcpd/files/odhcpd-update
+A  package/utils/busybox/patches/310-save-history-in-tmp.patch
+A  package/utils/busybox/patches/520-move-coreutils-to-bin.patch
+A  target/linux/ipq806x/patches-5.4/900-tweak-cpufreq-ondemand-governor.patch
+?? .config.init230420
+?? files/etc/HNsettings.r7800-180520.cpt
+?? version.date
+
+######################################################
+
+origin	https://git.openwrt.org/project/luci.git (fetch)
+* master
+2020-07-09 4ddcb36 Translated using Weblate (Arabic)
+M  applications/luci-app-statistics/root/etc/config/luci_statistics
+M  modules/luci-base/root/etc/config/luci
+M  themes/luci-theme-bootstrap/root/etc/uci-defaults/30_luci-theme-bootstrap
+M  themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
+M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020
+
+######################################################
+
+origin	https://git.openwrt.org/feed/packages.git (fetch)
+* master
+2020-07-09 9bd8160 c-ares: switch to CMake
+M  net/adblock/files/adblock.conf
+M  net/bcp38/files/bcp38.config
+M  net/nlbwmon/Makefile
+A  net/nlbwmon/files/nlbwmon.hotplug
+A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch

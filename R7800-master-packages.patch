@@ -1,0 +1,88 @@
+diff --git a/net/adblock/files/adblock.conf b/net/adblock/files/adblock.conf
+index a7ad738ef..9b7ee1a8b 100644
+--- a/net/adblock/files/adblock.conf
++++ b/net/adblock/files/adblock.conf
+@@ -1,6 +1,6 @@
+ 
+ config adblock 'global'
+-	option adb_enabled '1'
++	option adb_enabled '0'
+ 	option adb_debug '0'
+ 	option adb_forcedns '0'
+ 	option adb_safesearch '0'
+diff --git a/net/bcp38/files/bcp38.config b/net/bcp38/files/bcp38.config
+index 488daab68..f5bc3d5b4 100644
+--- a/net/bcp38/files/bcp38.config
++++ b/net/bcp38/files/bcp38.config
+@@ -1,6 +1,6 @@
+ config bcp38
+ 	option enabled 0
+-	option interface 'eth1'
++	option interface 'eth0.2'
+ 	option detect_upstream 1
+ 	list match '127.0.0.0/8'
+ 	list match '192.0.2.0/24'    # RFC 5737
+diff --git a/net/nlbwmon/Makefile b/net/nlbwmon/Makefile
+index 6c5606344..9e3a8ba75 100644
+--- a/net/nlbwmon/Makefile
++++ b/net/nlbwmon/Makefile
+@@ -1,7 +1,7 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=nlbwmon
+-PKG_RELEASE:=2
++PKG_RELEASE:=3
+ 
+ PKG_SOURCE_PROTO:=git
+ PKG_SOURCE_URL:=https://github.com/jow-/nlbwmon.git
+@@ -25,7 +25,7 @@ define Package/nlbwmon
+   SECTION:=net
+   CATEGORY:=Network
+   DEPENDS:=+libubox +libnl-tiny +zlib +kmod-nf-conntrack-netlink
+-  TITLE:=LEDE Traffic Usage Monitor
++  TITLE:=OpenWrt Traffic Usage Monitor
+ endef
+ 
+ define Package/nlbwmon/install
+@@ -38,6 +38,8 @@ define Package/nlbwmon/install
+ 	$(INSTALL_BIN) ./files/nlbwmon.init $(1)/etc/init.d/nlbwmon
+ 	$(INSTALL_DIR) $(1)/etc/config
+ 	$(INSTALL_CONF) ./files/nlbwmon.config $(1)/etc/config/nlbwmon
++	$(INSTALL_DIR) $(1)/etc/hotplug.d/iface
++	$(INSTALL_BIN) ./files/nlbwmon.hotplug $(1)/etc/hotplug.d/iface/30-nlbwmon
+ endef
+ 
+ define Package/nlbwmon/conffiles
+diff --git a/net/nlbwmon/files/nlbwmon.hotplug b/net/nlbwmon/files/nlbwmon.hotplug
+new file mode 100644
+index 000000000..d5754beed
+--- /dev/null
++++ b/net/nlbwmon/files/nlbwmon.hotplug
+@@ -0,0 +1,8 @@
++#!/bin/sh
++
++[ -n "$DEVICE" ] || exit 0
++
++[ "$ACTION" = ifup ] && /etc/init.d/nlbwmon enabled && /etc/init.d/nlbwmon reload
++
++logger -t nlbwmon "Reloading nlbwmon due to $ACTION of $INTERFACE ($DEVICE)"
++
+diff --git a/net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch b/net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
+new file mode 100644
+index 000000000..c9850128d
+--- /dev/null
++++ b/net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
+@@ -0,0 +1,13 @@
++--- a/platform/openwrt/sqm-uci
+++++ b/platform/openwrt/sqm-uci
++@@ -1,7 +1,7 @@
++ 
++-config queue 'eth1'
+++config queue 'eth0'
++         option enabled '0'
++-        option interface 'eth1'
+++        option interface 'eth0.2'
++         option download '85000'
++         option upload '10000'
++         option qdisc 'fq_codel'
++
