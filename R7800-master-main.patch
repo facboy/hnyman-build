@@ -144,7 +144,7 @@ index 0000000000..ef770ce017
 +CONFIG_PACKAGE_kmod-chaoskey=y
 +
 diff --git a/.gitignore b/.gitignore
-index 6549af83be..7875c2256c 100644
+index b6bfe1a525..0e7ba3e4e5 100644
 --- a/.gitignore
 +++ b/.gitignore
 @@ -12,7 +12,6 @@
@@ -172,16 +172,16 @@ index 03bfacb620..de3192c654 100644
  #src-git management https://github.com/openwrt-management/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..526b718b84
+index 0000000000..dda129e0b3
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r13768-f632747704 / 2020-07-09 14:01
++OpenWrt master r14117-d32010d5ff / 2020-08-10 21:05
 +---
-+main      2020-07-09 f632747 mediatek: fix bashism in gen_banana_pi_im
-+luci      2020-07-09 4ddcb36 Translated using Weblate (Arabic)
-+packages  2020-07-09 9bd8160 c-ares: switch to CMake
-+routing   2020-07-07 94d87cd Merge pull request #583 from ecsv/batadv-
++main      2020-08-10 d32010d uboot-envtools: ath79: add ZyXEL NBG6616 
++luci      2020-08-10 ea53310 Added translation using Weblate (Portugue
++packages  2020-08-10 3f38310 openvswitch: bump to version 2.13.1
++routing   2020-07-13 8f9aa11 Merge pull request #586 from lynxis/nodog
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..26de611655
@@ -651,7 +651,7 @@ index 0000000000..8eff1db078
 +hnscripts/parallelcompile.sh
 +
 diff --git a/package/base-files/files/bin/config_generate b/package/base-files/files/bin/config_generate
-index abb1388ba1..a8245b956a 100755
+index eb6816e519..22f8b65143 100755
 --- a/package/base-files/files/bin/config_generate
 +++ b/package/base-files/files/bin/config_generate
 @@ -242,7 +242,8 @@ generate_static_system() {
@@ -711,7 +711,7 @@ index 19052e2333..4726a8681a 100644
  	option readethers	1
  	option leasefile	'/tmp/dhcp.leases'
 diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
-index f4e2aa559c..4f05e07dd7 100644
+index fe5b407bc1..7cd1065ae5 100644
 --- a/package/network/services/hostapd/files/hostapd.sh
 +++ b/package/network/services/hostapd/files/hostapd.sh
 @@ -490,6 +490,11 @@ hostapd_set_bss_options() {
