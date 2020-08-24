@@ -1,6 +1,6 @@
 diff --git a/.config.init b/.config.init
 new file mode 100644
-index 0000000000..ef770ce017
+index 0000000000..dc70e6b286
 --- /dev/null
 +++ b/.config.init
 @@ -0,0 +1,139 @@
@@ -88,7 +88,7 @@ index 0000000000..ef770ce017
 +#CONFIG_WPA_MSG_MIN_PRIORITY=2
 +CONFIG_WPA_MSG_MIN_PRIORITY=4
 +CONFIG_PACKAGE_wpad-openssl=y
-+# CONFIG_PACKAGE_wpad-basic is not set
++# CONFIG_PACKAGE_wpad-basic-wolfssl is not set
 +
 +# SSL certificates
 +CONFIG_PACKAGE_ca-certificates=y
@@ -172,15 +172,15 @@ index 03bfacb620..de3192c654 100644
  #src-git management https://github.com/openwrt-management/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..dda129e0b3
+index 0000000000..0dcc99eefb
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r14117-d32010d5ff / 2020-08-10 21:05
++OpenWrt master r14223-17d16e093f / 2020-08-22 07:16
 +---
-+main      2020-08-10 d32010d uboot-envtools: ath79: add ZyXEL NBG6616 
-+luci      2020-08-10 ea53310 Added translation using Weblate (Portugue
-+packages  2020-08-10 3f38310 openvswitch: bump to version 2.13.1
++main      2020-08-21 17d16e0 curl: update to version 7.72.0
++luci      2020-08-21 60ce87a luci-proto-wireguard: Add generate key bu
++packages  2020-08-21 46f727e Merge pull request #13097 from lzto/nft-q
 +routing   2020-07-13 8f9aa11 Merge pull request #586 from lynxis/nodog
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
