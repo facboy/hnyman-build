@@ -1,10 +1,10 @@
-master-r14533-7817c831ef-20200921-2112
+master-r14793-9f1927173a-20201028-2022
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2020-09-21 7817c83 policycoreutils: break into smaller packa
+2020-10-28 9f19271 hostapd: wpas: add missing config symbols
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -36,9 +36,7 @@ M  package/network/services/odhcpd/files/odhcpd-update
 A  package/utils/busybox/patches/310-save-history-in-tmp.patch
 A  package/utils/busybox/patches/520-move-coreutils-to-bin.patch
 A  target/linux/ipq806x/patches-5.4/900-tweak-cpufreq-ondemand-governor.patch
-?? .config.init200820
-?? .config.init230420
-?? .config.init310820
+?? .config.init261020
 ?? files/etc/HNsettings.r7800-180520.cpt
 ?? version.date
 
@@ -46,7 +44,7 @@ A  target/linux/ipq806x/patches-5.4/900-tweak-cpufreq-ondemand-governor.patch
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2020-09-21 073b9ba Merge pull request #4455 from weblate/web
+2020-10-28 bb62854 Merge pull request #4548 from weblate/web
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  themes/luci-theme-bootstrap/root/etc/uci-defaults/30_luci-theme-bootstrap
@@ -57,7 +55,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2020-09-21 25fb479 gnunet: add runtime test
+2020-10-28 6a7ea2e Merge pull request #13795 from philenotfo
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch

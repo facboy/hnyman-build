@@ -173,16 +173,16 @@ index 03bfacb620..de3192c654 100644
  #src-git management https://github.com/openwrt-management/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..2b2e144e44
+index 0000000000..ca03672a55
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r14533-7817c831ef / 2020-09-21 20:54
++OpenWrt master r14793-9f1927173a / 2020-10-28 20:02
 +---
-+main      2020-09-21 7817c83 policycoreutils: break into smaller packa
-+luci      2020-09-21 073b9ba Merge pull request #4455 from weblate/web
-+packages  2020-09-21 25fb479 gnunet: add runtime test
-+routing   2020-08-28 b309086 Merge pull request #605 from pmelange/ols
++main      2020-10-28 9f19271 hostapd: wpas: add missing config symbols
++luci      2020-10-28 bb62854 Merge pull request #4548 from weblate/web
++packages  2020-10-28 6a7ea2e Merge pull request #13795 from philenotfo
++routing   2020-10-27 7dba1fd Merge pull request #623 from ecsv/batadv-
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..26de611655
@@ -712,10 +712,10 @@ index 19052e2333..4726a8681a 100644
  	option readethers	1
  	option leasefile	'/tmp/dhcp.leases'
 diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
-index b33e8e1edc..76dd803bc1 100644
+index cb7e1d7053..323163bb86 100644
 --- a/package/network/services/hostapd/files/hostapd.sh
 +++ b/package/network/services/hostapd/files/hostapd.sh
-@@ -572,6 +572,11 @@ hostapd_set_bss_options() {
+@@ -610,6 +610,11 @@ hostapd_set_bss_options() {
  		set_default wps_manufacturer "www.openwrt.org"
  		set_default wps_independent 1
  
