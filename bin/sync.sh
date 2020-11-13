@@ -45,4 +45,4 @@ cp "${temp_dir}/"* "${arc_dir}/"
 cd "${arc_dir}"
 version="$(cat VERSION)" 
 git add *
-git commit -m "Updated to version ${version}"
+git commit -m "Update to version ${version}"
