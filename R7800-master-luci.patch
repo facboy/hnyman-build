@@ -1,5 +1,5 @@
 diff --git a/applications/luci-app-statistics/root/etc/config/luci_statistics b/applications/luci-app-statistics/root/etc/config/luci_statistics
-index 1ab9208c3..3106d344a 100644
+index 5a2b94b67..3c2291c38 100644
 --- a/applications/luci-app-statistics/root/etc/config/luci_statistics
 +++ b/applications/luci-app-statistics/root/etc/config/luci_statistics
 @@ -60,7 +60,7 @@ config statistics 'collectd_apcups'
@@ -11,8 +11,8 @@ index 1ab9208c3..3106d344a 100644
  
  config statistics 'collectd_contextswitch'
  	option enable '0'
-@@ -69,7 +69,8 @@ config statistics 'collectd_cpu'
- 	option enable '1'
+@@ -73,7 +73,8 @@ config statistics 'collectd_cpu'
+ 	option ValuesPercentage '1'
  
  config statistics 'collectd_cpufreq'
 -	option enable '0'
@@ -21,7 +21,7 @@ index 1ab9208c3..3106d344a 100644
  
  config statistics 'collectd_curl'
  	option enable '0'
-@@ -93,16 +94,16 @@ config statistics 'collectd_dns'
+@@ -97,16 +98,16 @@ config statistics 'collectd_dns'
  	option IgnoreSources '127.0.0.1'
  
  config statistics 'collectd_entropy'
@@ -43,7 +43,7 @@ index 1ab9208c3..3106d344a 100644
  
  config statistics 'collectd_interface'
  	option enable '1'
-@@ -180,9 +181,9 @@ config statistics 'collectd_tcpconns'
+@@ -184,9 +185,9 @@ config statistics 'collectd_tcpconns'
  	option LocalPorts '22 80'
  
  config statistics 'collectd_thermal'

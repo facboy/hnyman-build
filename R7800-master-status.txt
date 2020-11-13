@@ -1,10 +1,10 @@
-master-r14793-9f1927173a-20201028-2022
+master-r14887-a47279154e-20201110-1759
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2020-10-28 9f19271 hostapd: wpas: add missing config symbols
+2020-11-10 a472791 kernel: bump 5.4 to 5.4.75
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -35,6 +35,7 @@ M  package/network/services/hostapd/files/wps-hotplug.sh
 M  package/network/services/odhcpd/files/odhcpd-update
 A  package/utils/busybox/patches/310-save-history-in-tmp.patch
 A  package/utils/busybox/patches/520-move-coreutils-to-bin.patch
+M  scripts/feeds
 A  target/linux/ipq806x/patches-5.4/900-tweak-cpufreq-ondemand-governor.patch
 ?? .config.init261020
 ?? files/etc/HNsettings.r7800-180520.cpt
@@ -44,7 +45,7 @@ A  target/linux/ipq806x/patches-5.4/900-tweak-cpufreq-ondemand-governor.patch
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2020-10-28 bb62854 Merge pull request #4548 from weblate/web
+2020-11-08 1cff100 luci-app-statistics: CPU plugin: hide 'id
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  themes/luci-theme-bootstrap/root/etc/uci-defaults/30_luci-theme-bootstrap
@@ -55,7 +56,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2020-10-28 6a7ea2e Merge pull request #13795 from philenotfo
+2020-11-09 6e3c3c4 Merge pull request #13873 from 1715173329
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
