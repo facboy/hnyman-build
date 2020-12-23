@@ -1,10 +1,10 @@
-master-r14887-a47279154e-20201110-1759
+master-r15254-1302bee12a-20201222-1824
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2020-11-10 a472791 kernel: bump 5.4 to 5.4.75
+2020-12-22 1302bee hostapd: parse skip_inactivity_poll optio
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -28,35 +28,51 @@ A  hnscripts/timestampVersion.sh
 A  hnscripts/updateNmake.sh
 M  package/base-files/files/bin/config_generate
 M  package/base-files/files/etc/rc.button/reset
+M  package/base-files/files/lib/upgrade/common.sh
+M  package/base-files/files/lib/upgrade/stage2
+M  package/firmware/ath10k-ct-firmware/Makefile
 M  package/network/ipv6/6in4/files/6in4.sh
 M  package/network/services/dnsmasq/files/dhcp.conf
 M  package/network/services/hostapd/files/hostapd.sh
 M  package/network/services/hostapd/files/wps-hotplug.sh
 M  package/network/services/odhcpd/files/odhcpd-update
+A  package/network/utils/iwinfo/patches/patch1.patch
+A  package/network/utils/iwinfo/patches/patch2.patch
+A  package/system/rpcd/patches/patch3.patch
+A  package/system/rpcd/patches/patch4.patch
 A  package/utils/busybox/patches/310-save-history-in-tmp.patch
 A  package/utils/busybox/patches/520-move-coreutils-to-bin.patch
-M  scripts/feeds
 A  target/linux/ipq806x/patches-5.4/900-tweak-cpufreq-ondemand-governor.patch
-?? .config.init261020
-?? files/etc/HNsettings.r7800-180520.cpt
+?? .config.init131220
+?? .config.init221120
+?? files/etc/HNsettings.r7800-221220.cpt
 ?? version.date
 
 ######################################################
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2020-11-08 1cff100 luci-app-statistics: CPU plugin: hide 'id
+2020-12-22 af20ec8 luci-app-statistics: Add initial support 
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
+M  modules/luci-base/htdocs/luci-static/resources/firewall.js
+M  modules/luci-base/htdocs/luci-static/resources/tools/prng.js
+M  modules/luci-base/htdocs/luci-static/resources/ui.js
 M  modules/luci-base/root/etc/config/luci
+A  modules/luci-mod-status/htdocs/luci-static/resources/svg/channel_analysis.svg
+A  modules/luci-mod-status/htdocs/luci-static/resources/view/status/channel_analysis.js
+M  modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json
+M  modules/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json
 M  themes/luci-theme-bootstrap/root/etc/uci-defaults/30_luci-theme-bootstrap
 M  themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
 M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020
+?? 4598v061220.patch
+?? 4598v251120.patch
 
 ######################################################
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2020-11-09 6e3c3c4 Merge pull request #13873 from 1715173329
+2020-12-22 8b5af4e htop: update to 3.0.4-1
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch

@@ -1,6 +1,6 @@
 diff --git a/.config.init b/.config.init
 new file mode 100644
-index 0000000000..45bdefbf12
+index 0000000000..0f08322e3d
 --- /dev/null
 +++ b/.config.init
 @@ -0,0 +1,140 @@
@@ -19,9 +19,6 @@ index 0000000000..45bdefbf12
 +
 +# Include package list in build
 +CONFIG_INCLUDE_CONFIG=y
-+
-+# exfat is patented
-+CONFIG_BUILD_PATENTED=y
 +
 +# Longer waiting for failsafe button push
 +CONFIG_IMAGEOPT=y
@@ -44,18 +41,18 @@ index 0000000000..45bdefbf12
 +## # CONFIG_PACKAGE_kmod-ath10k-ct is not set
 +
 +# Add-on programs
-+CONFIG_PACKAGE_htop=y
-+CONFIG_PACKAGE_nano=y
 +CONFIG_PACKAGE_ccrypt=y
 +CONFIG_PACKAGE_curl=y
 +CONFIG_LIBCURL_OPENSSL=y
-+#CONFIG_PACKAGE_vsftpd-tls=y
-+CONFIG_PACKAGE_wget=y
-+CONFIG_PACKAGE_patch=y
 +CONFIG_PACKAGE_diffutils=y
-+CONFIG_PACKAGE_tree=y
-+CONFIG_PACKAGE_irqbalance=y
 +CONFIG_DROPBEAR_ECC=y
++CONFIG_PACKAGE_htop=y
++CONFIG_PACKAGE_irqbalance=y
++CONFIG_PACKAGE_nano=y
++CONFIG_PACKAGE_patch=y
++CONFIG_PACKAGE_tcpdump-mini=y
++CONFIG_PACKAGE_tree=y
++CONFIG_PACKAGE_wget=y
 +
 +# USB device mount & file systems support
 +CONFIG_PACKAGE_block-mount=y
@@ -99,13 +96,16 @@ index 0000000000..45bdefbf12
 +CONFIG_PACKAGE_luci-app-commands=y
 +CONFIG_PACKAGE_luci-app-ddns=y
 +CONFIG_PACKAGE_luci-app-sqm=y
++CONFIG_PACKAGE_luci-app-uhttpd=y
 +CONFIG_PACKAGE_luci-app-upnp=y
 +CONFIG_PACKAGE_luci-app-wol=y
++# CONFIG_LUCI_JSMIN is not set
 +
 +# Luci statistics
 +CONFIG_PACKAGE_luci-app-statistics=y
 +CONFIG_PACKAGE_collectd-mod-conntrack=y
 +CONFIG_PACKAGE_collectd-mod-cpufreq=y
++CONFIG_PACKAGE_collectd-mod-dhcpleases=y
 +CONFIG_PACKAGE_collectd-mod-entropy=y
 +CONFIG_PACKAGE_collectd-mod-ping=y
 +CONFIG_PACKAGE_collectd-mod-sqm=y
@@ -173,16 +173,16 @@ index 03bfacb620..de3192c654 100644
  #src-git management https://github.com/openwrt-management/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..540d70269f
+index 0000000000..f43e7c4f7d
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r14887-a47279154e / 2020-11-10 17:41
++OpenWrt master r15254-1302bee12a / 2020-12-22 18:08
 +---
-+main      2020-11-10 a472791 kernel: bump 5.4 to 5.4.75
-+luci      2020-11-08 1cff100 luci-app-statistics: CPU plugin: hide 'id
-+packages  2020-11-09 6e3c3c4 Merge pull request #13873 from 1715173329
-+routing   2020-10-27 7dba1fd Merge pull request #623 from ecsv/batadv-
++main      2020-12-22 1302bee hostapd: parse skip_inactivity_poll optio
++luci      2020-12-22 af20ec8 luci-app-statistics: Add initial support 
++packages  2020-12-22 8b5af4e htop: update to 3.0.4-1
++routing   2020-12-17 4407369 ohybridproxy: fix up Makefile
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..26de611655
@@ -653,10 +653,10 @@ index 0000000000..8eff1db078
 +hnscripts/parallelcompile.sh
 +
 diff --git a/package/base-files/files/bin/config_generate b/package/base-files/files/bin/config_generate
-index e23f901504..06ecca7710 100755
+index ee3958e733..9ec18d1a54 100755
 --- a/package/base-files/files/bin/config_generate
 +++ b/package/base-files/files/bin/config_generate
-@@ -270,7 +270,8 @@ generate_static_system() {
+@@ -281,7 +281,8 @@ generate_static_system() {
  		delete system.@system[0]
  		add system system
  		set system.@system[-1].hostname='OpenWrt'
@@ -687,6 +687,198 @@ index 2403122ad2..5746ea237a 100755
  ;;
  esac
  
+diff --git a/package/base-files/files/lib/upgrade/common.sh b/package/base-files/files/lib/upgrade/common.sh
+index a5c27dc2fb..b44a5998f4 100644
+--- a/package/base-files/files/lib/upgrade/common.sh
++++ b/package/base-files/files/lib/upgrade/common.sh
+@@ -297,6 +297,7 @@ indicate_upgrade() {
+ # $(2): (optional) pipe command to extract firmware, e.g. dd bs=n skip=m
+ default_do_upgrade() {
+ 	sync
++	echo 3 > /proc/sys/vm/drop_caches
+ 	if [ -n "$UPGRADE_BACKUP" ]; then
+ 		get_image "$1" "$2" | mtd $MTD_ARGS $MTD_CONFIG_ARGS -j "$UPGRADE_BACKUP" write - "${PART_NAME:-image}"
+ 	else
+diff --git a/package/base-files/files/lib/upgrade/stage2 b/package/base-files/files/lib/upgrade/stage2
+index c7629c383f..23d356a447 100755
+--- a/package/base-files/files/lib/upgrade/stage2
++++ b/package/base-files/files/lib/upgrade/stage2
+@@ -123,6 +123,7 @@ kill_remaining KILL 1
+ 
+ sleep 1
+ 
++echo 3 > /proc/sys/vm/drop_caches
+ 
+ if [ -n "$IMAGE" ] && type 'platform_pre_upgrade' >/dev/null 2>/dev/null; then
+ 	platform_pre_upgrade "$IMAGE"
+diff --git a/package/firmware/ath10k-ct-firmware/Makefile b/package/firmware/ath10k-ct-firmware/Makefile
+index 83e5563e64..4fd7266f22 100644
+--- a/package/firmware/ath10k-ct-firmware/Makefile
++++ b/package/firmware/ath10k-ct-firmware/Makefile
+@@ -1,8 +1,8 @@
+ include $(TOPDIR)/rules.mk
+ 
+ PKG_NAME:=ath10k-ct-firmware
+-PKG_VERSION:=2020-07-02
+-PKG_RELEASE:=3
++PKG_VERSION:=2020-11-08
++PKG_RELEASE:=1
+ 
+ include $(INCLUDE_DIR)/package.mk
+ 
+@@ -28,120 +28,120 @@ define Download/ct-firmware-htt
+   URL_FILE:=$($(1)_FIRMWARE_FILE_CT_HTT)
+ endef
+ 
+-QCA988X_FIRMWARE_FILE_CT:=firmware-2-ct-full-community-22.bin.lede.019
++QCA988X_FIRMWARE_FILE_CT:=firmware-2-ct-full-community-22.bin.lede.022
+ define Download/ath10k-firmware-qca988x-ct
+   $(call Download/ct-firmware,QCA988X,)
+-  HASH:=8b4c99253aa309d35f2e060c190091b8db1b84dbda06a6a15c83ac0f9a938126
++  HASH:=398e4380e7e55105f3da0f78af29d1e437404ed3a82597aa4b6daaa7dce1a38e
+ endef
+ $(eval $(call Download,ath10k-firmware-qca988x-ct))
+ 
+-QCA988X_FIRMWARE_FILE_CT_FULL_HTT:=firmware-2-ct-full-htt-mgt-community-22.bin.lede.019
++QCA988X_FIRMWARE_FILE_CT_FULL_HTT:=firmware-2-ct-full-htt-mgt-community-22.bin.lede.022
+ define Download/ath10k-firmware-qca988x-ct-full-htt
+   $(call Download/ct-firmware-full-htt,QCA988X,)
+-  HASH:=a7168916d6aa5e4d7858f8b620c0c980c76d03f390929db6f4077685ce2051e7
++  HASH:=990d9cbf79dd81f141257a289f89808bd7726406c9ed845a7e49e5167002ffde
+ endef
+ $(eval $(call Download,ath10k-firmware-qca988x-ct-full-htt))
+ 
+ 
+-QCA9887_FIRMWARE_FILE_CT:=firmware-2-ct-full-community-22.bin.lede.019
++QCA9887_FIRMWARE_FILE_CT:=firmware-2-ct-full-community-22.bin.lede.022
+ define Download/ath10k-firmware-qca9887-ct
+   $(call Download/ct-firmware,QCA9887,ath10k-9887)
+-  HASH:=459692deb186a63ab8eeddb7ad5d54779266e68ca686e7c46062554db6dca12b
++  HASH:=a526cb44560da569781e10bf608194b1eff29b250e9887dba6d4d9a15c921c1e
+ endef
+ $(eval $(call Download,ath10k-firmware-qca9887-ct))
+ 
+-QCA9887_FIRMWARE_FILE_CT_FULL_HTT:=firmware-2-ct-full-htt-mgt-community-22.bin.lede.019
++QCA9887_FIRMWARE_FILE_CT_FULL_HTT:=firmware-2-ct-full-htt-mgt-community-22.bin.lede.022
+ define Download/ath10k-firmware-qca9887-ct-full-htt
+   $(call Download/ct-firmware-full-htt,QCA9887,ath10k-9887)
+-  HASH:=fd126a457d0927d0c8ea10d66ef5b67d5e1e0741f8692bb3016bb602d0af3098
++  HASH:=0b60fc558b773e9cbd5c2df903c894a030872fdb96390b0cca4b23b7fc7b881f
+ endef
+ $(eval $(call Download,ath10k-firmware-qca9887-ct-full-htt))
+ 
+ 
+-QCA99X0_FIRMWARE_FILE_CT:=firmware-5-ct-full-community-12.bin-lede.019
++QCA99X0_FIRMWARE_FILE_CT:=firmware-5-ct-full-community-12.bin-lede.022
+ define Download/ath10k-firmware-qca99x0-ct
+   $(call Download/ct-firmware,QCA99X0,ath10k-10-4b)
+-  HASH:=7dc934f934bc4973c9273a4f22cfead8e26ec6f579647af31b718a860eca0a4b
++  HASH:=578ad67976b61a393eb820a05e8eae70ec95f6b803bedbe952b8ff573eb09abe
+ endef
+ $(eval $(call Download,ath10k-firmware-qca99x0-ct))
+ 
+-QCA99X0_FIRMWARE_FILE_CT_FULL_HTT:=firmware-5-ct-full-htt-mgt-community-12.bin-lede.019
++QCA99X0_FIRMWARE_FILE_CT_FULL_HTT:=firmware-5-ct-full-htt-mgt-community-12.bin-lede.022
+ define Download/ath10k-firmware-qca99x0-ct-full-htt
+   $(call Download/ct-firmware-full-htt,QCA99X0,ath10k-10-4b)
+-  HASH:=71a27b245a382fe009938d2826d5c97a90dceb10ddf638325268df91837ea302
++  HASH:=8ea5c9f27c048796d406706a9c8471cd070f5aeb768622bb334a04853d557a4d
+ endef
+ $(eval $(call Download,ath10k-firmware-qca99x0-ct-full-htt))
+ 
+-QCA99X0_FIRMWARE_FILE_CT_HTT:=firmware-5-ct-htt-mgt-community-12.bin-lede.019
++QCA99X0_FIRMWARE_FILE_CT_HTT:=firmware-5-ct-htt-mgt-community-12.bin-lede.022
+ define Download/ath10k-firmware-qca99x0-ct-htt
+   $(call Download/ct-firmware-htt,QCA99X0,ath10k-10-4b)
+-  HASH:=9ed4fe41e5b0f30172f71ae0fe382dc0aab8aa4f8a898417af4f7ee936575ef6
++  HASH:=7b0b7545114e8dc0f2c70dc8a43a5a48d84d37f2a4673977a692c5f3361445c6
+ endef
+ $(eval $(call Download,ath10k-firmware-qca99x0-ct-htt))
+ 
+ 
+-QCA9984_FIRMWARE_FILE_CT:=firmware-5-ct-full-community-12.bin-lede.019
++QCA9984_FIRMWARE_FILE_CT:=firmware-5-ct-full-community-12.bin-lede.022
+ define Download/ath10k-firmware-qca9984-ct
+   $(call Download/ct-firmware,QCA9984,ath10k-9984-10-4b)
+-  HASH:=32d13f432691fe759ded7d027052e925233adb436cd8f729f85ec3d19ccd1dfd
++  HASH:=7bfe5bf7c38532fa57db62ebc56ec625583928d5d4736475d5dec4d4ae031154
+ endef
+ $(eval $(call Download,ath10k-firmware-qca9984-ct))
+ 
+-QCA9984_FIRMWARE_FILE_CT_FULL_HTT:=firmware-5-ct-full-htt-mgt-community-12.bin-lede.019
++QCA9984_FIRMWARE_FILE_CT_FULL_HTT:=firmware-5-ct-full-htt-mgt-community-12.bin-lede.022
+ define Download/ath10k-firmware-qca9984-ct-full-htt
+   $(call Download/ct-firmware-full-htt,QCA9984,ath10k-9984-10-4b)
+-  HASH:=e8ab69777bd00b5fc6b1b7acccb55b903553a99932a5b0351602b5f690106588
++  HASH:=672be40c4d987d7e8e309341262a37cda7baf925416d1dc651284b6d2bd30969
+ endef
+ $(eval $(call Download,ath10k-firmware-qca9984-ct-full-htt))
+ 
+-QCA9984_FIRMWARE_FILE_CT_HTT:=firmware-5-ct-htt-mgt-community-12.bin-lede.019
++QCA9984_FIRMWARE_FILE_CT_HTT:=firmware-5-ct-htt-mgt-community-12.bin-lede.022
+ define Download/ath10k-firmware-qca9984-ct-htt
+   $(call Download/ct-firmware-htt,QCA9984,ath10k-9984-10-4b)
+-  HASH:=74449b303b626e0713b3fd4f2d6103d65859403b2dd7bdd8882aa772b69b59c7
++  HASH:=a24e887f13aca4358ab2b6a42a7212d066e4d19e29b00bb26f9681b1dc8d0eb0
+ endef
+ $(eval $(call Download,ath10k-firmware-qca9984-ct-htt))
+ 
+ 
+-QCA4019_FIRMWARE_FILE_CT:=firmware-5-ct-full-community-12.bin-lede.019
++QCA4019_FIRMWARE_FILE_CT:=firmware-5-ct-full-community-12.bin-lede.022
+ define Download/ath10k-firmware-qca4019-ct
+   $(call Download/ct-firmware,QCA4019,ath10k-4019-10-4b)
+-  HASH:=4b89763087c7ed9b56046c4e621b7f045e452436d8d9b430a5d171179e313592
++  HASH:=503956d9bf09d603e4cf36ac080fa5b5a22032166204e3c15ae898647bc50df3
+ endef
+ $(eval $(call Download,ath10k-firmware-qca4019-ct))
+ 
+-QCA4019_FIRMWARE_FILE_CT_FULL_HTT:=firmware-5-ct-full-htt-mgt-community-12.bin-lede.019
++QCA4019_FIRMWARE_FILE_CT_FULL_HTT:=firmware-5-ct-full-htt-mgt-community-12.bin-lede.022
+ define Download/ath10k-firmware-qca4019-ct-full-htt
+   $(call Download/ct-firmware-full-htt,QCA4019,ath10k-4019-10-4b)
+-  HASH:=fba591e5777c53b82542ba16cae69d9bb4684837f2fa4cee1b9b26f648096748
++  HASH:=591bf9ed00fb540d7ba034453f17696e8dd91a4b7d81f7cc1ec41f447fa74831
+ endef
+ $(eval $(call Download,ath10k-firmware-qca4019-ct-full-htt))
+ 
+-QCA4019_FIRMWARE_FILE_CT_HTT:=firmware-5-ct-htt-mgt-community-12.bin-lede.019
++QCA4019_FIRMWARE_FILE_CT_HTT:=firmware-5-ct-htt-mgt-community-12.bin-lede.022
+ define Download/ath10k-firmware-qca4019-ct-htt
+   $(call Download/ct-firmware-htt,QCA4019,ath10k-4019-10-4b)
+-  HASH:=0d534c3c424184b8ec2773f15c8933bdab0d39b6f664d2578c6602b0eb7035d1
++  HASH:=06e58a283ff90d021ff7cb58684cbf39750bd71cf91c56b32add64253133929c
+ endef
+ $(eval $(call Download,ath10k-firmware-qca4019-ct-htt))
+ 
+ 
+-QCA9888_FIRMWARE_FILE_CT:=firmware-5-ct-full-community-12.bin-lede.019
++QCA9888_FIRMWARE_FILE_CT:=firmware-5-ct-full-community-12.bin-lede.022
+ define Download/ath10k-firmware-qca9888-ct
+   $(call Download/ct-firmware,QCA9888,ath10k-9888-10-4b)
+-  HASH:=048f4300725e6ebbf94a6bf4f3f4e4592c446fcdbe1d801aaac024b15e89e0c9
++  HASH:=82ff5afcf0c9dcdb03b0b40c6eddc81e11b18e4f522f681935b5ec42537972ee
+ endef
+ $(eval $(call Download,ath10k-firmware-qca9888-ct))
+ 
+-QCA9888_FIRMWARE_FILE_CT_FULL_HTT:=firmware-5-ct-full-htt-mgt-community-12.bin-lede.019
++QCA9888_FIRMWARE_FILE_CT_FULL_HTT:=firmware-5-ct-full-htt-mgt-community-12.bin-lede.022
+ define Download/ath10k-firmware-qca9888-ct-full-htt
+   $(call Download/ct-firmware-full-htt,QCA9888,ath10k-9888-10-4b)
+-  HASH:=d2a7e9fea6bd854721b3fc03a3a00d379d303b2bce339377ee87a1c14a60312d
++  HASH:=1a741f2cf43fbea24ed831b4e76cbb114b525d1ee9b917ce0000916cbcc42f92
+ endef
+ $(eval $(call Download,ath10k-firmware-qca9888-ct-full-htt))
+ 
+-QCA9888_FIRMWARE_FILE_CT_HTT:=firmware-5-ct-htt-mgt-community-12.bin-lede.019
++QCA9888_FIRMWARE_FILE_CT_HTT:=firmware-5-ct-htt-mgt-community-12.bin-lede.022
+ define Download/ath10k-firmware-qca9888-ct-htt
+   $(call Download/ct-firmware-htt,QCA9888,ath10k-9888-10-4b)
+-  HASH:=e52a6db33347c641ee791fd9a3a57a2503cdda1adc6b8d943e336431528b9d2a
++  HASH:=34bf07912a2f3fce4a5887c690848bb06d339bd1c86541b0b57b9c45eccc88e4
+ endef
+ $(eval $(call Download,ath10k-firmware-qca9888-ct-htt))
+ 
 diff --git a/package/network/ipv6/6in4/files/6in4.sh b/package/network/ipv6/6in4/files/6in4.sh
 index 5b5c7b36af..d75c6f4f41 100755
 --- a/package/network/ipv6/6in4/files/6in4.sh
@@ -713,10 +905,10 @@ index 8c42ef782e..296ce32641 100644
  	option readethers	1
  	option leasefile	'/tmp/dhcp.leases'
 diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
-index cb7e1d7053..323163bb86 100644
+index 80ded8ffbc..7261635870 100644
 --- a/package/network/services/hostapd/files/hostapd.sh
 +++ b/package/network/services/hostapd/files/hostapd.sh
-@@ -610,6 +610,11 @@ hostapd_set_bss_options() {
+@@ -661,6 +661,11 @@ hostapd_set_bss_options() {
  		set_default wps_manufacturer "www.openwrt.org"
  		set_default wps_independent 1
  
@@ -753,6 +945,361 @@ index c1814e00b0..b2f92bf10d 100755
  . /lib/functions/procd.sh
  
  procd_send_signal dnsmasq
+diff --git a/package/network/utils/iwinfo/patches/patch1.patch b/package/network/utils/iwinfo/patches/patch1.patch
+new file mode 100644
+index 0000000000..50138dca3d
+--- /dev/null
++++ b/package/network/utils/iwinfo/patches/patch1.patch
+@@ -0,0 +1,128 @@
++diff --git a/include/iwinfo.h b/include/iwinfo.h
++index 5e64294..676db91 100644
++--- a/include/iwinfo.h
+++++ b/include/iwinfo.h
++@@ -170,6 +170,38 @@ struct iwinfo_crypto_entry {
++ 	uint8_t auth_algs;
++ };
++ 
+++struct iwinfo_scanlist_ht_chan_entry {
+++	uint8_t primary_chan;
+++	uint8_t secondary_chan_off;
+++	uint8_t chan_width;
+++};
+++
+++struct iwinfo_scanlist_vht_chan_entry {
+++	uint8_t chan_width;
+++	uint8_t center_chan_1;
+++	uint8_t center_chan_2;
+++};
+++
+++static const char *ht_secondary_offset[4] = {
+++	"no secondary",
+++	"above",
+++	"[reserved!]",
+++	"below",
+++};
+++
+++
+++static uint16_t ht_chan_width[2] = {
+++	20, /* 20 MHz */
+++	2040, /* 40 MHz or higher (refer to vht if supported) */
+++};
+++
+++static uint16_t vht_chan_width[] = {
+++	[0] = 40, /* 40 MHz or lower (refer to ht to a more precise width) */
+++	[1] = 80, /* 80 MHz */
+++	[3] = 8080, /* 80+80 MHz */
+++	[2] = 160, /* 160 MHz */
+++};
+++
++ struct iwinfo_scanlist_entry {
++ 	uint8_t mac[6];
++ 	char ssid[IWINFO_ESSID_MAX_SIZE+1];
++@@ -179,6 +211,8 @@ struct iwinfo_scanlist_entry {
++ 	uint8_t quality;
++ 	uint8_t quality_max;
++ 	struct iwinfo_crypto_entry crypto;
+++	struct iwinfo_scanlist_ht_chan_entry ht_chan_info;
+++	struct iwinfo_scanlist_vht_chan_entry vht_chan_info;
++ };
++ 
++ struct iwinfo_country_entry {
++diff --git a/iwinfo_cli.c b/iwinfo_cli.c
++index 0332bc2..6bfe0ab 100644
++--- a/iwinfo_cli.c
+++++ b/iwinfo_cli.c
++@@ -323,6 +323,20 @@ static char * format_assocrate(struct iwinfo_rate_entry *r)
++ 	return buf;
++ }
++ 
+++static const char* format_chan_width(uint16_t width)
+++{
+++	switch (width) {
+++		case 20: return "20 MHz";
+++		case 2040: return "40 MHz and upper or 20 MHz with intolerant bit";
+++		case 40: return "40 MHz or lower";
+++		case 80: return "80 MHz";
+++		case 8080: return "80+80 MHz";
+++		case 160: return "160 MHz";
+++	}
+++
+++	return "unknown";
+++}
+++
++ 
++ static const char * print_type(const struct iwinfo_ops *iw, const char *ifname)
++ {
++@@ -612,8 +626,27 @@ static void print_scanlist(const struct iwinfo_ops *iw, const char *ifname)
++ 			format_signal(e->signal - 0x100),
++ 			format_quality(e->quality),
++ 			format_quality_max(e->quality_max));
++-		printf("          Encryption: %s\n\n",
+++		printf("          Encryption: %s\n",
++ 			format_encryption(&e->crypto));
+++		printf("          HT Operation:\n");
+++		printf("                    Primary Channel: %d\n",
+++		       e->ht_chan_info.primary_chan);
+++		printf("                    Secondary Channel Offset: %s\n",
+++		       ht_secondary_offset[e->ht_chan_info.secondary_chan_off]);
+++		printf("                    Channel Width: %s\n",
+++		       format_chan_width(ht_chan_width[e->ht_chan_info.chan_width]));
+++
+++		if (e->vht_chan_info.center_chan_1) {
+++		  printf("          VHT Operation:\n");
+++		  printf("                    Channel Width: %s\n",
+++		         format_chan_width(vht_chan_width[e->vht_chan_info.chan_width]));
+++		  printf("                    Center Frequency 1: %d\n",
+++		         e->vht_chan_info.center_chan_1);
+++		  printf("                    Center Frequency 2: %d\n",
+++		         e->vht_chan_info.center_chan_2);
+++		}
+++
+++		printf("\n");
++ 	}
++ }
++ 
++diff --git a/iwinfo_nl80211.c b/iwinfo_nl80211.c
++index 2b2a043..5917e3a 100644
++--- a/iwinfo_nl80211.c
+++++ b/iwinfo_nl80211.c
++@@ -2306,6 +2306,16 @@ static void nl80211_get_scanlist_ie(struct nlattr **bss,
++ 				iwinfo_parse_rsn(&e->crypto, ie + 6, ie[1] - 4,
++ 				                 IWINFO_CIPHER_TKIP, IWINFO_KMGMT_PSK);
++ 			break;
+++		case 61: /* HT oeration */
+++			e->ht_chan_info.primary_chan = ie[2];
+++			e->ht_chan_info.secondary_chan_off = ie[3] & 0x3;
+++			e->ht_chan_info.chan_width = (ie[4] & 0x4)>>2;
+++			break;
+++		case 192: /* VHT operation */
+++			e->vht_chan_info.chan_width = ie[2];
+++			e->vht_chan_info.center_chan_1 = ie[3];
+++			e->vht_chan_info.center_chan_2 = ie[4];
+++			break;
++ 		}
++ 
++ 		ielen -= ie[1] + 2;
++
+diff --git a/package/network/utils/iwinfo/patches/patch2.patch b/package/network/utils/iwinfo/patches/patch2.patch
+new file mode 100644
+index 0000000000..56c761dd25
+--- /dev/null
++++ b/package/network/utils/iwinfo/patches/patch2.patch
+@@ -0,0 +1,154 @@
++diff --git a/include/iwinfo.h b/include/iwinfo.h
++index 676db91..680f384 100644
++--- a/include/iwinfo.h
+++++ b/include/iwinfo.h
++@@ -282,6 +282,8 @@ struct iwinfo_ops {
++ 	int (*survey)(const char *, char *, int *);
++ 	int (*lookup_phy)(const char *, char *);
++ 	void (*close)(void);
+++	int (*center_chan1)(const char *, int *);
+++	int (*center_chan2)(const char *, int *);
++ };
++ 
++ const char * iwinfo_type(const char *ifname);
++diff --git a/iwinfo_cli.c b/iwinfo_cli.c
++index 6bfe0ab..cc5d298 100644
++--- a/iwinfo_cli.c
+++++ b/iwinfo_cli.c
++@@ -445,6 +445,24 @@ static char * print_channel(const struct iwinfo_ops *iw, const char *ifname)
++ 	return format_channel(ch);
++ }
++ 
+++static char * print_center_chan1(const struct iwinfo_ops *iw, const char *ifname)
+++{
+++	int ch;
+++	if (iw->center_chan1(ifname, &ch))
+++		ch = -1;
+++
+++	return format_channel(ch);
+++}
+++
+++static char * print_center_chan2(const struct iwinfo_ops *iw, const char *ifname)
+++{
+++	int ch;
+++	if (iw->center_chan2(ifname, &ch))
+++		ch = -1;
+++
+++	return format_channel(ch);
+++}
+++
++ static char * print_frequency(const struct iwinfo_ops *iw, const char *ifname)
++ {
++ 	int freq;
++@@ -566,6 +584,11 @@ static void print_info(const struct iwinfo_ops *iw, const char *ifname)
++ 		print_mode(iw, ifname),
++ 		print_channel(iw, ifname),
++ 		print_frequency(iw, ifname));
+++	if (iw->center_chan1 != NULL) {
+++		printf("          Center Channel 1: %s",
+++			print_center_chan1(iw, ifname));
+++		printf(" 2: %s\n", print_center_chan2(iw, ifname));
+++	}
++ 	printf("          Tx-Power: %s  Link Quality: %s/%s\n",
++ 		print_txpower(iw, ifname),
++ 		print_quality(iw, ifname),
++diff --git a/iwinfo_nl80211.c b/iwinfo_nl80211.c
++index 5917e3a..1bcc5ea 100644
++--- a/iwinfo_nl80211.c
+++++ b/iwinfo_nl80211.c
++@@ -1262,6 +1262,56 @@ static int nl80211_get_frequency(const char *ifname, int *buf)
++ 	return (*buf == 0) ? -1 : 0;
++ }
++ 
+++static int nl80211_get_center_freq1_cb(struct nl_msg *msg, void *arg)
+++{
+++	int *freq = arg;
+++	struct nlattr **tb = nl80211_parse(msg);
+++
+++	if (tb[NL80211_ATTR_CENTER_FREQ1])
+++		*freq = nla_get_u32(tb[NL80211_ATTR_CENTER_FREQ1]);
+++
+++	return NL_SKIP;
+++}
+++
+++static int nl80211_get_center_freq1(const char *ifname, int *buf)
+++{
+++	char *res;
+++
+++	/* try to find frequency from interface info */
+++	res = nl80211_phy2ifname(ifname);
+++	*buf = 0;
+++
+++	nl80211_request(res ? res : ifname, NL80211_CMD_GET_INTERFACE, 0,
+++	                nl80211_get_center_freq1_cb, buf);
+++
+++	return (*buf == 0) ? -1 : 0;
+++}
+++
+++static int nl80211_get_center_freq2_cb(struct nl_msg *msg, void *arg)
+++{
+++	int *freq = arg;
+++	struct nlattr **tb = nl80211_parse(msg);
+++
+++	if (tb[NL80211_ATTR_CENTER_FREQ2])
+++		*freq = nla_get_u32(tb[NL80211_ATTR_CENTER_FREQ2]);
+++
+++	return NL_SKIP;
+++}
+++
+++static int nl80211_get_center_freq2(const char *ifname, int *buf)
+++{
+++	char *res;
+++
+++	/* try to find frequency from interface info */
+++	res = nl80211_phy2ifname(ifname);
+++	*buf = 0;
+++
+++	nl80211_request(res ? res : ifname, NL80211_CMD_GET_INTERFACE, 0,
+++	                nl80211_get_center_freq2_cb, buf);
+++
+++	return (*buf == 0) ? -1 : 0;
+++}
+++
++ static int nl80211_get_channel(const char *ifname, int *buf)
++ {
++ 	if (!nl80211_get_frequency(ifname, buf))
++@@ -1273,6 +1323,28 @@ static int nl80211_get_channel(const char *ifname, int *buf)
++ 	return -1;
++ }
++ 
+++static int nl80211_get_center_chan1(const char *ifname, int *buf)
+++{
+++	if (!nl80211_get_center_freq1(ifname, buf))
+++	{
+++		*buf = nl80211_freq2channel(*buf);
+++		return 0;
+++	}
+++
+++	return -1;
+++}
+++
+++static int nl80211_get_center_chan2(const char *ifname, int *buf)
+++{
+++	if (!nl80211_get_center_freq2(ifname, buf))
+++	{
+++		*buf = nl80211_freq2channel(*buf);
+++		return 0;
+++	}
+++
+++	return -1;
+++}
+++
++ static int nl80211_get_txpower_cb(struct nl_msg *msg, void *arg)
++ {
++ 	int *buf = arg;
++@@ -3242,5 +3314,7 @@ const struct iwinfo_ops nl80211_ops = {
++ 	.countrylist      = nl80211_get_countrylist,
++ 	.survey           = nl80211_get_survey,
++ 	.lookup_phy       = nl80211_lookup_phyname,
++-	.close            = nl80211_close
+++	.close            = nl80211_close,
+++	.center_chan1     = nl80211_get_center_chan1,
+++	.center_chan2     = nl80211_get_center_chan2
++ };
++
+diff --git a/package/system/rpcd/patches/patch3.patch b/package/system/rpcd/patches/patch3.patch
+new file mode 100644
+index 0000000000..22a3fdcd81
+--- /dev/null
++++ b/package/system/rpcd/patches/patch3.patch
+@@ -0,0 +1,35 @@
++diff --git a/iwinfo.c b/iwinfo.c
++index 7780e69..45ca784 100644
++--- a/iwinfo.c
+++++ b/iwinfo.c
++@@ -403,7 +403,7 @@ rpc_iwinfo_scan(struct ubus_context *ctx, struct ubus_object *obj,
++                 struct blob_attr *msg)
++ {
++ 	int i, rv, len;
++-	void *c, *d;
+++	void *c, *d, *t;
++ 	char mac[18];
++ 	char res[IWINFO_BUFSIZE];
++ 	struct iwinfo_scanlist_entry *e;
++@@ -441,6 +441,20 @@ rpc_iwinfo_scan(struct ubus_context *ctx, struct ubus_object *obj,
++ 			blobmsg_add_u32(&buf, "quality", e->quality);
++ 			blobmsg_add_u32(&buf, "quality_max", e->quality_max);
++ 
+++			t = blobmsg_open_table(&buf, "ht_operation");
+++			blobmsg_add_u32(&buf, "primary_channel", e->ht_chan_info.primary_chan);
+++			blobmsg_add_string(&buf, "secondary_channel_offset", ht_secondary_offset[e->ht_chan_info.secondary_chan_off]);
+++			blobmsg_add_u32(&buf, "channel_width", ht_chan_width[e->ht_chan_info.chan_width]);
+++			blobmsg_close_table(&buf, t);
+++
+++			if (e->vht_chan_info.center_chan_1) {
+++				t = blobmsg_open_table(&buf, "vht_operation");
+++				blobmsg_add_u32(&buf, "channel_width", vht_chan_width[e->vht_chan_info.chan_width]);
+++				blobmsg_add_u32(&buf, "center_freq_1", e->vht_chan_info.center_chan_1);
+++				blobmsg_add_u32(&buf, "center_freq_2", e->vht_chan_info.center_chan_2);
+++				blobmsg_close_table(&buf, t);
+++			}
+++
++ 			rpc_iwinfo_add_encryption("encryption", &e->crypto);
++ 
++ 			blobmsg_close_table(&buf, d);
++
+diff --git a/package/system/rpcd/patches/patch4.patch b/package/system/rpcd/patches/patch4.patch
+new file mode 100644
+index 0000000000..31d9688725
+--- /dev/null
++++ b/package/system/rpcd/patches/patch4.patch
+@@ -0,0 +1,14 @@
++diff --git a/iwinfo.c b/iwinfo.c
++index 45ca784..94fa822 100644
++--- a/iwinfo.c
+++++ b/iwinfo.c
++@@ -364,6 +364,8 @@ rpc_iwinfo_info(struct ubus_context *ctx, struct ubus_object *obj,
++ 
++ 	rpc_iwinfo_call_int("mode", iw->mode, IWINFO_OPMODE_NAMES);
++ 	rpc_iwinfo_call_int("channel", iw->channel, NULL);
+++	rpc_iwinfo_call_int("center_chan1", iw->center_chan1, NULL);
+++	rpc_iwinfo_call_int("center_chan2", iw->center_chan2, NULL);
++ 
++ 	rpc_iwinfo_call_int("frequency", iw->frequency, NULL);
++ 	rpc_iwinfo_call_int("frequency_offset", iw->frequency_offset, NULL);
++
 diff --git a/package/utils/busybox/patches/310-save-history-in-tmp.patch b/package/utils/busybox/patches/310-save-history-in-tmp.patch
 new file mode 100644
 index 0000000000..7f5ee9ce94
@@ -787,21 +1334,6 @@ index 0000000000..de94f592f9
 + 
 + //kbuild:lib-$(CONFIG_SORT) += sort.o
 + 
-diff --git a/scripts/feeds b/scripts/feeds
-index 69ab60278a..22d4f8e8f4 100755
---- a/scripts/feeds
-+++ b/scripts/feeds
-@@ -158,8 +158,8 @@ my %update_method = (
- 		'init'          => "git clone --depth 1 '%s' '%s'",
- 		'init_branch'   => "git clone --depth 1 --branch '%s' '%s' '%s'",
- 		'init_commit'   => "git clone '%s' '%s' && cd '%s' && git checkout -b '%s' '%s' && cd -",
--		'update'	=> "git pull --ff",
--		'update_force'	=> "git pull --ff || (git reset --hard HEAD; git pull --ff; exit 1)",
-+		'update'	=> "git pull --ff-only",
-+		'update_force'	=> "git pull --ff-only || (git reset --hard HEAD; git pull --ff-only; exit 1)",
- 		'post_update'	=> "git submodule update --init --recursive",
- 		'controldir'	=> ".git",
- 		'revision'	=> "git rev-parse --short HEAD | tr -d '\n'"},
 diff --git a/target/linux/ipq806x/patches-5.4/900-tweak-cpufreq-ondemand-governor.patch b/target/linux/ipq806x/patches-5.4/900-tweak-cpufreq-ondemand-governor.patch
 new file mode 100644
 index 0000000000..dbf617d3cb
