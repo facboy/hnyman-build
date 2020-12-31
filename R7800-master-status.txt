@@ -1,10 +1,10 @@
-master-r15254-1302bee12a-20201222-1824
+master-r15362-e1938d3397-20201228-1941
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2020-12-22 1302bee hostapd: parse skip_inactivity_poll optio
+2020-12-28 e1938d3 ath10k-ct-firmware: update to 022 (2020-1
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -28,9 +28,6 @@ A  hnscripts/timestampVersion.sh
 A  hnscripts/updateNmake.sh
 M  package/base-files/files/bin/config_generate
 M  package/base-files/files/etc/rc.button/reset
-M  package/base-files/files/lib/upgrade/common.sh
-M  package/base-files/files/lib/upgrade/stage2
-M  package/firmware/ath10k-ct-firmware/Makefile
 M  package/network/ipv6/6in4/files/6in4.sh
 M  package/network/services/dnsmasq/files/dhcp.conf
 M  package/network/services/hostapd/files/hostapd.sh
@@ -45,6 +42,7 @@ A  package/utils/busybox/patches/520-move-coreutils-to-bin.patch
 A  target/linux/ipq806x/patches-5.4/900-tweak-cpufreq-ondemand-governor.patch
 ?? .config.init131220
 ?? .config.init221120
+?? .config.init231220
 ?? files/etc/HNsettings.r7800-221220.cpt
 ?? version.date
 
@@ -52,7 +50,7 @@ A  target/linux/ipq806x/patches-5.4/900-tweak-cpufreq-ondemand-governor.patch
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2020-12-22 af20ec8 luci-app-statistics: Add initial support 
+2020-12-27 6ffd159 luci-theme-bootstrap: fix text wrapping i
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/htdocs/luci-static/resources/firewall.js
 M  modules/luci-base/htdocs/luci-static/resources/tools/prng.js
@@ -72,7 +70,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2020-12-22 8b5af4e htop: update to 3.0.4-1
+2020-12-26 4b96bbf libuhttpd: Update to 3.7.0
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
