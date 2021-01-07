@@ -1,10 +1,10 @@
-master-r15362-e1938d3397-20201228-1941
+master-r15437-b4c0d377f6-20210106-0927
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2020-12-28 e1938d3 ath10k-ct-firmware: update to 022 (2020-1
+2021-01-06 b4c0d37 ramips: limit 5GHz channels for UniFi 6 L
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -33,24 +33,23 @@ M  package/network/services/dnsmasq/files/dhcp.conf
 M  package/network/services/hostapd/files/hostapd.sh
 M  package/network/services/hostapd/files/wps-hotplug.sh
 M  package/network/services/odhcpd/files/odhcpd-update
-A  package/network/utils/iwinfo/patches/patch1.patch
-A  package/network/utils/iwinfo/patches/patch2.patch
-A  package/system/rpcd/patches/patch3.patch
-A  package/system/rpcd/patches/patch4.patch
 A  package/utils/busybox/patches/310-save-history-in-tmp.patch
 A  package/utils/busybox/patches/520-move-coreutils-to-bin.patch
-A  target/linux/ipq806x/patches-5.4/900-tweak-cpufreq-ondemand-governor.patch
+A  target/linux/ipq806x/patches-5.4/910-tweak-cpufreq-ondemand-governor.patch
 ?? .config.init131220
 ?? .config.init221120
 ?? .config.init231220
-?? files/etc/HNsettings.r7800-221220.cpt
+?? files/etc/HNsettings.r7800-311220.cpt
 ?? version.date
 
 ######################################################
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2020-12-27 6ffd159 luci-theme-bootstrap: fix text wrapping i
+2021-01-05 e7aeb9b Translated using Weblate (Chinese (Simpli
+ D .buildpath
+ D .cproject
+ D .project
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/htdocs/luci-static/resources/firewall.js
 M  modules/luci-base/htdocs/luci-static/resources/tools/prng.js
@@ -70,7 +69,8 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2020-12-26 4b96bbf libuhttpd: Update to 3.7.0
+2021-01-05 46b0ed5 Merge pull request #14406 from tofurky/fi
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
+?? 14335.patch

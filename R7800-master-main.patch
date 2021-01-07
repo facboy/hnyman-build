@@ -173,15 +173,15 @@ index 03bfacb620..de3192c654 100644
  #src-git management https://github.com/openwrt-management/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..f7751827a0
+index 0000000000..a4fa11e59f
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r15362-e1938d3397 / 2020-12-28 19:25
++OpenWrt master r15437-b4c0d377f6 / 2021-01-06 09:11
 +---
-+main      2020-12-28 e1938d3 ath10k-ct-firmware: update to 022 (2020-1
-+luci      2020-12-27 6ffd159 luci-theme-bootstrap: fix text wrapping i
-+packages  2020-12-26 4b96bbf libuhttpd: Update to 3.7.0
++main      2021-01-06 b4c0d37 ramips: limit 5GHz channels for UniFi 6 L
++luci      2021-01-05 e7aeb9b Translated using Weblate (Chinese (Simpli
++packages  2021-01-05 46b0ed5 Merge pull request #14406 from tofurky/fi
 +routing   2020-12-26 25d53e8 cjdns: use codeload
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
@@ -295,7 +295,7 @@ index 0000000000..7953eb8d9e
 +/etc/init.d/collectd start
 diff --git a/files/etc/saveHNsettings.sh b/files/etc/saveHNsettings.sh
 new file mode 100755
-index 0000000000..0350eb4005
+index 0000000000..5e19c8fd33
 --- /dev/null
 +++ b/files/etc/saveHNsettings.sh
 @@ -0,0 +1,13 @@
@@ -304,7 +304,7 @@ index 0000000000..0350eb4005
 +tar -czv -f /tmp/HNsettings \
 +  config/network config/wireless config/firewall config/dhcp config/sqm \
 +  config/luci_statistics config/bcp38 \
-+  dropbear/authorized_keys adblock/adblock.whitelist
++  dropbear/authorized_keys adblock/adblock.whitelist crontabs/root
 +if [ "$?" -eq 0 ] ; then
 +  ccencrypt -vf /tmp/HNsettings
 +  if [ "$?" -eq 0 ] ; then
@@ -561,7 +561,7 @@ index 0000000000..2bb4f29de6
 +
 diff --git a/hnscripts/parallelcompile.sh b/hnscripts/parallelcompile.sh
 new file mode 100755
-index 0000000000..cc25508eb5
+index 0000000000..093c29dbea
 --- /dev/null
 +++ b/hnscripts/parallelcompile.sh
 @@ -0,0 +1,14 @@
@@ -573,7 +573,7 @@ index 0000000000..cc25508eb5
 +hnscripts/timestampVersion.sh
 +echo "...make world..."
 +mkdir -p logs
-+make -j 5 V=s 2>&1 | tee logs/build.log | grep -i -E "^make.*(error|[12345]...Entering dir)"
++make -j 5 V=s 2>&1 | tee logs/build.log | grep -i -E "^make.*(error|[12345]...Entering dir)|^warning"
 +[ ${PIPESTATUS[0]} -ne 0 ] && exit 1
 +echo -n "...create build info: "
 +hnscripts/createbuildinfo.sh
@@ -581,7 +581,7 @@ index 0000000000..cc25508eb5
 +
 diff --git a/hnscripts/singlecompile.sh b/hnscripts/singlecompile.sh
 new file mode 100755
-index 0000000000..3fe4556ac0
+index 0000000000..ac05bd6434
 --- /dev/null
 +++ b/hnscripts/singlecompile.sh
 @@ -0,0 +1,14 @@
@@ -593,7 +593,7 @@ index 0000000000..3fe4556ac0
 +hnscripts/timestampVersion.sh
 +echo "...make world..."
 +mkdir -p logs
-+make V=s 2>&1 | tee logs/build.log | grep -i -E "^make.*(error|[12345]...Entering dir)"
++make V=s 2>&1 | tee logs/build.log | grep -i -E "^make.*(error|[12345]...Entering dir)|^warning"
 +[ ${PIPESTATUS[0]} -ne 0 ] && exit 1
 +echo -n "...create build info: "
 +hnscripts/createbuildinfo.sh
@@ -653,10 +653,10 @@ index 0000000000..8eff1db078
 +hnscripts/parallelcompile.sh
 +
 diff --git a/package/base-files/files/bin/config_generate b/package/base-files/files/bin/config_generate
-index ee3958e733..9ec18d1a54 100755
+index ee3958e733..1308d49c15 100755
 --- a/package/base-files/files/bin/config_generate
 +++ b/package/base-files/files/bin/config_generate
-@@ -281,7 +281,8 @@ generate_static_system() {
+@@ -281,9 +281,10 @@ generate_static_system() {
  		delete system.@system[0]
  		add system system
  		set system.@system[-1].hostname='OpenWrt'
@@ -664,8 +664,11 @@ index ee3958e733..9ec18d1a54 100755
 +		set system.@system[-1].timezone='EET-2EEST,M3.5.0/3,M10.5.0/4'
 +		set system.@system[-1].zonename='Europe/Helsinki'
  		set system.@system[-1].ttylogin='0'
- 		set system.@system[-1].log_size='64'
+-		set system.@system[-1].log_size='64'
++		set system.@system[-1].log_size='128'
  		set system.@system[-1].urandom_seed='0'
+ 
+ 		delete system.ntp
 diff --git a/package/base-files/files/etc/rc.button/reset b/package/base-files/files/etc/rc.button/reset
 index 2403122ad2..5746ea237a 100755
 --- a/package/base-files/files/etc/rc.button/reset
@@ -713,10 +716,10 @@ index 8c42ef782e..296ce32641 100644
  	option readethers	1
  	option leasefile	'/tmp/dhcp.leases'
 diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
-index 78f6a19612..3ff5e6481f 100644
+index 0f6741336b..35cca993bf 100644
 --- a/package/network/services/hostapd/files/hostapd.sh
 +++ b/package/network/services/hostapd/files/hostapd.sh
-@@ -661,6 +661,11 @@ hostapd_set_bss_options() {
+@@ -663,6 +663,11 @@ hostapd_set_bss_options() {
  		set_default wps_manufacturer "www.openwrt.org"
  		set_default wps_independent 1
  
@@ -753,361 +756,6 @@ index c1814e00b0..b2f92bf10d 100755
  . /lib/functions/procd.sh
  
  procd_send_signal dnsmasq
-diff --git a/package/network/utils/iwinfo/patches/patch1.patch b/package/network/utils/iwinfo/patches/patch1.patch
-new file mode 100644
-index 0000000000..50138dca3d
---- /dev/null
-+++ b/package/network/utils/iwinfo/patches/patch1.patch
-@@ -0,0 +1,128 @@
-+diff --git a/include/iwinfo.h b/include/iwinfo.h
-+index 5e64294..676db91 100644
-+--- a/include/iwinfo.h
-++++ b/include/iwinfo.h
-+@@ -170,6 +170,38 @@ struct iwinfo_crypto_entry {
-+ 	uint8_t auth_algs;
-+ };
-+ 
-++struct iwinfo_scanlist_ht_chan_entry {
-++	uint8_t primary_chan;
-++	uint8_t secondary_chan_off;
-++	uint8_t chan_width;
-++};
-++
-++struct iwinfo_scanlist_vht_chan_entry {
-++	uint8_t chan_width;
-++	uint8_t center_chan_1;
-++	uint8_t center_chan_2;
-++};
-++
-++static const char *ht_secondary_offset[4] = {
-++	"no secondary",
-++	"above",
-++	"[reserved!]",
-++	"below",
-++};
-++
-++
-++static uint16_t ht_chan_width[2] = {
-++	20, /* 20 MHz */
-++	2040, /* 40 MHz or higher (refer to vht if supported) */
-++};
-++
-++static uint16_t vht_chan_width[] = {
-++	[0] = 40, /* 40 MHz or lower (refer to ht to a more precise width) */
-++	[1] = 80, /* 80 MHz */
-++	[3] = 8080, /* 80+80 MHz */
-++	[2] = 160, /* 160 MHz */
-++};
-++
-+ struct iwinfo_scanlist_entry {
-+ 	uint8_t mac[6];
-+ 	char ssid[IWINFO_ESSID_MAX_SIZE+1];
-+@@ -179,6 +211,8 @@ struct iwinfo_scanlist_entry {
-+ 	uint8_t quality;
-+ 	uint8_t quality_max;
-+ 	struct iwinfo_crypto_entry crypto;
-++	struct iwinfo_scanlist_ht_chan_entry ht_chan_info;
-++	struct iwinfo_scanlist_vht_chan_entry vht_chan_info;
-+ };
-+ 
-+ struct iwinfo_country_entry {
-+diff --git a/iwinfo_cli.c b/iwinfo_cli.c
-+index 0332bc2..6bfe0ab 100644
-+--- a/iwinfo_cli.c
-++++ b/iwinfo_cli.c
-+@@ -323,6 +323,20 @@ static char * format_assocrate(struct iwinfo_rate_entry *r)
-+ 	return buf;
-+ }
-+ 
-++static const char* format_chan_width(uint16_t width)
-++{
-++	switch (width) {
-++		case 20: return "20 MHz";
-++		case 2040: return "40 MHz and upper or 20 MHz with intolerant bit";
-++		case 40: return "40 MHz or lower";
-++		case 80: return "80 MHz";
-++		case 8080: return "80+80 MHz";
-++		case 160: return "160 MHz";
-++	}
-++
-++	return "unknown";
-++}
-++
-+ 
-+ static const char * print_type(const struct iwinfo_ops *iw, const char *ifname)
-+ {
-+@@ -612,8 +626,27 @@ static void print_scanlist(const struct iwinfo_ops *iw, const char *ifname)
-+ 			format_signal(e->signal - 0x100),
-+ 			format_quality(e->quality),
-+ 			format_quality_max(e->quality_max));
-+-		printf("          Encryption: %s\n\n",
-++		printf("          Encryption: %s\n",
-+ 			format_encryption(&e->crypto));
-++		printf("          HT Operation:\n");
-++		printf("                    Primary Channel: %d\n",
-++		       e->ht_chan_info.primary_chan);
-++		printf("                    Secondary Channel Offset: %s\n",
-++		       ht_secondary_offset[e->ht_chan_info.secondary_chan_off]);
-++		printf("                    Channel Width: %s\n",
-++		       format_chan_width(ht_chan_width[e->ht_chan_info.chan_width]));
-++
-++		if (e->vht_chan_info.center_chan_1) {
-++		  printf("          VHT Operation:\n");
-++		  printf("                    Channel Width: %s\n",
-++		         format_chan_width(vht_chan_width[e->vht_chan_info.chan_width]));
-++		  printf("                    Center Frequency 1: %d\n",
-++		         e->vht_chan_info.center_chan_1);
-++		  printf("                    Center Frequency 2: %d\n",
-++		         e->vht_chan_info.center_chan_2);
-++		}
-++
-++		printf("\n");
-+ 	}
-+ }
-+ 
-+diff --git a/iwinfo_nl80211.c b/iwinfo_nl80211.c
-+index 2b2a043..5917e3a 100644
-+--- a/iwinfo_nl80211.c
-++++ b/iwinfo_nl80211.c
-+@@ -2306,6 +2306,16 @@ static void nl80211_get_scanlist_ie(struct nlattr **bss,
-+ 				iwinfo_parse_rsn(&e->crypto, ie + 6, ie[1] - 4,
-+ 				                 IWINFO_CIPHER_TKIP, IWINFO_KMGMT_PSK);
-+ 			break;
-++		case 61: /* HT oeration */
-++			e->ht_chan_info.primary_chan = ie[2];
-++			e->ht_chan_info.secondary_chan_off = ie[3] & 0x3;
-++			e->ht_chan_info.chan_width = (ie[4] & 0x4)>>2;
-++			break;
-++		case 192: /* VHT operation */
-++			e->vht_chan_info.chan_width = ie[2];
-++			e->vht_chan_info.center_chan_1 = ie[3];
-++			e->vht_chan_info.center_chan_2 = ie[4];
-++			break;
-+ 		}
-+ 
-+ 		ielen -= ie[1] + 2;
-+
-diff --git a/package/network/utils/iwinfo/patches/patch2.patch b/package/network/utils/iwinfo/patches/patch2.patch
-new file mode 100644
-index 0000000000..56c761dd25
---- /dev/null
-+++ b/package/network/utils/iwinfo/patches/patch2.patch
-@@ -0,0 +1,154 @@
-+diff --git a/include/iwinfo.h b/include/iwinfo.h
-+index 676db91..680f384 100644
-+--- a/include/iwinfo.h
-++++ b/include/iwinfo.h
-+@@ -282,6 +282,8 @@ struct iwinfo_ops {
-+ 	int (*survey)(const char *, char *, int *);
-+ 	int (*lookup_phy)(const char *, char *);
-+ 	void (*close)(void);
-++	int (*center_chan1)(const char *, int *);
-++	int (*center_chan2)(const char *, int *);
-+ };
-+ 
-+ const char * iwinfo_type(const char *ifname);
-+diff --git a/iwinfo_cli.c b/iwinfo_cli.c
-+index 6bfe0ab..cc5d298 100644
-+--- a/iwinfo_cli.c
-++++ b/iwinfo_cli.c
-+@@ -445,6 +445,24 @@ static char * print_channel(const struct iwinfo_ops *iw, const char *ifname)
-+ 	return format_channel(ch);
-+ }
-+ 
-++static char * print_center_chan1(const struct iwinfo_ops *iw, const char *ifname)
-++{
-++	int ch;
-++	if (iw->center_chan1(ifname, &ch))
-++		ch = -1;
-++
-++	return format_channel(ch);
-++}
-++
-++static char * print_center_chan2(const struct iwinfo_ops *iw, const char *ifname)
-++{
-++	int ch;
-++	if (iw->center_chan2(ifname, &ch))
-++		ch = -1;
-++
-++	return format_channel(ch);
-++}
-++
-+ static char * print_frequency(const struct iwinfo_ops *iw, const char *ifname)
-+ {
-+ 	int freq;
-+@@ -566,6 +584,11 @@ static void print_info(const struct iwinfo_ops *iw, const char *ifname)
-+ 		print_mode(iw, ifname),
-+ 		print_channel(iw, ifname),
-+ 		print_frequency(iw, ifname));
-++	if (iw->center_chan1 != NULL) {
-++		printf("          Center Channel 1: %s",
-++			print_center_chan1(iw, ifname));
-++		printf(" 2: %s\n", print_center_chan2(iw, ifname));
-++	}
-+ 	printf("          Tx-Power: %s  Link Quality: %s/%s\n",
-+ 		print_txpower(iw, ifname),
-+ 		print_quality(iw, ifname),
-+diff --git a/iwinfo_nl80211.c b/iwinfo_nl80211.c
-+index 5917e3a..1bcc5ea 100644
-+--- a/iwinfo_nl80211.c
-++++ b/iwinfo_nl80211.c
-+@@ -1262,6 +1262,56 @@ static int nl80211_get_frequency(const char *ifname, int *buf)
-+ 	return (*buf == 0) ? -1 : 0;
-+ }
-+ 
-++static int nl80211_get_center_freq1_cb(struct nl_msg *msg, void *arg)
-++{
-++	int *freq = arg;
-++	struct nlattr **tb = nl80211_parse(msg);
-++
-++	if (tb[NL80211_ATTR_CENTER_FREQ1])
-++		*freq = nla_get_u32(tb[NL80211_ATTR_CENTER_FREQ1]);
-++
-++	return NL_SKIP;
-++}
-++
-++static int nl80211_get_center_freq1(const char *ifname, int *buf)
-++{
-++	char *res;
-++
-++	/* try to find frequency from interface info */
-++	res = nl80211_phy2ifname(ifname);
-++	*buf = 0;
-++
-++	nl80211_request(res ? res : ifname, NL80211_CMD_GET_INTERFACE, 0,
-++	                nl80211_get_center_freq1_cb, buf);
-++
-++	return (*buf == 0) ? -1 : 0;
-++}
-++
-++static int nl80211_get_center_freq2_cb(struct nl_msg *msg, void *arg)
-++{
-++	int *freq = arg;
-++	struct nlattr **tb = nl80211_parse(msg);
-++
-++	if (tb[NL80211_ATTR_CENTER_FREQ2])
-++		*freq = nla_get_u32(tb[NL80211_ATTR_CENTER_FREQ2]);
-++
-++	return NL_SKIP;
-++}
-++
-++static int nl80211_get_center_freq2(const char *ifname, int *buf)
-++{
-++	char *res;
-++
-++	/* try to find frequency from interface info */
-++	res = nl80211_phy2ifname(ifname);
-++	*buf = 0;
-++
-++	nl80211_request(res ? res : ifname, NL80211_CMD_GET_INTERFACE, 0,
-++	                nl80211_get_center_freq2_cb, buf);
-++
-++	return (*buf == 0) ? -1 : 0;
-++}
-++
-+ static int nl80211_get_channel(const char *ifname, int *buf)
-+ {
-+ 	if (!nl80211_get_frequency(ifname, buf))
-+@@ -1273,6 +1323,28 @@ static int nl80211_get_channel(const char *ifname, int *buf)
-+ 	return -1;
-+ }
-+ 
-++static int nl80211_get_center_chan1(const char *ifname, int *buf)
-++{
-++	if (!nl80211_get_center_freq1(ifname, buf))
-++	{
-++		*buf = nl80211_freq2channel(*buf);
-++		return 0;
-++	}
-++
-++	return -1;
-++}
-++
-++static int nl80211_get_center_chan2(const char *ifname, int *buf)
-++{
-++	if (!nl80211_get_center_freq2(ifname, buf))
-++	{
-++		*buf = nl80211_freq2channel(*buf);
-++		return 0;
-++	}
-++
-++	return -1;
-++}
-++
-+ static int nl80211_get_txpower_cb(struct nl_msg *msg, void *arg)
-+ {
-+ 	int *buf = arg;
-+@@ -3242,5 +3314,7 @@ const struct iwinfo_ops nl80211_ops = {
-+ 	.countrylist      = nl80211_get_countrylist,
-+ 	.survey           = nl80211_get_survey,
-+ 	.lookup_phy       = nl80211_lookup_phyname,
-+-	.close            = nl80211_close
-++	.close            = nl80211_close,
-++	.center_chan1     = nl80211_get_center_chan1,
-++	.center_chan2     = nl80211_get_center_chan2
-+ };
-+
-diff --git a/package/system/rpcd/patches/patch3.patch b/package/system/rpcd/patches/patch3.patch
-new file mode 100644
-index 0000000000..22a3fdcd81
---- /dev/null
-+++ b/package/system/rpcd/patches/patch3.patch
-@@ -0,0 +1,35 @@
-+diff --git a/iwinfo.c b/iwinfo.c
-+index 7780e69..45ca784 100644
-+--- a/iwinfo.c
-++++ b/iwinfo.c
-+@@ -403,7 +403,7 @@ rpc_iwinfo_scan(struct ubus_context *ctx, struct ubus_object *obj,
-+                 struct blob_attr *msg)
-+ {
-+ 	int i, rv, len;
-+-	void *c, *d;
-++	void *c, *d, *t;
-+ 	char mac[18];
-+ 	char res[IWINFO_BUFSIZE];
-+ 	struct iwinfo_scanlist_entry *e;
-+@@ -441,6 +441,20 @@ rpc_iwinfo_scan(struct ubus_context *ctx, struct ubus_object *obj,
-+ 			blobmsg_add_u32(&buf, "quality", e->quality);
-+ 			blobmsg_add_u32(&buf, "quality_max", e->quality_max);
-+ 
-++			t = blobmsg_open_table(&buf, "ht_operation");
-++			blobmsg_add_u32(&buf, "primary_channel", e->ht_chan_info.primary_chan);
-++			blobmsg_add_string(&buf, "secondary_channel_offset", ht_secondary_offset[e->ht_chan_info.secondary_chan_off]);
-++			blobmsg_add_u32(&buf, "channel_width", ht_chan_width[e->ht_chan_info.chan_width]);
-++			blobmsg_close_table(&buf, t);
-++
-++			if (e->vht_chan_info.center_chan_1) {
-++				t = blobmsg_open_table(&buf, "vht_operation");
-++				blobmsg_add_u32(&buf, "channel_width", vht_chan_width[e->vht_chan_info.chan_width]);
-++				blobmsg_add_u32(&buf, "center_freq_1", e->vht_chan_info.center_chan_1);
-++				blobmsg_add_u32(&buf, "center_freq_2", e->vht_chan_info.center_chan_2);
-++				blobmsg_close_table(&buf, t);
-++			}
-++
-+ 			rpc_iwinfo_add_encryption("encryption", &e->crypto);
-+ 
-+ 			blobmsg_close_table(&buf, d);
-+
-diff --git a/package/system/rpcd/patches/patch4.patch b/package/system/rpcd/patches/patch4.patch
-new file mode 100644
-index 0000000000..31d9688725
---- /dev/null
-+++ b/package/system/rpcd/patches/patch4.patch
-@@ -0,0 +1,14 @@
-+diff --git a/iwinfo.c b/iwinfo.c
-+index 45ca784..94fa822 100644
-+--- a/iwinfo.c
-++++ b/iwinfo.c
-+@@ -364,6 +364,8 @@ rpc_iwinfo_info(struct ubus_context *ctx, struct ubus_object *obj,
-+ 
-+ 	rpc_iwinfo_call_int("mode", iw->mode, IWINFO_OPMODE_NAMES);
-+ 	rpc_iwinfo_call_int("channel", iw->channel, NULL);
-++	rpc_iwinfo_call_int("center_chan1", iw->center_chan1, NULL);
-++	rpc_iwinfo_call_int("center_chan2", iw->center_chan2, NULL);
-+ 
-+ 	rpc_iwinfo_call_int("frequency", iw->frequency, NULL);
-+ 	rpc_iwinfo_call_int("frequency_offset", iw->frequency_offset, NULL);
-+
 diff --git a/package/utils/busybox/patches/310-save-history-in-tmp.patch b/package/utils/busybox/patches/310-save-history-in-tmp.patch
 new file mode 100644
 index 0000000000..7f5ee9ce94
@@ -1142,15 +790,15 @@ index 0000000000..de94f592f9
 + 
 + //kbuild:lib-$(CONFIG_SORT) += sort.o
 + 
-diff --git a/target/linux/ipq806x/patches-5.4/900-tweak-cpufreq-ondemand-governor.patch b/target/linux/ipq806x/patches-5.4/900-tweak-cpufreq-ondemand-governor.patch
+diff --git a/target/linux/ipq806x/patches-5.4/910-tweak-cpufreq-ondemand-governor.patch b/target/linux/ipq806x/patches-5.4/910-tweak-cpufreq-ondemand-governor.patch
 new file mode 100644
-index 0000000000..dbf617d3cb
+index 0000000000..c6f2f7746f
 --- /dev/null
-+++ b/target/linux/ipq806x/patches-5.4/900-tweak-cpufreq-ondemand-governor.patch
++++ b/target/linux/ipq806x/patches-5.4/910-tweak-cpufreq-ondemand-governor.patch
 @@ -0,0 +1,16 @@
 +--- a/drivers/cpufreq/cpufreq_ondemand.c
 ++++ b/drivers/cpufreq/cpufreq_ondemand.c
-+@@ -21,10 +21,10 @@
++@@ -18,10 +18,10 @@
 + #include "cpufreq_ondemand.h"
 + 
 + /* On-demand governor macros */

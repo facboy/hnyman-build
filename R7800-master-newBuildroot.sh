@@ -13,7 +13,7 @@ TARGET=master
 GITREPO=https://git.openwrt.org/openwrt/openwrt.git
 
 ## Current version
-FILESTAMP=R7800-master-r15362-e1938d3397-20201228-1941
+FILESTAMP=R7800-master-r15437-b4c0d377f6-20210106-0927
 
 ### Prerequisites for buildroot
 sudo apt-get install build-essential subversion libncurses5-dev zlib1g-dev
