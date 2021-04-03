@@ -15,6 +15,7 @@ function normalize_dir() {
 
     rm *-factory.img
     rm *-sysupgrade.bin
+    rm *.ipk
     chmod a-x *
     chmod a+x *.sh
 

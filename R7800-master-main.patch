@@ -1,9 +1,9 @@
 diff --git a/.config.init b/.config.init
 new file mode 100644
-index 0000000000..f12dffa5cb
+index 0000000000..09195872e3
 --- /dev/null
 +++ b/.config.init
-@@ -0,0 +1,140 @@
+@@ -0,0 +1,144 @@
 +# Use "make defconfig" to expand this to a full .config
 +CONFIG_TARGET_ipq806x=y
 +CONFIG_TARGET_ipq806x_generic=y
@@ -33,6 +33,10 @@ index 0000000000..f12dffa5cb
 +CONFIG_BUSYBOX_CONFIG_FEATURE_LESS_FLAGS=y
 +CONFIG_BUSYBOX_CONFIG_FEATURE_LESS_REGEXP=y
 +CONFIG_BUSYBOX_CONFIG_FEATURE_LESS_WINCH=y
++
++### Build also ath10k mainline .ipk
++### (disable this if you use the below section to fully switch to mainline)
++CONFIG_PACKAGE_kmod-ath10k=m
 +
 +## # Mainline ath10k wifi firmware and driver instead of -ct
 +## CONFIG_PACKAGE_ath10k-firmware-qca9984=y
@@ -145,10 +149,10 @@ index 0000000000..f12dffa5cb
 +CONFIG_PACKAGE_kmod-chaoskey=y
 +
 diff --git a/.gitignore b/.gitignore
-index b6bfe1a525..0e7ba3e4e5 100644
+index 9647daa5a4..86407f9e62 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -12,7 +12,6 @@
+@@ -12,14 +12,11 @@
  /logs
  /feeds
  /feeds.conf
@@ -156,33 +160,38 @@ index b6bfe1a525..0e7ba3e4e5 100644
  /overlay
  /package/feeds
  /package/openwrt-packages
+ /*.patch
+ key-build*
+-*.orig
+-*.rej
+ *~
+ .#*
+ *#
 diff --git a/feeds.conf.default b/feeds.conf.default
-index 03bfacb620..de3192c654 100644
+index da6c665624..0954f2f0b7 100644
 --- a/feeds.conf.default
 +++ b/feeds.conf.default
-@@ -1,8 +1,8 @@
+@@ -1,7 +1,7 @@
  src-git packages https://git.openwrt.org/feed/packages.git
  src-git luci https://git.openwrt.org/project/luci.git
  src-git routing https://git.openwrt.org/feed/routing.git
 -src-git telephony https://git.openwrt.org/feed/telephony.git
--src-git freifunk https://github.com/freifunk/openwrt-packages.git
 +#src-git telephony https://git.openwrt.org/feed/telephony.git
-+#src-git freifunk https://github.com/freifunk/openwrt-packages.git
  #src-git video https://github.com/openwrt/video.git
  #src-git targets https://github.com/openwrt/targets.git
  #src-git management https://github.com/openwrt-management/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..a4fa11e59f
+index 0000000000..110328bf4b
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r15437-b4c0d377f6 / 2021-01-06 09:11
++OpenWrt master r16372-e62ace0ecf / 2021-03-31 17:56
 +---
-+main      2021-01-06 b4c0d37 ramips: limit 5GHz channels for UniFi 6 L
-+luci      2021-01-05 e7aeb9b Translated using Weblate (Chinese (Simpli
-+packages  2021-01-05 46b0ed5 Merge pull request #14406 from tofurky/fi
-+routing   2020-12-26 25d53e8 cjdns: use codeload
++main      2021-03-31 e62ace0 netifd: update to git HEAD
++luci      2021-03-31 cd8d7a5 Translated using Weblate (Malay)
++packages  2021-03-31 abce423 podman: Add selinux variant and several i
++routing   2021-03-26 b38a46a bird2: Makefile polishing
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..26de611655
@@ -199,6 +208,9 @@ index 0000000000..26de611655
 +  fi
 +fi
 +
+diff --git a/files/etc/backup.stats/.placeholder b/files/etc/backup.stats/.placeholder
+new file mode 100644
+index 0000000000..e69de29bb2
 diff --git a/files/etc/checksettings.sh b/files/etc/checksettings.sh
 new file mode 100755
 index 0000000000..e7a1c42c19
@@ -314,14 +326,15 @@ index 0000000000..5e19c8fd33
 +
 diff --git a/files/etc/storeStats.sh b/files/etc/storeStats.sh
 new file mode 100755
-index 0000000000..01b92d0065
+index 0000000000..2eaae65af7
 --- /dev/null
 +++ b/files/etc/storeStats.sh
-@@ -0,0 +1,7 @@
+@@ -0,0 +1,8 @@
 +#!/bin/sh
 +/etc/init.d/collectd stop
++logger -t "LuCI statistics" Create backup archive
++mkdir -p /etc/backup.stats
 +cd /tmp/rrd/$(uname -n)
-+logger -t "LuCI statistics" collectd stopped, create backup archive
 +tar c -zvf /etc/backup.stats/stats.tar.gz *
 +cp /etc/backup.stats/stats.tar.gz /etc/backup.stats/stats-$(date +%Y%m%dT%H%M).tar.gz
 +/etc/init.d/collectd start
@@ -356,10 +369,10 @@ index 0000000000..4222b2c6f0
 +
 diff --git a/hnscripts/createbuildinfo.sh b/hnscripts/createbuildinfo.sh
 new file mode 100755
-index 0000000000..7ab6e1165a
+index 0000000000..c08766cc38
 --- /dev/null
 +++ b/hnscripts/createbuildinfo.sh
-@@ -0,0 +1,61 @@
+@@ -0,0 +1,65 @@
 +#!/bin/sh
 +#
 +# createbuildinfo  -  Create info on current config and source code changes
@@ -387,7 +400,7 @@ index 0000000000..7ab6e1165a
 +echo process $Branch...
 +
 +# cleanup old binaries & patches
-+rm -f $BinDir/$Device-*
++rm -f $BinDir/$Device-* $BinDir/ath10k-*
 +
 +# remove unnecessary files
 +rm -f $BinDir/*root.img $BinDir/*vmlinux.elf $BinDir/*initramfs-uImage
@@ -421,6 +434,10 @@ index 0000000000..7ab6e1165a
 +mv $Prefix-squashfs-sysupgrade.bin $Device-$VersTime-sysupgrade.bin
 +mv $Prefix-squashfs-factory.img $Device-$VersTime-factory.img
 +
++# copy ath10k ct+mainline kmods
++cp packages/kmod-ath10k_* ath10k-mainline-$VersTime.ipk
++cp packages/kmod-ath10k-ct_* ath10k-ct-$VersTime.ipk
++
 diff --git a/hnscripts/kernelcompile.sh b/hnscripts/kernelcompile.sh
 new file mode 100755
 index 0000000000..8bf93a3a53
@@ -438,10 +455,10 @@ index 0000000000..8bf93a3a53
 +
 diff --git a/hnscripts/mountNcopy.sh b/hnscripts/mountNcopy.sh
 new file mode 100755
-index 0000000000..d2c5623e41
+index 0000000000..e64ecc89fd
 --- /dev/null
 +++ b/hnscripts/mountNcopy.sh
-@@ -0,0 +1,32 @@
+@@ -0,0 +1,34 @@
 +#!/bin/sh
 +#
 +# mount & copy  -  Mount the Virtualbox shared folder and copy files to PC
@@ -464,6 +481,8 @@ index 0000000000..d2c5623e41
 +sleep 2
 +cp $BinDir/*img $Mountpoint
 +sleep 2
++cp $BinDir/ath10k* $Mountpoint
++sleep 1
 +cp $BinDir/*patch $Mountpoint
 +sleep 1
 +cp $BinDir/*sh $Mountpoint
@@ -476,10 +495,10 @@ index 0000000000..d2c5623e41
 +
 diff --git a/hnscripts/newBuildroot.sh b/hnscripts/newBuildroot.sh
 new file mode 100755
-index 0000000000..2bb4f29de6
+index 0000000000..f54408801d
 --- /dev/null
 +++ b/hnscripts/newBuildroot.sh
-@@ -0,0 +1,79 @@
+@@ -0,0 +1,74 @@
 +#!/bin/sh
 +#
 +# newBuildroot.sh
@@ -495,16 +514,11 @@ index 0000000000..2bb4f29de6
 +GITREPO=https://git.openwrt.org/openwrt/openwrt.git
 +
 +## Current version
-+FILESTAMP=R7800-master-r13046-df27e949fb-20200423-1942
++FILESTAMP=R7800-master-r15838-d2d32dcd5f-20210218-1804
 +
 +### Prerequisites for buildroot
 +sudo apt-get install build-essential subversion libncurses5-dev zlib1g-dev
-+sudo apt-get install gawk gcc-multilib flex git-core gettext libssl-dev
-+
-+### Prerequisite for 18.06 and 19.07 on Ubuntu 17.10+ as it has python3 by default
-+# sudo apt-get install python
-+
-+### Prerequisite for master on Ubuntu as master needs python3 libs
++sudo apt-get install gawk gcc-multilib flex git gettext libssl-dev
 +sudo apt-get install python3-distutils
 +
 +### Prerequisites for being able to send patches to openwrt-devel
@@ -716,10 +730,10 @@ index 8c42ef782e..296ce32641 100644
  	option readethers	1
  	option leasefile	'/tmp/dhcp.leases'
 diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
-index 0f6741336b..35cca993bf 100644
+index 45a49b8faa..9fdeeda77f 100644
 --- a/package/network/services/hostapd/files/hostapd.sh
 +++ b/package/network/services/hostapd/files/hostapd.sh
-@@ -663,6 +663,11 @@ hostapd_set_bss_options() {
+@@ -665,6 +665,11 @@ hostapd_set_bss_options() {
  		set_default wps_manufacturer "www.openwrt.org"
  		set_default wps_independent 1
  
@@ -729,7 +743,7 @@ index 0f6741336b..35cca993bf 100644
 +#		set_default wps_pin "$PINdefault"
 +
  		wps_state=2
- 		[ -n "$wps_configured" ] && wps_state=1
+ 		[ -n "$wps_not_configured" ] && wps_state=1
  
 diff --git a/package/network/services/hostapd/files/wps-hotplug.sh b/package/network/services/hostapd/files/wps-hotplug.sh
 index d00939d769..0f5cc8a8cb 100644
@@ -790,25 +804,25 @@ index 0000000000..de94f592f9
 + 
 + //kbuild:lib-$(CONFIG_SORT) += sort.o
 + 
-diff --git a/target/linux/ipq806x/patches-5.4/910-tweak-cpufreq-ondemand-governor.patch b/target/linux/ipq806x/patches-5.4/910-tweak-cpufreq-ondemand-governor.patch
-new file mode 100644
-index 0000000000..c6f2f7746f
+diff --git a/target/linux/ipq806x/base-files/etc/init.d/cpufreq b/target/linux/ipq806x/base-files/etc/init.d/cpufreq
+new file mode 100755
+index 0000000000..73b9465321
 --- /dev/null
-+++ b/target/linux/ipq806x/patches-5.4/910-tweak-cpufreq-ondemand-governor.patch
++++ b/target/linux/ipq806x/base-files/etc/init.d/cpufreq
 @@ -0,0 +1,16 @@
-+--- a/drivers/cpufreq/cpufreq_ondemand.c
-++++ b/drivers/cpufreq/cpufreq_ondemand.c
-+@@ -18,10 +18,10 @@
-+ #include "cpufreq_ondemand.h"
-+ 
-+ /* On-demand governor macros */
-+-#define DEF_FREQUENCY_UP_THRESHOLD		(80)
-+-#define DEF_SAMPLING_DOWN_FACTOR		(1)
-++#define DEF_FREQUENCY_UP_THRESHOLD		(60)
-++#define DEF_SAMPLING_DOWN_FACTOR		(10)
-+ #define MAX_SAMPLING_DOWN_FACTOR		(100000)
-+-#define MICRO_FREQUENCY_UP_THRESHOLD		(95)
-++#define MICRO_FREQUENCY_UP_THRESHOLD		(60)
-+ #define MICRO_FREQUENCY_MIN_SAMPLE_RATE		(10000)
-+ #define MIN_FREQUENCY_UP_THRESHOLD		(1)
-+ #define MAX_FREQUENCY_UP_THRESHOLD		(100)
++#!/bin/sh /etc/rc.common
++
++START=15
++
++boot() {
++  # Select 'ondemand'=scaling or 'performance'=always max freq
++  echo ondemand > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
++  echo ondemand > /sys/devices/system/cpu/cpufreq/policy1/scaling_governor
++
++  # Effective only with ondemand
++  echo 600000 > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
++  echo 600000 > /sys/devices/system/cpu/cpufreq/policy1/scaling_min_freq
++  echo 20 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
++  echo 50 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
++}
++

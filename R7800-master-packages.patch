@@ -1,5 +1,5 @@
 diff --git a/net/adblock/files/adblock.conf b/net/adblock/files/adblock.conf
-index a7ad738ef..9b7ee1a8b 100644
+index a7ad738ef..586bc5b18 100644
 --- a/net/adblock/files/adblock.conf
 +++ b/net/adblock/files/adblock.conf
 @@ -1,6 +1,6 @@
@@ -10,6 +10,14 @@ index a7ad738ef..9b7ee1a8b 100644
  	option adb_debug '0'
  	option adb_forcedns '0'
  	option adb_safesearch '0'
+@@ -9,6 +9,7 @@ config adblock 'global'
+ 	option adb_report '0'
+ 	option adb_backup '1'
+ 	option adb_maxqueue '4'
++	option adb_triggerdelay '7'
+ 	list adb_sources 'adaway'
+ 	list adb_sources 'adguard'
+ 	list adb_sources 'disconnect'
 diff --git a/net/bcp38/files/bcp38.config b/net/bcp38/files/bcp38.config
 index 488daab68..f5bc3d5b4 100644
 --- a/net/bcp38/files/bcp38.config
