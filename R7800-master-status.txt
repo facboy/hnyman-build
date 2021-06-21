@@ -1,10 +1,10 @@
-master-r16372-e62ace0ecf-20210331-1814
+master-r16972-3dabb62581-20210620-1954
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2021-03-31 e62ace0 netifd: update to git HEAD
+2021-06-19 3dabb62 treewide: remove PKG_INSTALL from CMake p
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -36,9 +36,9 @@ M  package/network/services/hostapd/files/wps-hotplug.sh
 M  package/network/services/odhcpd/files/odhcpd-update
 A  package/utils/busybox/patches/310-save-history-in-tmp.patch
 A  package/utils/busybox/patches/520-move-coreutils-to-bin.patch
-A  target/linux/ipq806x/base-files/etc/init.d/cpufreq
-?? .config.init200221
-?? .config.init210221
+M  target/linux/ipq806x/base-files/etc/init.d/cpufreq
+?? .config.firewall4
+?? .config.init210421
 ?? files/etc/HNsettings.r7800-311220.cpt
 ?? version.date
 
@@ -46,7 +46,7 @@ A  target/linux/ipq806x/base-files/etc/init.d/cpufreq
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2021-03-31 cd8d7a5 Translated using Weblate (Malay)
+2021-06-18 2f0ffd9 luco-app-ksmbd, luci-app-omcproxy: use re
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  themes/luci-theme-bootstrap/root/etc/uci-defaults/30_luci-theme-bootstrap
@@ -57,7 +57,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2021-03-31 abce423 podman: Add selinux variant and several i
+2021-06-20 93c1821 Merge pull request #15923 from nxhack/icu
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch

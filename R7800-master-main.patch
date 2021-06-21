@@ -168,7 +168,7 @@ index 9647daa5a4..86407f9e62 100644
  .#*
  *#
 diff --git a/feeds.conf.default b/feeds.conf.default
-index da6c665624..0954f2f0b7 100644
+index fc679335e0..22f055a6f3 100644
 --- a/feeds.conf.default
 +++ b/feeds.conf.default
 @@ -1,7 +1,7 @@
@@ -179,19 +179,19 @@ index da6c665624..0954f2f0b7 100644
 +#src-git telephony https://git.openwrt.org/feed/telephony.git
  #src-git video https://github.com/openwrt/video.git
  #src-git targets https://github.com/openwrt/targets.git
- #src-git management https://github.com/openwrt-management/packages.git
+ #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..110328bf4b
+index 0000000000..375e9bec59
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r16372-e62ace0ecf / 2021-03-31 17:56
++OpenWrt master r16972-3dabb62581 / 2021-06-20 19:36
 +---
-+main      2021-03-31 e62ace0 netifd: update to git HEAD
-+luci      2021-03-31 cd8d7a5 Translated using Weblate (Malay)
-+packages  2021-03-31 abce423 podman: Add selinux variant and several i
-+routing   2021-03-26 b38a46a bird2: Makefile polishing
++main      2021-06-19 3dabb62 treewide: remove PKG_INSTALL from CMake p
++luci      2021-06-18 2f0ffd9 luco-app-ksmbd, luci-app-omcproxy: use re
++packages  2021-06-20 93c1821 Merge pull request #15923 from nxhack/icu
++routing   2021-06-17 b81e9c8 issuetemplate: reference foreign repos
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..26de611655
@@ -495,7 +495,7 @@ index 0000000000..e64ecc89fd
 +
 diff --git a/hnscripts/newBuildroot.sh b/hnscripts/newBuildroot.sh
 new file mode 100755
-index 0000000000..f54408801d
+index 0000000000..2f3b8cd5e1
 --- /dev/null
 +++ b/hnscripts/newBuildroot.sh
 @@ -0,0 +1,74 @@
@@ -514,7 +514,7 @@ index 0000000000..f54408801d
 +GITREPO=https://git.openwrt.org/openwrt/openwrt.git
 +
 +## Current version
-+FILESTAMP=R7800-master-r15838-d2d32dcd5f-20210218-1804
++FILESTAMP=R7800-master-r16595-f4473baf6e-20210426-2222
 +
 +### Prerequisites for buildroot
 +sudo apt-get install build-essential subversion libncurses5-dev zlib1g-dev
@@ -667,10 +667,10 @@ index 0000000000..8eff1db078
 +hnscripts/parallelcompile.sh
 +
 diff --git a/package/base-files/files/bin/config_generate b/package/base-files/files/bin/config_generate
-index ee3958e733..1308d49c15 100755
+index 596fcf41fa..76be93800a 100755
 --- a/package/base-files/files/bin/config_generate
 +++ b/package/base-files/files/bin/config_generate
-@@ -281,9 +281,10 @@ generate_static_system() {
+@@ -302,9 +302,10 @@ generate_static_system() {
  		delete system.@system[0]
  		add system system
  		set system.@system[-1].hostname='OpenWrt'
@@ -679,7 +679,7 @@ index ee3958e733..1308d49c15 100755
 +		set system.@system[-1].zonename='Europe/Helsinki'
  		set system.@system[-1].ttylogin='0'
 -		set system.@system[-1].log_size='64'
-+		set system.@system[-1].log_size='128'
++		set system.@system[-1].log_size='192'
  		set system.@system[-1].urandom_seed='0'
  
  		delete system.ntp
@@ -730,10 +730,10 @@ index 8c42ef782e..296ce32641 100644
  	option readethers	1
  	option leasefile	'/tmp/dhcp.leases'
 diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
-index 45a49b8faa..9fdeeda77f 100644
+index cf85019d56..b483c32185 100644
 --- a/package/network/services/hostapd/files/hostapd.sh
 +++ b/package/network/services/hostapd/files/hostapd.sh
-@@ -665,6 +665,11 @@ hostapd_set_bss_options() {
+@@ -713,6 +713,11 @@ hostapd_set_bss_options() {
  		set_default wps_manufacturer "www.openwrt.org"
  		set_default wps_independent 1
  
@@ -805,24 +805,15 @@ index 0000000000..de94f592f9
 + //kbuild:lib-$(CONFIG_SORT) += sort.o
 + 
 diff --git a/target/linux/ipq806x/base-files/etc/init.d/cpufreq b/target/linux/ipq806x/base-files/etc/init.d/cpufreq
-new file mode 100755
-index 0000000000..73b9465321
---- /dev/null
+index 19278902ed..b61824c877 100755
+--- a/target/linux/ipq806x/base-files/etc/init.d/cpufreq
 +++ b/target/linux/ipq806x/base-files/etc/init.d/cpufreq
-@@ -0,0 +1,16 @@
-+#!/bin/sh /etc/rc.common
-+
-+START=15
-+
-+boot() {
-+  # Select 'ondemand'=scaling or 'performance'=always max freq
-+  echo ondemand > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
-+  echo ondemand > /sys/devices/system/cpu/cpufreq/policy1/scaling_governor
-+
-+  # Effective only with ondemand
-+  echo 600000 > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
-+  echo 600000 > /sys/devices/system/cpu/cpufreq/policy1/scaling_min_freq
-+  echo 20 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
-+  echo 50 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
-+}
-+
+@@ -11,7 +11,7 @@ boot() {
+     # Effective only with ondemand
+     echo 600000 > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
+     echo 600000 > /sys/devices/system/cpu/cpufreq/policy1/scaling_min_freq
+-    echo 10 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
++    echo 20 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
+     echo 50 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
+   fi
+ }
