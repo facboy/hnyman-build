@@ -1,10 +1,10 @@
-master-r16972-3dabb62581-20210620-1954
+master-r17354-c5616a8ae1-20210819-1908
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2021-06-19 3dabb62 treewide: remove PKG_INSTALL from CMake p
+2021-08-19 c5616a8 image: fix build with SELinux
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -38,15 +38,16 @@ A  package/utils/busybox/patches/310-save-history-in-tmp.patch
 A  package/utils/busybox/patches/520-move-coreutils-to-bin.patch
 M  target/linux/ipq806x/base-files/etc/init.d/cpufreq
 ?? .config.firewall4
+?? .config.init130821
 ?? .config.init210421
-?? files/etc/HNsettings.r7800-311220.cpt
+?? files/etc/HNsettings.r7800-290721.cpt
 ?? version.date
 
 ######################################################
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2021-06-18 2f0ffd9 luco-app-ksmbd, luci-app-omcproxy: use re
+2021-08-19 adbaa8a Merge pull request #5270 from vgaetera/if
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  themes/luci-theme-bootstrap/root/etc/uci-defaults/30_luci-theme-bootstrap
@@ -57,7 +58,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2021-06-20 93c1821 Merge pull request #15923 from nxhack/icu
+2021-08-19 bbdaaac Merge pull request #16394 from turris-cz/
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
