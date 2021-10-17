@@ -1,6 +1,6 @@
 diff --git a/.config.init b/.config.init
 new file mode 100644
-index 0000000000..246a585a2c
+index 0000000000..99a08bce9c
 --- /dev/null
 +++ b/.config.init
 @@ -0,0 +1,143 @@
@@ -14,7 +14,7 @@ index 0000000000..246a585a2c
 +CONFIG_BUILD_LOG=y
 +
 +# Debugging options (build gdbserver, include package debug)
-+CONFIG_PACKAGE_gdbserver=m
++CONFIG_PACKAGE_gdbserver=y
 +CONFIG_DEBUG=y
 +
 +# Include package list in build
@@ -181,16 +181,16 @@ index fc679335e0..22f055a6f3 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..c3baf85869
+index 0000000000..6a8675261d
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r17354-c5616a8ae1 / 2021-08-19 18:47
++OpenWrt master r17753-48e209e5c5 / 2021-10-13 19:56
 +---
-+main      2021-08-19 c5616a8 image: fix build with SELinux
-+luci      2021-08-19 adbaa8a Merge pull request #5270 from vgaetera/if
-+packages  2021-08-19 bbdaaac Merge pull request #16394 from turris-cz/
-+routing   2021-08-19 383c52f cjdns: fix uci-defaults (#714)
++main      2021-10-13 48e209e tools/fakeroot: explicitly pass CPP varia
++luci      2021-10-12 1c3b32d luci-theme-openwrt: add success style for
++packages  2021-10-13 2f51a01 yq: Update to 4.13.4
++routing   2021-10-13 0bb6aa0 olsrd: wait for wireless to initialize be
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..26de611655
@@ -494,7 +494,7 @@ index 0000000000..e64ecc89fd
 +
 diff --git a/hnscripts/newBuildroot.sh b/hnscripts/newBuildroot.sh
 new file mode 100755
-index 0000000000..38c6a75eae
+index 0000000000..2934a02d96
 --- /dev/null
 +++ b/hnscripts/newBuildroot.sh
 @@ -0,0 +1,74 @@
@@ -513,7 +513,7 @@ index 0000000000..38c6a75eae
 +GITREPO=https://git.openwrt.org/openwrt/openwrt.git
 +
 +## Current version
-+FILESTAMP=R7800-master-r17265-e3096c384c-20210805-2024
++FILESTAMP=R7800-master-r17693-c2222f74c8-20211008-1900
 +
 +### Prerequisites for buildroot
 +sudo apt-get install build-essential subversion libncurses5-dev zlib1g-dev
@@ -703,6 +703,65 @@ index 2403122ad2..5746ea237a 100755
  ;;
  esac
  
+diff --git a/package/kernel/ath10k-ct/Makefile b/package/kernel/ath10k-ct/Makefile
+index 5681c5c2cd..25ea3376f0 100644
+--- a/package/kernel/ath10k-ct/Makefile
++++ b/package/kernel/ath10k-ct/Makefile
+@@ -8,9 +8,9 @@ PKG_LICENSE_FILES:=
+ 
+ PKG_SOURCE_URL:=https://github.com/greearb/ath10k-ct.git
+ PKG_SOURCE_PROTO:=git
+-PKG_SOURCE_DATE:=2021-06-03
+-PKG_SOURCE_VERSION:=b44cd7b2e7b0df5995ece18f358d4dfc40834ba1
+-PKG_MIRROR_HASH:=59f961ad425eb1a48fa9c391a325cc0f23845daec9d12673445d3077f9756cf0
++PKG_SOURCE_DATE:=2021-09-22
++PKG_SOURCE_VERSION:=e6a7d5b5b834737cd12e357b5efdc2e42d923bf6
++PKG_MIRROR_HASH:=62a1b97089d3561730656ef73beb3cd77231ec636645115cc1bbb3c6c84a6fe3
+ 
+ # Build the 5.10 ath10k-ct driver version.
+ # Probably this should match as closely as
+diff --git a/package/kernel/ath10k-ct/patches/202-ath10k-use-tpt-trigger-by-default.patch b/package/kernel/ath10k-ct/patches/202-ath10k-use-tpt-trigger-by-default.patch
+index 6205c9b661..168c6ab462 100644
+--- a/package/kernel/ath10k-ct/patches/202-ath10k-use-tpt-trigger-by-default.patch
++++ b/package/kernel/ath10k-ct/patches/202-ath10k-use-tpt-trigger-by-default.patch
+@@ -42,7 +42,7 @@ Signed-off-by: Mathias Kresin <dev@kresin.me>
+  	if (ret)
+ --- a/ath10k-5.10/mac.c
+ +++ b/ath10k-5.10/mac.c
+-@@ -11403,7 +11403,7 @@ int ath10k_mac_register(struct ath10k *a
++@@ -11405,7 +11405,7 @@ int ath10k_mac_register(struct ath10k *a
+  	ar->hw->weight_multiplier = ATH10K_AIRTIME_WEIGHT_MULTIPLIER;
+  
+  #ifdef CPTCFG_MAC80211_LEDS
+diff --git a/package/kernel/ath10k-ct/patches/203-ath10k-Try-to-get-mac-address-from-dts.patch b/package/kernel/ath10k-ct/patches/203-ath10k-Try-to-get-mac-address-from-dts.patch
+index 3b5d9d45ac..8fcdaf8c0f 100644
+--- a/package/kernel/ath10k-ct/patches/203-ath10k-Try-to-get-mac-address-from-dts.patch
++++ b/package/kernel/ath10k-ct/patches/203-ath10k-Try-to-get-mac-address-from-dts.patch
+@@ -16,8 +16,6 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+  ath10k-5.10/core.c | 10 ++++++++++
+  1 file changed, 10 insertions(+)
+ 
+-diff --git a/ath10k-5.10/core.c b/ath10k-5.10/core.c
+-index 5f4e12196..9ed7b9883 100644
+ --- a/ath10k-5.10/core.c
+ +++ b/ath10k-5.10/core.c
+ @@ -8,6 +8,7 @@
+@@ -28,7 +26,7 @@ index 5f4e12196..9ed7b9883 100644
+  #include <linux/property.h>
+  #include <linux/dmi.h>
+  #include <linux/ctype.h>
+-@@ -3062,6 +3068,8 @@ static int ath10k_core_probe_fw(struct ath10k *ar)
++@@ -3881,6 +3882,8 @@ static int ath10k_core_probe_fw(struct a
+  
+  	device_get_mac_address(ar->dev, ar->mac_addr, sizeof(ar->mac_addr));
+  
+@@ -37,6 +35,3 @@ index 5f4e12196..9ed7b9883 100644
+  	ret = ath10k_core_init_firmware_features(ar);
+  	if (ret) {
+  		ath10k_err(ar, "fatal problem with firmware features: %d\n",
+--- 
+-2.27.0
+-
 diff --git a/package/network/ipv6/6in4/files/6in4.sh b/package/network/ipv6/6in4/files/6in4.sh
 index d0904952fd..2c754b6f66 100755
 --- a/package/network/ipv6/6in4/files/6in4.sh
@@ -729,7 +788,7 @@ index 8c42ef782e..296ce32641 100644
  	option readethers	1
  	option leasefile	'/tmp/dhcp.leases'
 diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
-index 821905b05e..c0c7ec0046 100644
+index 4f306317c7..20587b7faf 100644
 --- a/package/network/services/hostapd/files/hostapd.sh
 +++ b/package/network/services/hostapd/files/hostapd.sh
 @@ -722,6 +722,11 @@ hostapd_set_bss_options() {
