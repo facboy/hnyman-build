@@ -181,16 +181,16 @@ index fc679335e0..22f055a6f3 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..6a8675261d
+index 0000000000..616a0e5639
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r17753-48e209e5c5 / 2021-10-13 19:56
++OpenWrt master r17768-7cb5af30f4 / 2021-10-17 23:48
 +---
-+main      2021-10-13 48e209e tools/fakeroot: explicitly pass CPP varia
-+luci      2021-10-12 1c3b32d luci-theme-openwrt: add success style for
-+packages  2021-10-13 2f51a01 yq: Update to 4.13.4
-+routing   2021-10-13 0bb6aa0 olsrd: wait for wireless to initialize be
++main      2021-10-17 7cb5af3 wolfssl: remove --enable-sha512 configure
++luci      2021-10-17 d1dab6c Translated using Weblate (Portuguese (Bra
++packages  2021-10-17 18261fc msmtp: update to version 1.8.17
++routing   2021-10-16 2cf253b babeld: remove unnecessray blob_buf_init 
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..26de611655

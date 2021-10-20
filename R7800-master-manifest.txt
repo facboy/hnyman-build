@@ -5,7 +5,7 @@ adblock - 4.1.3-3
 ath10k-board-qca9984 - 20210511-1
 ath10k-firmware-qca9984-ct - 2020-11-08-1
 banip - 0.7.10-3
-base-files - 1453-r17753-48e209e5c5
+base-files - 1453-r17768-7cb5af30f4
 bcp38 - 5-6
 block-mount - 2021-08-25-e1b68111-2
 busybox - 1.34.1-1
@@ -44,8 +44,8 @@ fstools - 2021-08-25-e1b68111-2
 fwtool - 2019-11-12-8f7fe925-1
 gdbserver - 10.2-1
 getrandom - 2021-08-03-205defb5-2
-hostapd-common - 2021-05-22-b102f19b-37
-hostapd-utils - 2021-05-22-b102f19b-37
+hostapd-common - 2021-05-22-b102f19b-39
+hostapd-utils - 2021-05-22-b102f19b-39
 htop - 3.1.0-2
 ip-tiny - 5.14.0-1
 ip6tables - 1.8.7-1
@@ -260,8 +260,9 @@ patch - 2.7.6-6
 ppp - 2.4.9.git-2021-01-04-3
 ppp-mod-pppoe - 2.4.9.git-2021-01-04-3
 ppp-mod-pptp - 2.4.9.git-2021-01-04-3
-procd - 2021-10-13-82dd3902-1
-procd-ujail - 2021-10-13-82dd3902-1
+procd - 2021-10-13-82dd3902-2
+procd-seccomp - 2021-10-13-82dd3902-2
+procd-ujail - 2021-10-13-82dd3902-2
 resolveip - 2
 rpcd - 2021-07-13-1fa35765-1
 rpcd-mod-file - 2021-07-13-1fa35765-1
@@ -291,5 +292,5 @@ usign - 2020-05-23-f1f65026-1
 wget-ssl - 1.21.1-1
 wireguard-tools - 1.0.20210424-1
 wireless-regdb - 2021.04.21-1
-wpad-openssl - 2021-05-22-b102f19b-37
+wpad-openssl - 2021-05-22-b102f19b-39
 zlib - 1.2.11-3
