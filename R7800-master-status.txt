@@ -1,10 +1,10 @@
-master-r17768-7cb5af30f4-20211017-2351
+master-r18621-af8a059bb4-20220122-1843
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2021-10-17 7cb5af3 wolfssl: remove --enable-sha512 configure
+2022-01-22 af8a059 ath79: add support for GL.iNet GL-XE300
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -18,6 +18,7 @@ A  files/etc/lan-repeater.sh
 A  files/etc/restoreStats.sh
 A  files/etc/saveHNsettings.sh
 A  files/etc/storeStats.sh
+A  files/etc/wifi-suite.sh
 A  hnscripts/copyPackages2tmp.sh
 A  hnscripts/createbuildinfo.sh
 A  hnscripts/kernelcompile.sh
@@ -29,9 +30,7 @@ A  hnscripts/timestampVersion.sh
 A  hnscripts/updateNmake.sh
 M  package/base-files/files/bin/config_generate
 M  package/base-files/files/etc/rc.button/reset
-M  package/kernel/ath10k-ct/Makefile
-M  package/kernel/ath10k-ct/patches/202-ath10k-use-tpt-trigger-by-default.patch
-M  package/kernel/ath10k-ct/patches/203-ath10k-Try-to-get-mac-address-from-dts.patch
+M  package/network/config/qosify/files/qosify.conf
 M  package/network/ipv6/6in4/files/6in4.sh
 M  package/network/services/dnsmasq/files/dhcp.conf
 M  package/network/services/hostapd/files/hostapd.sh
@@ -40,25 +39,39 @@ M  package/network/services/odhcpd/files/odhcpd-update
 A  package/utils/busybox/patches/310-save-history-in-tmp.patch
 A  package/utils/busybox/patches/520-move-coreutils-to-bin.patch
 M  target/linux/ipq806x/base-files/etc/init.d/cpufreq
-?? files/etc/HNsettings.r7800-290721.cpt
+M  target/linux/ipq806x/config-5.10
+M  target/linux/ipq806x/files/arch/arm/boot/dts/qcom-ipq8065-nighthawk.dtsi
+?? .config.fw3
+?? .config.init-fw4-070122
+?? .config.init061121
+?? .config.init190122
+?? .config.init201121
+?? files/etc/HNsettings.r7800-030122.cpt
+?? tinyHIPPO/
 ?? version.date
 
 ######################################################
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2021-10-17 d1dab6c Translated using Weblate (Portuguese (Bra
+2022-01-22 6ada502 Merge pull request #5642 from hgl/xfrm
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
-M  themes/luci-theme-bootstrap/root/etc/uci-defaults/30_luci-theme-bootstrap
+M  modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+A  modules/luci-mod-status/htdocs/luci-static/resources/view/status/nftables.js
+M  modules/luci-mod-status/root/usr/share/luci/menu.d/luci-mod-status.json
+M  modules/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json
 M  themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
 M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020
+?? 5652.patch
 
 ######################################################
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2021-10-17 18261fc msmtp: update to version 1.8.17
+2022-01-22 59af1d0 Merge pull request #17543 from stintel/va
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
+M  net/sqm-scripts/Makefile
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
+?? 9f721f5d46479d55da885b3bbd5fa595b2814586.patch

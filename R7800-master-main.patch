@@ -1,9 +1,9 @@
 diff --git a/.config.init b/.config.init
 new file mode 100644
-index 0000000000..99a08bce9c
+index 0000000000..f8f6669eab
 --- /dev/null
 +++ b/.config.init
-@@ -0,0 +1,143 @@
+@@ -0,0 +1,159 @@
 +# Use "make defconfig" to expand this to a full .config
 +CONFIG_TARGET_ipq806x=y
 +CONFIG_TARGET_ipq806x_generic=y
@@ -52,6 +52,7 @@ index 0000000000..99a08bce9c
 +CONFIG_DROPBEAR_ECC=y
 +CONFIG_PACKAGE_htop=y
 +CONFIG_PACKAGE_irqbalance=y
++CONFIG_PACKAGE_mtr=y
 +CONFIG_PACKAGE_nano=y
 +CONFIG_PACKAGE_patch=y
 +CONFIG_PACKAGE_tcpdump-mini=y
@@ -82,7 +83,7 @@ index 0000000000..99a08bce9c
 +CONFIG_PACKAGE_6rd=y
 +
 +# IPv6 NAT support (ip6tables NAT extensions, ipt-nat6 and nf-nat6 kmods)
-+CONFIG_PACKAGE_ip6tables-mod-nat=y
++###CONFIG_PACKAGE_ip6tables-mod-nat=y
 +
 +# WLAN/WPS support
 +CONFIG_PACKAGE_hostapd-utils=y
@@ -100,6 +101,7 @@ index 0000000000..99a08bce9c
 +CONFIG_PACKAGE_luci-app-ddns=y
 +CONFIG_PACKAGE_luci-app-sqm=y
 +CONFIG_PACKAGE_luci-app-uhttpd=y
++CONFIG_PACKAGE_miniupnpd-nftables=y
 +CONFIG_PACKAGE_luci-app-upnp=y
 +CONFIG_PACKAGE_luci-app-wol=y
 +# CONFIG_LUCI_JSMIN is not set
@@ -133,13 +135,13 @@ index 0000000000..99a08bce9c
 +CONFIG_PACKAGE_iptables-mod-ipsec=y
 +
 +# Support for IETF BCP38
-+CONFIG_PACKAGE_luci-app-bcp38=y
++#####CONFIG_PACKAGE_luci-app-bcp38=y
 +
 +# Adblock package with Luci support, initially disabled
 +CONFIG_PACKAGE_luci-app-adblock=y
 +
 +# BanIP package with Luci support, initially disabled
-+CONFIG_PACKAGE_luci-app-banip=y
++####CONFIG_PACKAGE_luci-app-banip=y
 +
 +# nlbwmon app
 +CONFIG_PACKAGE_luci-app-nlbwmon=y
@@ -147,11 +149,25 @@ index 0000000000..99a08bce9c
 +# chaoskey TRNG USB dongle
 +CONFIG_PACKAGE_kmod-chaoskey=y
 +
++# kernel module needed for qosify
++CONFIG_PACKAGE_kmod-sched-bpf=y
++
++## Build and include qosify, if the LLVM toolchain has been downloaded and
++## extracted to the buildroot before the build config is started.
++## The file can be downloaded from buildbot snapshot target downloads.
++## https://downloads.openwrt.org/snapshots/targets/ipq806x/generic/llvm-bpf-13.0.0.tar.xz
++##
++CONFIG_USE_LLVM_PREBUILT=y
++CONFIG_PACKAGE_qosify=y
++
++# NFT support for iptables
++CONFIG_PACKAGE_iptables-nft=y
++
 diff --git a/.gitignore b/.gitignore
-index 11f280d0aa..afa978df60 100644
+index a80cdbbea3..bd42cb89f3 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -12,14 +12,11 @@
+@@ -13,15 +13,12 @@
  /logs
  /feeds
  /feeds.conf
@@ -160,6 +176,7 @@ index 11f280d0aa..afa978df60 100644
  /package/feeds
  /package/openwrt-packages
  /*.patch
+ /llvm-bpf*
  key-build*
 -*.orig
 -*.rej
@@ -181,22 +198,22 @@ index fc679335e0..22f055a6f3 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..616a0e5639
+index 0000000000..acea97f92a
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r17768-7cb5af30f4 / 2021-10-17 23:48
++OpenWrt master r18621-af8a059bb4 / 2022-01-22 18:40
 +---
-+main      2021-10-17 7cb5af3 wolfssl: remove --enable-sha512 configure
-+luci      2021-10-17 d1dab6c Translated using Weblate (Portuguese (Bra
-+packages  2021-10-17 18261fc msmtp: update to version 1.8.17
-+routing   2021-10-16 2cf253b babeld: remove unnecessray blob_buf_init 
++main      2022-01-22 af8a059 ath79: add support for GL.iNet GL-XE300
++luci      2022-01-22 6ada502 Merge pull request #5642 from hgl/xfrm
++packages  2022-01-22 59af1d0 Merge pull request #17543 from stintel/va
++routing   2022-01-16 0bffe62 olsrd: add ubus ipc integration to olsrd
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
-index 0000000000..26de611655
+index 0000000000..d49760d772
 --- /dev/null
 +++ b/files/etc/applyHNsettings.sh
-@@ -0,0 +1,10 @@
+@@ -0,0 +1,11 @@
 +#!/bin/sh
 +cp -f $1 /tmp/HNsettings.cpt
 +if [ "$?" -eq 0 ] ; then
@@ -204,6 +221,7 @@ index 0000000000..26de611655
 +  if [ "$?" -eq 0 ] ; then
 +    tar -xzv -f /tmp/HNsettings -C /etc
 +    chmod 744 /etc/dropbear/authorized_keys
++    sync
 +  fi
 +fi
 +
@@ -292,10 +310,10 @@ index 0000000000..088bdbb2d5
 +
 diff --git a/files/etc/restoreStats.sh b/files/etc/restoreStats.sh
 new file mode 100755
-index 0000000000..7953eb8d9e
+index 0000000000..ef205bd577
 --- /dev/null
 +++ b/files/etc/restoreStats.sh
-@@ -0,0 +1,8 @@
+@@ -0,0 +1,9 @@
 +#!/bin/sh
 +
 +/etc/init.d/collectd stop
@@ -303,6 +321,7 @@ index 0000000000..7953eb8d9e
 +mkdir -p /tmp/rrd/$(uname -n)
 +cd /tmp/rrd/$(uname -n)
 +tar x -zvf /etc/backup.stats/stats.tar.gz
++sync
 +/etc/init.d/collectd start
 diff --git a/files/etc/saveHNsettings.sh b/files/etc/saveHNsettings.sh
 new file mode 100755
@@ -325,10 +344,10 @@ index 0000000000..5e19c8fd33
 +
 diff --git a/files/etc/storeStats.sh b/files/etc/storeStats.sh
 new file mode 100755
-index 0000000000..2eaae65af7
+index 0000000000..c72960f579
 --- /dev/null
 +++ b/files/etc/storeStats.sh
-@@ -0,0 +1,8 @@
+@@ -0,0 +1,9 @@
 +#!/bin/sh
 +/etc/init.d/collectd stop
 +logger -t "LuCI statistics" Create backup archive
@@ -336,7 +355,50 @@ index 0000000000..2eaae65af7
 +cd /tmp/rrd/$(uname -n)
 +tar c -zvf /etc/backup.stats/stats.tar.gz *
 +cp /etc/backup.stats/stats.tar.gz /etc/backup.stats/stats-$(date +%Y%m%dT%H%M).tar.gz
++sync
 +/etc/init.d/collectd start
+diff --git a/files/etc/wifi-suite.sh b/files/etc/wifi-suite.sh
+new file mode 100755
+index 0000000000..3b002ec409
+--- /dev/null
++++ b/files/etc/wifi-suite.sh
+@@ -0,0 +1,36 @@
++#!/bin/sh
++
++echo "Associated wifi stations' AKM suites:"
++cd /var/run/hostapd
++for socket in *; do
++  [ -S "$socket" ] || continue
++  [ "$socket" = "global" ] && continue
++  for assoc in $(hostapd_cli -i "$socket" list_sta); do
++    suite=$(hostapd_cli -i "$socket" sta "$assoc" | grep "AKMSuiteSelector" | cut -f 2 -d"=")
++    case "$suite" in
++        00-0f-ac-1) akm=802.1x  ;;
++        00-0f-ac-2) akm=WPA-PSK  ;;
++        00-0f-ac-3) akm=FT-802.1x  ;;
++        00-0f-ac-4) akm=WPA-PSK-FT  ;;
++        00-0f-ac-5) akm=802.1x-SHA256  ;;
++        00-0f-ac-6) akm=WPA-PSK-SHA256  ;;
++        00-0f-ac-7) akm=TDLS  ;;
++        00-0f-ac-8) akm=WPA3-SAE  ;;
++        00-0f-ac-9) akm=FT-SAE  ;;
++        00-0f-ac-10) akm=AP-PEER-KEY  ;;
++        00-0f-ac-11) akm=802.1x-suite-B  ;;
++        00-0f-ac-12) akm=802.1x-suite-B-192  ;;
++        00-0f-ac-13) akm=FT-802.1x-SHA384  ;;
++        00-0f-ac-14) akm=FILS-SHA256  ;;
++        00-0f-ac-15) akm=FILS-SHA384  ;;
++        00-0f-ac-16) akm=FT-FILS-SHA256  ;;
++        00-0f-ac-17) akm=FT-FILS-SHA384  ;;
++        00-0f-ac-18) akm=OWE  ;;
++        00-0f-ac-19) akm=FT-WPA2-PSK-SHA384  ;;
++        00-0f-ac-20) akm=WPA2-PSK-SHA384  ;;
++        *) akm="undefined" ;;
++    esac
++    echo "$socket: AKM suite of $assoc is $suite ($akm)"
++  done
++done
++
 diff --git a/hnscripts/copyPackages2tmp.sh b/hnscripts/copyPackages2tmp.sh
 new file mode 100755
 index 0000000000..4222b2c6f0
@@ -703,67 +765,23 @@ index 2403122ad2..5746ea237a 100755
  ;;
  esac
  
-diff --git a/package/kernel/ath10k-ct/Makefile b/package/kernel/ath10k-ct/Makefile
-index 5681c5c2cd..25ea3376f0 100644
---- a/package/kernel/ath10k-ct/Makefile
-+++ b/package/kernel/ath10k-ct/Makefile
-@@ -8,9 +8,9 @@ PKG_LICENSE_FILES:=
- 
- PKG_SOURCE_URL:=https://github.com/greearb/ath10k-ct.git
- PKG_SOURCE_PROTO:=git
--PKG_SOURCE_DATE:=2021-06-03
--PKG_SOURCE_VERSION:=b44cd7b2e7b0df5995ece18f358d4dfc40834ba1
--PKG_MIRROR_HASH:=59f961ad425eb1a48fa9c391a325cc0f23845daec9d12673445d3077f9756cf0
-+PKG_SOURCE_DATE:=2021-09-22
-+PKG_SOURCE_VERSION:=e6a7d5b5b834737cd12e357b5efdc2e42d923bf6
-+PKG_MIRROR_HASH:=62a1b97089d3561730656ef73beb3cd77231ec636645115cc1bbb3c6c84a6fe3
- 
- # Build the 5.10 ath10k-ct driver version.
- # Probably this should match as closely as
-diff --git a/package/kernel/ath10k-ct/patches/202-ath10k-use-tpt-trigger-by-default.patch b/package/kernel/ath10k-ct/patches/202-ath10k-use-tpt-trigger-by-default.patch
-index 6205c9b661..168c6ab462 100644
---- a/package/kernel/ath10k-ct/patches/202-ath10k-use-tpt-trigger-by-default.patch
-+++ b/package/kernel/ath10k-ct/patches/202-ath10k-use-tpt-trigger-by-default.patch
-@@ -42,7 +42,7 @@ Signed-off-by: Mathias Kresin <dev@kresin.me>
-  	if (ret)
- --- a/ath10k-5.10/mac.c
- +++ b/ath10k-5.10/mac.c
--@@ -11403,7 +11403,7 @@ int ath10k_mac_register(struct ath10k *a
-+@@ -11405,7 +11405,7 @@ int ath10k_mac_register(struct ath10k *a
-  	ar->hw->weight_multiplier = ATH10K_AIRTIME_WEIGHT_MULTIPLIER;
-  
-  #ifdef CPTCFG_MAC80211_LEDS
-diff --git a/package/kernel/ath10k-ct/patches/203-ath10k-Try-to-get-mac-address-from-dts.patch b/package/kernel/ath10k-ct/patches/203-ath10k-Try-to-get-mac-address-from-dts.patch
-index 3b5d9d45ac..8fcdaf8c0f 100644
---- a/package/kernel/ath10k-ct/patches/203-ath10k-Try-to-get-mac-address-from-dts.patch
-+++ b/package/kernel/ath10k-ct/patches/203-ath10k-Try-to-get-mac-address-from-dts.patch
-@@ -16,8 +16,6 @@ Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-  ath10k-5.10/core.c | 10 ++++++++++
-  1 file changed, 10 insertions(+)
- 
--diff --git a/ath10k-5.10/core.c b/ath10k-5.10/core.c
--index 5f4e12196..9ed7b9883 100644
- --- a/ath10k-5.10/core.c
- +++ b/ath10k-5.10/core.c
- @@ -8,6 +8,7 @@
-@@ -28,7 +26,7 @@ index 5f4e12196..9ed7b9883 100644
-  #include <linux/property.h>
-  #include <linux/dmi.h>
-  #include <linux/ctype.h>
--@@ -3062,6 +3068,8 @@ static int ath10k_core_probe_fw(struct ath10k *ar)
-+@@ -3881,6 +3882,8 @@ static int ath10k_core_probe_fw(struct a
-  
-  	device_get_mac_address(ar->dev, ar->mac_addr, sizeof(ar->mac_addr));
-  
-@@ -37,6 +35,3 @@ index 5f4e12196..9ed7b9883 100644
-  	ret = ath10k_core_init_firmware_features(ar);
-  	if (ret) {
-  		ath10k_err(ar, "fatal problem with firmware features: %d\n",
---- 
--2.27.0
--
+diff --git a/package/network/config/qosify/files/qosify.conf b/package/network/config/qosify/files/qosify.conf
+index 69c1d5949a..8bf4dfeaad 100644
+--- a/package/network/config/qosify/files/qosify.conf
++++ b/package/network/config/qosify/files/qosify.conf
+@@ -27,8 +27,8 @@ config class voice
+ config interface wan
+ 	option name wan
+ 	option disabled 1
+-	option bandwidth_up 100mbit
+-	option bandwidth_down 100mbit
++	option bandwidth_up 55mbit
++	option bandwidth_down 190mbit
+ 	option overhead_type none
+ 	# defaults:
+ 	option ingress 1
 diff --git a/package/network/ipv6/6in4/files/6in4.sh b/package/network/ipv6/6in4/files/6in4.sh
-index d0904952fd..2c754b6f66 100755
+index 5b5c7b36af..d75c6f4f41 100755
 --- a/package/network/ipv6/6in4/files/6in4.sh
 +++ b/package/network/ipv6/6in4/files/6in4.sh
 @@ -25,7 +25,7 @@ test_6in4_rfc1918()
@@ -788,10 +806,10 @@ index 8c42ef782e..296ce32641 100644
  	option readethers	1
  	option leasefile	'/tmp/dhcp.leases'
 diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
-index 4f306317c7..20587b7faf 100644
+index d9d5f34877..1f26b3ca30 100644
 --- a/package/network/services/hostapd/files/hostapd.sh
 +++ b/package/network/services/hostapd/files/hostapd.sh
-@@ -722,6 +722,11 @@ hostapd_set_bss_options() {
+@@ -763,6 +763,11 @@ hostapd_set_bss_options() {
  		set_default wps_manufacturer "www.openwrt.org"
  		set_default wps_independent 1
  
@@ -803,18 +821,29 @@ index 4f306317c7..20587b7faf 100644
  		wps_state=2
  		[ -n "$wps_not_configured" ] && wps_state=1
  
+@@ -848,8 +853,8 @@ hostapd_set_bss_options() {
+ 			json_get_vars mobility_domain ft_psk_generate_local ft_over_ds reassociation_deadline
+ 
+ 			set_default mobility_domain "$(echo "$ssid" | md5sum | head -c 4)"
+-			set_default ft_over_ds 1
+-			set_default reassociation_deadline 1000
++			set_default ft_over_ds 0
++			set_default reassociation_deadline 20000
+ 
+ 			case "$auth_type" in
+ 				psk|sae|psk-sae)
 diff --git a/package/network/services/hostapd/files/wps-hotplug.sh b/package/network/services/hostapd/files/wps-hotplug.sh
-index d00939d769..0f5cc8a8cb 100644
+index 073bdd1868..dc05718eb7 100644
 --- a/package/network/services/hostapd/files/wps-hotplug.sh
 +++ b/package/network/services/hostapd/files/wps-hotplug.sh
 @@ -39,6 +39,7 @@ wps_catch_credentials() {
  }
  
- if [ "$ACTION" = "pressed" -a "$BUTTON" = "wps" ]; then
+ if [ "$ACTION" = "released" ] && [ "$BUTTON" = "wps" ]; then
 +	logger "WPS button pressed, looking for active radios"
- 	wps_done=0
- 	ubusobjs="$( ubus -S list hostapd.* )"
- 	for ubusobj in $ubusobjs; do
+ 	# If the button was pressed for 3 seconds or more, trigger WPS on
+ 	# wpa_supplicant only, no matter if hostapd is running or not.  If
+ 	# was pressed for less than 3 seconds, try triggering on
 diff --git a/package/network/services/odhcpd/files/odhcpd-update b/package/network/services/odhcpd/files/odhcpd-update
 index c1814e00b0..b2f92bf10d 100755
 --- a/package/network/services/odhcpd/files/odhcpd-update
@@ -830,14 +859,14 @@ index c1814e00b0..b2f92bf10d 100755
  procd_send_signal dnsmasq
 diff --git a/package/utils/busybox/patches/310-save-history-in-tmp.patch b/package/utils/busybox/patches/310-save-history-in-tmp.patch
 new file mode 100644
-index 0000000000..7f5ee9ce94
+index 0000000000..ff76ddb956
 --- /dev/null
 +++ b/package/utils/busybox/patches/310-save-history-in-tmp.patch
 @@ -0,0 +1,11 @@
 +--- a/shell/ash.c
 ++++ b/shell/ash.c
-+@@ -14396,7 +14396,7 @@ int ash_main(int argc UNUSED_PARAM, char
-+ 		if (iflag) {
++@@ -14693,7 +14693,7 @@ int ash_main(int argc UNUSED_PARAM, char
++ 		if (line_input_state) {
 + 			const char *hp = lookupvar("HISTFILE");
 + 			if (!hp) {
 +-				hp = lookupvar("HOME");
@@ -875,3 +904,57 @@ index 19278902ed..b61824c877 100755
      echo 50 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
    fi
  }
+diff --git a/target/linux/ipq806x/config-5.10 b/target/linux/ipq806x/config-5.10
+index 35da3dd3c2..e22e0ce69e 100644
+--- a/target/linux/ipq806x/config-5.10
++++ b/target/linux/ipq806x/config-5.10
+@@ -365,6 +365,19 @@ CONFIG_POWER_RESET_MSM=y
+ CONFIG_POWER_SUPPLY=y
+ CONFIG_PPS=y
+ CONFIG_PRINTK_TIME=y
++CONFIG_PSTORE=y
++# CONFIG_PSTORE_842_COMPRESS is not set
++CONFIG_PSTORE_COMPRESS=y
++CONFIG_PSTORE_COMPRESS_DEFAULT="deflate"
++# CONFIG_PSTORE_CONSOLE is not set
++CONFIG_PSTORE_DEFLATE_COMPRESS=y
++CONFIG_PSTORE_DEFLATE_COMPRESS_DEFAULT=y
++# CONFIG_PSTORE_LZ4HC_COMPRESS is not set
++# CONFIG_PSTORE_LZ4_COMPRESS is not set
++# CONFIG_PSTORE_LZO_COMPRESS is not set
++# CONFIG_PSTORE_PMSG is not set
++CONFIG_PSTORE_RAM=y
++# CONFIG_PSTORE_ZSTD_COMPRESS is not set
+ CONFIG_PTP_1588_CLOCK=y
+ # CONFIG_QCOM_A53PLL is not set
+ CONFIG_QCOM_ADM=y
+@@ -397,6 +410,9 @@ CONFIG_QCOM_WDT=y
+ # CONFIG_QCS_TURING_404 is not set
+ CONFIG_RAS=y
+ CONFIG_RATIONAL=y
++CONFIG_REED_SOLOMON=y
++CONFIG_REED_SOLOMON_DEC8=y
++CONFIG_REED_SOLOMON_ENC8=y
+ CONFIG_REGMAP=y
+ CONFIG_REGMAP_MMIO=y
+ CONFIG_REGULATOR=y
+diff --git a/target/linux/ipq806x/files/arch/arm/boot/dts/qcom-ipq8065-nighthawk.dtsi b/target/linux/ipq806x/files/arch/arm/boot/dts/qcom-ipq8065-nighthawk.dtsi
+index a1fde4d698..78b4db52ac 100644
+--- a/target/linux/ipq806x/files/arch/arm/boot/dts/qcom-ipq8065-nighthawk.dtsi
++++ b/target/linux/ipq806x/files/arch/arm/boot/dts/qcom-ipq8065-nighthawk.dtsi
+@@ -13,6 +13,15 @@
+ 			reg = <0x5fe00000 0x200000>;
+ 			reusable;
+ 		};
++
++		ramoops@42100000 {
++			compatible = "ramoops";
++			reg = <0x42100000 0x40000>;
++			record-size = <0x4000>;
++			console-size = <0x4000>;
++			ftrace-size = <0x4000>;
++			pmsg-size = <0x4000>;
++		};
+ 	};
+ 
+ 	aliases {
