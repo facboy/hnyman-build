@@ -1,6 +1,6 @@
 diff --git a/.config.init b/.config.init
 new file mode 100644
-index 0000000000..f8f6669eab
+index 0000000000..b84f37bf78
 --- /dev/null
 +++ b/.config.init
 @@ -0,0 +1,159 @@
@@ -53,7 +53,7 @@ index 0000000000..f8f6669eab
 +CONFIG_PACKAGE_htop=y
 +CONFIG_PACKAGE_irqbalance=y
 +CONFIG_PACKAGE_mtr=y
-+CONFIG_PACKAGE_nano=y
++CONFIG_PACKAGE_nano-plus=y
 +CONFIG_PACKAGE_patch=y
 +CONFIG_PACKAGE_tcpdump-mini=y
 +CONFIG_PACKAGE_tree=y
@@ -83,7 +83,7 @@ index 0000000000..f8f6669eab
 +CONFIG_PACKAGE_6rd=y
 +
 +# IPv6 NAT support (ip6tables NAT extensions, ipt-nat6 and nf-nat6 kmods)
-+###CONFIG_PACKAGE_ip6tables-mod-nat=y
++####CONFIG_PACKAGE_ip6tables-mod-nat=y
 +
 +# WLAN/WPS support
 +CONFIG_PACKAGE_hostapd-utils=y
@@ -101,7 +101,6 @@ index 0000000000..f8f6669eab
 +CONFIG_PACKAGE_luci-app-ddns=y
 +CONFIG_PACKAGE_luci-app-sqm=y
 +CONFIG_PACKAGE_luci-app-uhttpd=y
-+CONFIG_PACKAGE_miniupnpd-nftables=y
 +CONFIG_PACKAGE_luci-app-upnp=y
 +CONFIG_PACKAGE_luci-app-wol=y
 +# CONFIG_LUCI_JSMIN is not set
@@ -135,7 +134,7 @@ index 0000000000..f8f6669eab
 +CONFIG_PACKAGE_iptables-mod-ipsec=y
 +
 +# Support for IETF BCP38
-+#####CONFIG_PACKAGE_luci-app-bcp38=y
++####CONFIG_PACKAGE_luci-app-bcp38=y
 +
 +# Adblock package with Luci support, initially disabled
 +CONFIG_PACKAGE_luci-app-adblock=y
@@ -162,6 +161,7 @@ index 0000000000..f8f6669eab
 +
 +# NFT support for iptables
 +CONFIG_PACKAGE_iptables-nft=y
++CONFIG_PACKAGE_ip6tables-nft=y
 +
 diff --git a/.gitignore b/.gitignore
 index a80cdbbea3..bd42cb89f3 100644
@@ -198,16 +198,16 @@ index fc679335e0..22f055a6f3 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..acea97f92a
+index 0000000000..27a961e9f3
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r18621-af8a059bb4 / 2022-01-22 18:40
++OpenWrt master r18722-e045e40671 / 2022-02-03 18:57
 +---
-+main      2022-01-22 af8a059 ath79: add support for GL.iNet GL-XE300
-+luci      2022-01-22 6ada502 Merge pull request #5642 from hgl/xfrm
-+packages  2022-01-22 59af1d0 Merge pull request #17543 from stintel/va
-+routing   2022-01-16 0bffe62 olsrd: add ubus ipc integration to olsrd
++main      2022-02-03 e045e40 mt76: update to the latest version
++luci      2022-02-02 6524da4 Translated using Weblate (French)
++packages  2022-02-03 71e81d9 rtklib: update to 2.4.3 b34; fix patches
++routing   2022-02-01 879725c babeld: remove unused return variable
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772

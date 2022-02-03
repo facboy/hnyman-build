@@ -31,7 +31,7 @@ index 488daab68..f5bc3d5b4 100644
  	list match '127.0.0.0/8'
  	list match '192.0.2.0/24'    # RFC 5737
 diff --git a/net/sqm-scripts/Makefile b/net/sqm-scripts/Makefile
-index f23a0adac..511de75e4 100644
+index f23a0adac..421f6f411 100644
 --- a/net/sqm-scripts/Makefile
 +++ b/net/sqm-scripts/Makefile
 @@ -24,8 +24,7 @@ include $(INCLUDE_DIR)/package.mk
@@ -40,7 +40,7 @@ index f23a0adac..511de75e4 100644
    CATEGORY:=Base system
 -  DEPENDS:=+tc +kmod-sched-cake +kmod-ifb +iptables \
 -	+iptables-mod-ipopt +iptables-mod-conntrack-extra
-+  DEPENDS:=+tc +kmod-sched-cake +kmod-ifb +iptables +iptables-nft
++  DEPENDS:=+tc +kmod-sched-cake +kmod-ifb +iptables-nft +iptables-mod-ipopt
    TITLE:=SQM Scripts (QoS)
    PKGARCH:=all
  endef

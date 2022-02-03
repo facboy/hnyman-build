@@ -1,10 +1,10 @@
-master-r18621-af8a059bb4-20220122-1843
+master-r18722-e045e40671-20220203-1916
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2022-01-22 af8a059 ath79: add support for GL.iNet GL-XE300
+2022-02-03 e045e40 mt76: update to the latest version
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -46,15 +46,17 @@ M  target/linux/ipq806x/files/arch/arm/boot/dts/qcom-ipq8065-nighthawk.dtsi
 ?? .config.init061121
 ?? .config.init190122
 ?? .config.init201121
+?? .config.init260122
+?? .config.init270122
+?? .config.init310122
 ?? files/etc/HNsettings.r7800-030122.cpt
-?? tinyHIPPO/
 ?? version.date
 
 ######################################################
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2022-01-22 6ada502 Merge pull request #5642 from hgl/xfrm
+2022-02-02 6524da4 Translated using Weblate (French)
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
@@ -64,14 +66,15 @@ M  modules/luci-mod-status/root/usr/share/rpcd/acl.d/luci-mod-status.json
 M  themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
 M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020
 ?? 5652.patch
+?? new5.patch
 
 ######################################################
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2022-01-22 59af1d0 Merge pull request #17543 from stintel/va
+2022-02-03 71e81d9 rtklib: update to 2.4.3 b34; fix patches
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
-M  net/sqm-scripts/Makefile
+ M net/sqm-scripts/Makefile
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
-?? 9f721f5d46479d55da885b3bbd5fa595b2814586.patch
+?? 17671.patch

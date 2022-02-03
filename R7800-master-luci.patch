@@ -69,10 +69,10 @@ index 46947ae4c..2bd9b85f5 100644
  config internal apply
  	option rollback 90
 diff --git a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
-index e2daf9ebe..f43afb0af 100644
+index a81228543..9dbe373fe 100644
 --- a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
 +++ b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
-@@ -1521,15 +1521,15 @@ return view.extend({
+@@ -1524,15 +1524,15 @@ return view.extend({
  
  					o = ss.taboption('encryption', form.Value, 'reassociation_deadline', _('Reassociation Deadline'), _('time units (TUs / 1.024 ms) [1000-65535]'));
  					o.depends({ ieee80211r: '1' });
@@ -93,10 +93,10 @@ index e2daf9ebe..f43afb0af 100644
  					o.depends({ ieee80211r: '1' });
 diff --git a/modules/luci-mod-status/htdocs/luci-static/resources/view/status/nftables.js b/modules/luci-mod-status/htdocs/luci-static/resources/view/status/nftables.js
 new file mode 100644
-index 000000000..6cc12c1f7
+index 000000000..e5b85c405
 --- /dev/null
 +++ b/modules/luci-mod-status/htdocs/luci-static/resources/view/status/nftables.js
-@@ -0,0 +1,636 @@
+@@ -0,0 +1,651 @@
 +'use strict';
 +'require view';
 +'require poll';
@@ -213,7 +213,9 @@ index 000000000..6cc12c1f7
 +	'limit': _('At most <strong>%h</strong> per <strong>%h</strong>, burst of <strong>%h</strong>'),
 +	'limit.burst': _('At most <strong>%h</strong> per <strong>%h</strong>, burst of <strong>%h</strong>'),
 +	'limit.inv': _('At least <strong>%h</strong> per <strong>%h</strong>, burst of <strong>%h</strong>'),
-+	'limit.inv.burst': _('At least <strong>%h</strong> per <strong>%h</strong>, burst of <strong>%h</strong>')
++	'limit.inv.burst': _('At least <strong>%h</strong> per <strong>%h</strong>, burst of <strong>%h</strong>'),
++
++	'return': _('Continue in calling chain')
 +};
 +
 +return view.extend({
@@ -234,6 +236,7 @@ index 000000000..6cc12c1f7
 +				case 'redirect':
 +				case 'mangle':
 +				case 'masquerade':
++				case 'return':
 +					return true;
 +				}
 +			}
@@ -336,6 +339,14 @@ index 000000000..6cc12c1f7
 +		case 'range':
 +			return '%s-%s'.format(this.exprToString(spec[0], hint), this.exprToString(spec[1], hint));
 +
++		case '&':
++		case '|':
++		case '^':
++			return '%s %h %s'.format(
++				this.exprToString(spec[0], hint),
++				kind,
++				Array.isArray(spec[1]) ? '(%h)'.format(spec[1].join('|')) : this.exprToString(spec[1], hint));
++
 +		default:
 +			var k = this.exprToKey(expr);
 +
@@ -433,6 +444,10 @@ index 000000000..6cc12c1f7
 +				'class': 'ifacebadge'
 +			}, action_translations.jump.format(table, spec.target, spec.target));
 +
++		case 'return':
++			return E('span', {
++				'class': 'ifacebadge'
++			}, action_translations.return);
 +
 +		case 'snat':
 +		case 'dnat':
@@ -511,7 +526,7 @@ index 000000000..6cc12c1f7
 +		return E('span', { 'class': 'ifacebadge cbi-tooltip-container nft-counter' }, [
 +			E('var', [ '%.1024mB'.format(data.bytes) ]),
 +			E('div', { 'class': 'cbi-tooltip' }, [
-+				_('Traffic matched by rule: %.1000m Packets, %.1024m Bytes', 'nft counter').format(data.packets, data.bytes)
++				_('Traffic matched by rule: %.1000mPackets, %.1024mBytes', 'nft counter').format(data.packets, data.bytes)
 +			])
 +		]);
 +	},
