@@ -157,3 +157,6 @@ CONFIG_PACKAGE_qosify=y
 CONFIG_PACKAGE_iptables-nft=y
 CONFIG_PACKAGE_ip6tables-nft=y
 
+# RAMoops - kernel crash logs in /sys/fs/pstore
+CONFIG_PACKAGE_kmod-ramoops=y
+

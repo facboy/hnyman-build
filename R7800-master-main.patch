@@ -1,9 +1,9 @@
 diff --git a/.config.init b/.config.init
 new file mode 100644
-index 0000000000..b84f37bf78
+index 0000000000..8446f19acf
 --- /dev/null
 +++ b/.config.init
-@@ -0,0 +1,159 @@
+@@ -0,0 +1,162 @@
 +# Use "make defconfig" to expand this to a full .config
 +CONFIG_TARGET_ipq806x=y
 +CONFIG_TARGET_ipq806x_generic=y
@@ -163,6 +163,9 @@ index 0000000000..b84f37bf78
 +CONFIG_PACKAGE_iptables-nft=y
 +CONFIG_PACKAGE_ip6tables-nft=y
 +
++# RAMoops - kernel crash logs in /sys/fs/pstore
++CONFIG_PACKAGE_kmod-ramoops=y
++
 diff --git a/.gitignore b/.gitignore
 index a80cdbbea3..bd42cb89f3 100644
 --- a/.gitignore
@@ -198,16 +201,16 @@ index fc679335e0..22f055a6f3 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..27a961e9f3
+index 0000000000..c54033edf0
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r18722-e045e40671 / 2022-02-03 18:57
++OpenWrt master r18806-2120cad38d / 2022-02-14 20:28
 +---
-+main      2022-02-03 e045e40 mt76: update to the latest version
-+luci      2022-02-02 6524da4 Translated using Weblate (French)
-+packages  2022-02-03 71e81d9 rtklib: update to 2.4.3 b34; fix patches
-+routing   2022-02-01 879725c babeld: remove unused return variable
++main      2022-02-14 2120cad build: store source_date_epoch as integer
++luci      2022-02-13 1f525bd Translated using Weblate (Ukrainian)
++packages  2022-02-14 6b04175 auc: fall back to 'sdcard' image
++routing   2022-02-13 4afbe17 olsrd: fix setting default interface conf
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -765,6 +768,84 @@ index 2403122ad2..5746ea237a 100755
  ;;
  esac
  
+diff --git a/package/kernel/linux/modules/fs.mk b/package/kernel/linux/modules/fs.mk
+index f9e1b132c7..c6032af675 100644
+--- a/package/kernel/linux/modules/fs.mk
++++ b/package/kernel/linux/modules/fs.mk
+@@ -498,6 +498,27 @@ endef
+ $(eval $(call KernelPackage,fs-ntfs))
+ 
+ 
++define KernelPackage/pstore
++  SUBMENU:=$(FS_MENU)
++  TITLE:=Pstore file system
++  DEFAULT:=m if ALL_KMODS
++  KCONFIG:= \
++	CONFIG_PSTORE \
++	CONFIG_PSTORE_COMPRESS=y \
++	CONFIG_PSTORE_COMPRESS_DEFAULT="deflate" \
++	CONFIG_PSTORE_DEFLATE_COMPRESS=y \
++	CONFIG_PSTORE_DEFLATE_COMPRESS_DEFAULT=y
++  FILES:= $(LINUX_DIR)/fs/pstore/pstore.ko
++  AUTOLOAD:=$(call AutoLoad,30,pstore,1)
++endef
++
++define KernelPackage/pstore/description
++ Kernel module for pstore filesystem support
++endef
++
++$(eval $(call KernelPackage,pstore))
++
++
+ define KernelPackage/fs-reiserfs
+   SUBMENU:=$(FS_MENU)
+   TITLE:=ReiserFS filesystem support
+diff --git a/package/kernel/linux/modules/other.mk b/package/kernel/linux/modules/other.mk
+index f712c95c8e..5ccc860790 100644
+--- a/package/kernel/linux/modules/other.mk
++++ b/package/kernel/linux/modules/other.mk
+@@ -770,6 +770,41 @@ endef
+ $(eval $(call KernelPackage,mtdram))
+ 
+ 
++define KernelPackage/ramoops
++  SUBMENU:=$(OTHER_MENU)
++  TITLE:=Ramoops (pstore-ram)
++  DEFAULT:=m if ALL_KMODS
++  KCONFIG:=CONFIG_PSTORE_RAM
++  DEPENDS:=+kmod-pstore +kmod-reed-solomon
++  FILES:= $(LINUX_DIR)/fs/pstore/ramoops.ko
++  AUTOLOAD:=$(call AutoLoad,30,ramoops,1)
++endef
++
++define KernelPackage/ramoops/description
++ Kernel module for pstore-ram (ramoops) crash log storage
++endef
++
++$(eval $(call KernelPackage,ramoops))
++
++
++define KernelPackage/reed-solomon
++  SUBMENU:=$(OTHER_MENU)
++  TITLE:=Reed-Solomon error correction
++  DEFAULT:=m if ALL_KMODS
++  KCONFIG:=CONFIG_REED_SOLOMON \
++	CONFIG_REED_SOLOMON_DEC8=y \
++	CONFIG_REED_SOLOMON_ENC8=y
++  FILES:= $(LINUX_DIR)/lib/reed_solomon/reed_solomon.ko
++  AUTOLOAD:=$(call AutoLoad,30,reed_solomon,1)
++endef
++
++define KernelPackage/reed-solomon/description
++ Kernel module for Reed-Solomon error correction
++endef
++
++$(eval $(call KernelPackage,reed-solomon))
++
++
+ define KernelPackage/serial-8250
+   SUBMENU:=$(OTHER_MENU)
+   TITLE:=8250 UARTs
 diff --git a/package/network/config/qosify/files/qosify.conf b/package/network/config/qosify/files/qosify.conf
 index 69c1d5949a..8bf4dfeaad 100644
 --- a/package/network/config/qosify/files/qosify.conf
@@ -891,6 +972,39 @@ index 0000000000..de94f592f9
 + 
 + //kbuild:lib-$(CONFIG_SORT) += sort.o
 + 
+diff --git a/target/linux/generic/config-5.10 b/target/linux/generic/config-5.10
+index 9595da0346..204a60e5b3 100644
+--- a/target/linux/generic/config-5.10
++++ b/target/linux/generic/config-5.10
+@@ -4582,6 +4582,18 @@ CONFIG_PROC_SYSCTL=y
+ # CONFIG_PSB6970_PHY is not set
+ # CONFIG_PSI is not set
+ # CONFIG_PSTORE is not set
++# CONFIG_PSTORE_COMPRESS is not set
++# CONFIG_PSTORE_COMPRESS_DEFAULT="deflate"
++# CONFIG_PSTORE_CONSOLE is not set
++# CONFIG_PSTORE_DEFLATE_COMPRESS is not set
++# CONFIG_PSTORE_DEFLATE_COMPRESS_DEFAULT is not set
++# CONFIG_PSTORE_842_COMPRESS is not set
++# CONFIG_PSTORE_LZ4_COMPRESS is not set
++# CONFIG_PSTORE_LZ4HC_COMPRESS is not set
++# CONFIG_PSTORE_LZO_COMPRESS is not set
++# CONFIG_PSTORE_PMSG is not set
++# CONFIG_PSTORE_RAM is not set
++# CONFIG_PSTORE_ZSTD_COMPRESS is not set
+ # CONFIG_PTDUMP_DEBUGFS is not set
+ # CONFIG_PTP_1588_CLOCK is not set
+ # CONFIG_PTP_1588_CLOCK_IDT82P33 is not set
+@@ -4691,6 +4703,9 @@ CONFIG_RCU_TORTURE_TEST_SLOW_INIT_DELAY=3
+ # CONFIG_READ_ONLY_THP_FOR_FS is not set
+ # CONFIG_REALTEK_PHY is not set
+ # CONFIG_REDWOOD is not set
++# CONFIG_REED_SOLOMON is not set
++# CONFIG_REED_SOLOMON_DEC8 is not set
++# CONFIG_REED_SOLOMON_ENC8 is not set
+ # CONFIG_REED_SOLOMON_TEST is not set
+ # CONFIG_REGMAP is not set
+ # CONFIG_REGMAP_I2C is not set
 diff --git a/target/linux/ipq806x/base-files/etc/init.d/cpufreq b/target/linux/ipq806x/base-files/etc/init.d/cpufreq
 index 19278902ed..b61824c877 100755
 --- a/target/linux/ipq806x/base-files/etc/init.d/cpufreq
@@ -904,42 +1018,8 @@ index 19278902ed..b61824c877 100755
      echo 50 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
    fi
  }
-diff --git a/target/linux/ipq806x/config-5.10 b/target/linux/ipq806x/config-5.10
-index 35da3dd3c2..e22e0ce69e 100644
---- a/target/linux/ipq806x/config-5.10
-+++ b/target/linux/ipq806x/config-5.10
-@@ -365,6 +365,19 @@ CONFIG_POWER_RESET_MSM=y
- CONFIG_POWER_SUPPLY=y
- CONFIG_PPS=y
- CONFIG_PRINTK_TIME=y
-+CONFIG_PSTORE=y
-+# CONFIG_PSTORE_842_COMPRESS is not set
-+CONFIG_PSTORE_COMPRESS=y
-+CONFIG_PSTORE_COMPRESS_DEFAULT="deflate"
-+# CONFIG_PSTORE_CONSOLE is not set
-+CONFIG_PSTORE_DEFLATE_COMPRESS=y
-+CONFIG_PSTORE_DEFLATE_COMPRESS_DEFAULT=y
-+# CONFIG_PSTORE_LZ4HC_COMPRESS is not set
-+# CONFIG_PSTORE_LZ4_COMPRESS is not set
-+# CONFIG_PSTORE_LZO_COMPRESS is not set
-+# CONFIG_PSTORE_PMSG is not set
-+CONFIG_PSTORE_RAM=y
-+# CONFIG_PSTORE_ZSTD_COMPRESS is not set
- CONFIG_PTP_1588_CLOCK=y
- # CONFIG_QCOM_A53PLL is not set
- CONFIG_QCOM_ADM=y
-@@ -397,6 +410,9 @@ CONFIG_QCOM_WDT=y
- # CONFIG_QCS_TURING_404 is not set
- CONFIG_RAS=y
- CONFIG_RATIONAL=y
-+CONFIG_REED_SOLOMON=y
-+CONFIG_REED_SOLOMON_DEC8=y
-+CONFIG_REED_SOLOMON_ENC8=y
- CONFIG_REGMAP=y
- CONFIG_REGMAP_MMIO=y
- CONFIG_REGULATOR=y
 diff --git a/target/linux/ipq806x/files/arch/arm/boot/dts/qcom-ipq8065-nighthawk.dtsi b/target/linux/ipq806x/files/arch/arm/boot/dts/qcom-ipq8065-nighthawk.dtsi
-index a1fde4d698..78b4db52ac 100644
+index fc869c9ec0..cca887bb3b 100644
 --- a/target/linux/ipq806x/files/arch/arm/boot/dts/qcom-ipq8065-nighthawk.dtsi
 +++ b/target/linux/ipq806x/files/arch/arm/boot/dts/qcom-ipq8065-nighthawk.dtsi
 @@ -13,6 +13,15 @@

@@ -30,20 +30,6 @@ index 488daab68..f5bc3d5b4 100644
  	option detect_upstream 1
  	list match '127.0.0.0/8'
  	list match '192.0.2.0/24'    # RFC 5737
-diff --git a/net/sqm-scripts/Makefile b/net/sqm-scripts/Makefile
-index f23a0adac..421f6f411 100644
---- a/net/sqm-scripts/Makefile
-+++ b/net/sqm-scripts/Makefile
-@@ -24,8 +24,7 @@ include $(INCLUDE_DIR)/package.mk
- define Package/sqm-scripts
-   SECTION:=net
-   CATEGORY:=Base system
--  DEPENDS:=+tc +kmod-sched-cake +kmod-ifb +iptables \
--	+iptables-mod-ipopt +iptables-mod-conntrack-extra
-+  DEPENDS:=+tc +kmod-sched-cake +kmod-ifb +iptables-nft +iptables-mod-ipopt
-   TITLE:=SQM Scripts (QoS)
-   PKGARCH:=all
- endef
 diff --git a/net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch b/net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
 new file mode 100644
 index 000000000..c9850128d
