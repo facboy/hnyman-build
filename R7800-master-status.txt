@@ -1,10 +1,10 @@
-master-r18806-2120cad38d-20220214-2048
+master-r18881-4d8020072e-20220218-1847
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2022-02-14 2120cad build: store source_date_epoch as integer
+2022-02-18 4d80200 realtek: fix locking bug in rtl838x_hw_re
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -60,7 +60,7 @@ M  target/linux/ipq806x/files/arch/arm/boot/dts/qcom-ipq8065-nighthawk.dtsi
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2022-02-13 1f525bd Translated using Weblate (Ukrainian)
+2022-02-18 3db6c9b Translated using Weblate (Ukrainian)
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
@@ -71,7 +71,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2022-02-14 6b04175 auc: fall back to 'sdcard' image
+2022-02-17 c48a375 haproxy: Update HAProxy to v2.4.13
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch

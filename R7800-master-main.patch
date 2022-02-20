@@ -187,29 +187,29 @@ index a80cdbbea3..bd42cb89f3 100644
  .#*
  *#
 diff --git a/feeds.conf.default b/feeds.conf.default
-index fc679335e0..22f055a6f3 100644
+index 50ae67cb9d..9899b1d1f4 100644
 --- a/feeds.conf.default
 +++ b/feeds.conf.default
 @@ -1,7 +1,7 @@
- src-git packages https://git.openwrt.org/feed/packages.git
- src-git luci https://git.openwrt.org/project/luci.git
- src-git routing https://git.openwrt.org/feed/routing.git
--src-git telephony https://git.openwrt.org/feed/telephony.git
-+#src-git telephony https://git.openwrt.org/feed/telephony.git
- #src-git video https://github.com/openwrt/video.git
- #src-git targets https://github.com/openwrt/targets.git
- #src-git oldpackages http://git.openwrt.org/packages.git
+ src-git-full packages https://git.openwrt.org/feed/packages.git
+ src-git-full luci https://git.openwrt.org/project/luci.git
+ src-git-full routing https://git.openwrt.org/feed/routing.git
+-src-git-full telephony https://git.openwrt.org/feed/telephony.git
++#src-git-full telephony https://git.openwrt.org/feed/telephony.git
+ #src-git-full video https://github.com/openwrt/video.git
+ #src-git-full targets https://github.com/openwrt/targets.git
+ #src-git-full oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..c54033edf0
+index 0000000000..07d67eec29
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r18806-2120cad38d / 2022-02-14 20:28
++OpenWrt master r18881-4d8020072e / 2022-02-18 18:27
 +---
-+main      2022-02-14 2120cad build: store source_date_epoch as integer
-+luci      2022-02-13 1f525bd Translated using Weblate (Ukrainian)
-+packages  2022-02-14 6b04175 auc: fall back to 'sdcard' image
++main      2022-02-18 4d80200 realtek: fix locking bug in rtl838x_hw_re
++luci      2022-02-18 3db6c9b Translated using Weblate (Ukrainian)
++packages  2022-02-17 c48a375 haproxy: Update HAProxy to v2.4.13
 +routing   2022-02-13 4afbe17 olsrd: fix setting default interface conf
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755

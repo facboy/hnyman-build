@@ -4,7 +4,7 @@
 adblock - 4.1.3-5
 ath10k-board-qca9984 - 20211216-2
 ath10k-firmware-qca9984-ct - 2020-11-08-1
-base-files - 1464-r18806-2120cad38d
+base-files - 1465-r18881-4d8020072e
 block-mount - 2021-11-16-77c02889-1
 busybox - 1.35.0-1
 ca-bundle - 20211016-1
@@ -218,7 +218,7 @@ luci - git-20.074.84698-ead5e81
 luci-app-adblock - git-22.038.79726-2ab828f
 luci-app-commands - git-21.099.45379-36959dc
 luci-app-ddns - git-21.187.20976-699b7f0
-luci-app-firewall - git-22.006.47037-48599d8
+luci-app-firewall - git-22.046.84457-2178444
 luci-app-nlbwmon - git-21.183.06323-fb52e86
 luci-app-opkg - git-21.312.69814-02398a3
 luci-app-sqm - git-21.164.25180-005c09a
@@ -227,7 +227,7 @@ luci-app-uhttpd - git-22.029.54222-e3fbfe9
 luci-app-upnp - git-20.332.74200-03c77da
 luci-app-wireguard - git-21.322.66896-8ae208d
 luci-app-wol - git-21.154.28269-c7b7b42
-luci-base - git-22.025.79016-22e2bfb
+luci-base - git-22.046.84457-2178444
 luci-compat - git-21.223.24521-5844764
 luci-lib-base - git-20.232.39649-1f6dc29
 luci-lib-ip - git-20.250.76529-62505bd
@@ -262,9 +262,9 @@ patch - 2.7.6-6
 ppp - 2.4.9.git-2021-01-04-3
 ppp-mod-pppoe - 2.4.9.git-2021-01-04-3
 ppp-mod-pptp - 2.4.9.git-2021-01-04-3
-procd - 2022-01-31-cb0031c4-4
-procd-seccomp - 2022-01-31-cb0031c4-4
-procd-ujail - 2022-01-31-cb0031c4-4
+procd - 2022-02-18-a839518d-1
+procd-seccomp - 2022-02-18-a839518d-1
+procd-ujail - 2022-02-18-a839518d-1
 qosify - 2022-02-10-8d6c19a8
 resolveip - 2
 rpcd - 2022-02-07-909f2a04-1
