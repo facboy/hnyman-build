@@ -157,3 +157,6 @@ CONFIG_PACKAGE_qosify=y
 CONFIG_PACKAGE_iptables-nft=y
 CONFIG_PACKAGE_ip6tables-nft=y
 
+# ipset and kernel module
+CONFIG_PACKAGE_ipset=y
+

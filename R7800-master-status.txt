@@ -1,10 +1,10 @@
-master-r19623-064e7e57b4-20220513-1703
+master-r19863-fd72e595c2-20220620-1920
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2022-05-13 064e7e5 ramips: fix booting on Samknows SK-WB8
+2022-06-20 fd72e59 ramips: fix booting on ZyXEL NBG-419N v2
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -40,6 +40,7 @@ A  package/utils/busybox/patches/310-save-history-in-tmp.patch
 A  package/utils/busybox/patches/520-move-coreutils-to-bin.patch
 M  target/linux/ipq806x/base-files/etc/init.d/cpufreq
 ?? .config.init220422
+?? .config.init220522
 ?? files/etc/HNsettings.r7800-030122.cpt
 ?? version.date
 
@@ -47,7 +48,7 @@ M  target/linux/ipq806x/base-files/etc/init.d/cpufreq
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2022-05-10 4e768e5 Translated using Weblate (Polish)
+2022-06-20 cc3d97c luci-base: remove redundant english trans
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
@@ -58,7 +59,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2022-05-13 f906a32 haproxy: Update HAProxy to v2.4.16
+2022-06-19 b9a47cc django: bump to version 4.0.5
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
