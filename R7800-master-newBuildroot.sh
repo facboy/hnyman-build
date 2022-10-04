@@ -5,7 +5,7 @@
 # Creates the build environment with the current directory as the root
 # To avoid problems with long paths, something like /Openwrt is preferable
 #
-# Script creates subdir for trunk or the release branch, and dl for downloads
+# Script creates subdir for master (or the release branch), and dl for downloads
 # Creates main source repository and luci, packages & routing feeds
 
 ### Target definitions
@@ -13,9 +13,9 @@ TARGET=master
 GITREPO=https://git.openwrt.org/openwrt/openwrt.git
 
 ## Current version
-FILESTAMP=R7800-master-r19863-fd72e595c2-20220620-1920
+FILESTAMP=R7800-master-r20751-6e9613844c-20220925-2102
 
-### Prerequisites for buildroot
+### Prerequisites for buildroot for the current Ubuntu
 sudo apt-get install build-essential libncurses5-dev zlib1g-dev
 sudo apt-get install gawk gcc-multilib flex git gettext libssl-dev
 sudo apt-get install python3-distutils

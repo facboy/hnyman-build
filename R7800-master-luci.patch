@@ -1,5 +1,5 @@
 diff --git a/applications/luci-app-statistics/root/etc/config/luci_statistics b/applications/luci-app-statistics/root/etc/config/luci_statistics
-index 43d825bc95..28c7bec537 100644
+index 43d825bc95..1822d9fd7f 100644
 --- a/applications/luci-app-statistics/root/etc/config/luci_statistics
 +++ b/applications/luci-app-statistics/root/etc/config/luci_statistics
 @@ -67,7 +67,7 @@ config statistics 'collectd_chrony'
@@ -21,14 +21,7 @@ index 43d825bc95..28c7bec537 100644
  
  config statistics 'collectd_curl'
  	option enable '0'
-@@ -108,16 +109,16 @@ config statistics 'collectd_dns'
- 	option IgnoreSources '127.0.0.1'
- 
- config statistics 'collectd_entropy'
--	option enable '0'
-+	option enable '1'
- 
- config statistics 'collectd_exec'
+@@ -114,10 +115,10 @@ config statistics 'collectd_exec'
  	option enable '0'
  
  #example for sqm_collect plugin
@@ -69,10 +62,10 @@ index 46947ae4c1..2bd9b85f5e 100644
  config internal apply
  	option rollback 90
 diff --git a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
-index a81228543d..9dbe373fe2 100644
+index e5e2173462..688c3f9121 100644
 --- a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
 +++ b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
-@@ -1524,15 +1524,15 @@ return view.extend({
+@@ -1538,7 +1538,7 @@ return view.extend({
  
  					o = ss.taboption('encryption', form.Value, 'reassociation_deadline', _('Reassociation Deadline'), _('time units (TUs / 1.024 ms) [1000-65535]'));
  					o.depends({ ieee80211r: '1' });
@@ -81,16 +74,6 @@ index a81228543d..9dbe373fe2 100644
  					o.datatype = 'range(1000,65535)';
  					o.rmempty = true;
  
- 					o = ss.taboption('encryption', form.ListValue, 'ft_over_ds', _('FT protocol'));
- 					o.depends({ ieee80211r: '1' });
--					o.value('1', _('FT over DS'));
- 					o.value('0', _('FT over the Air'));
--					o.rmempty = true;
-+					o.value('1', _('FT over DS'));
-+					o.rmempty = false;
- 
- 					o = ss.taboption('encryption', form.Flag, 'ft_psk_generate_local', _('Generate PMK locally'), _('When using a PSK, the PMK can be automatically generated. When enabled, the R0/R1 key options below are not applied. Disable this to use the R0 and R1 key options.'));
- 					o.depends({ ieee80211r: '1' });
 diff --git a/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material b/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
 index 7f07239ec0..e7c376df80 100755
 --- a/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material

@@ -1,13 +1,13 @@
-master-r19863-fd72e595c2-20220620-1920
+master-r20751-6e9613844c-20220925-2102
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2022-06-20 fd72e59 ramips: fix booting on ZyXEL NBG-419N v2
+2022-09-25 6e96138 mt76: fix compilation error with mt7915 a
 A  .config.init
 M  .gitignore
-M  feeds.conf.default
+MM feeds.conf.default
 A  files/etc/Compile_info.txt
 A  files/etc/applyHNsettings.sh
 A  files/etc/backup.stats/.placeholder
@@ -39,8 +39,10 @@ M  package/network/services/odhcpd/files/odhcpd-update
 A  package/utils/busybox/patches/310-save-history-in-tmp.patch
 A  package/utils/busybox/patches/520-move-coreutils-to-bin.patch
 M  target/linux/ipq806x/base-files/etc/init.d/cpufreq
+?? .config.init040922
 ?? .config.init220422
 ?? .config.init220522
+?? .config.minimal
 ?? files/etc/HNsettings.r7800-030122.cpt
 ?? version.date
 
@@ -48,7 +50,7 @@ M  target/linux/ipq806x/base-files/etc/init.d/cpufreq
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2022-06-20 cc3d97c luci-base: remove redundant english trans
+2022-09-24 27060f3 luci-app-adblock: remove stub lua control
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
@@ -59,7 +61,14 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2022-06-19 b9a47cc django: bump to version 4.0.5
+2022-09-25 256d026 tang: update directory
 M  net/adblock/files/adblock.conf
+ M net/bcp38/Makefile
 M  net/bcp38/files/bcp38.config
+ M net/bcp38/files/bcp38.defaults
+ M net/bcp38/files/run.sh
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
+?? 19354.patch
+?? 4043.patch
+?? 951-upstream-NUT-plugin-fix1.patch
+?? 952-upstream-NUT-plugin-fix2.patch

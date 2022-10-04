@@ -1,13 +1,14 @@
 diff --git a/.config.init b/.config.init
 new file mode 100644
-index 0000000000..aaa7cf0676
+index 0000000000..6502caa235
 --- /dev/null
 +++ b/.config.init
-@@ -0,0 +1,162 @@
+@@ -0,0 +1,165 @@
 +# Use "make defconfig" to expand this to a full .config
 +CONFIG_TARGET_ipq806x=y
 +CONFIG_TARGET_ipq806x_generic=y
 +CONFIG_TARGET_ipq806x_generic_DEVICE_netgear_r7800=y
++#CONFIG_TESTING_KERNEL=y
 +
 +# Per-package build logs in <buildroot>/logs
 +CONFIG_DEVEL=y
@@ -123,8 +124,10 @@ index 0000000000..aaa7cf0676
 +# kernel support for tunnels, VPNs
 +CONFIG_PACKAGE_kmod-tun=y
 +
-+# wireguard
++# wireguard and unetd (new wg-based mesh VPN)
 +CONFIG_PACKAGE_luci-app-wireguard=y
++CONFIG_PACKAGE_unetd=y
++CONFIG_PACKAGE_unet-cli=y
 +
 +# PPTP support
 +CONFIG_PACKAGE_luci-proto-ppp=y
@@ -134,7 +137,7 @@ index 0000000000..aaa7cf0676
 +CONFIG_PACKAGE_iptables-mod-ipsec=y
 +
 +# Support for IETF BCP38
-+####CONFIG_PACKAGE_luci-app-bcp38=y
++CONFIG_PACKAGE_luci-app-bcp38=m
 +
 +# Adblock package with Luci support, initially disabled
 +CONFIG_PACKAGE_luci-app-adblock=y
@@ -187,12 +190,13 @@ index a80cdbbea3..bd42cb89f3 100644
  .#*
  *#
 diff --git a/feeds.conf.default b/feeds.conf.default
-index 50ae67cb9d..9899b1d1f4 100644
+index 50ae67cb9d..59962eb7d6 100644
 --- a/feeds.conf.default
 +++ b/feeds.conf.default
-@@ -1,7 +1,7 @@
+@@ -1,7 +1,8 @@
  src-git-full packages https://git.openwrt.org/feed/packages.git
  src-git-full luci https://git.openwrt.org/project/luci.git
++###src-git-full luci https://github.com/jow-/luci.git;ucode
  src-git-full routing https://git.openwrt.org/feed/routing.git
 -src-git-full telephony https://git.openwrt.org/feed/telephony.git
 +#src-git-full telephony https://git.openwrt.org/feed/telephony.git
@@ -201,16 +205,16 @@ index 50ae67cb9d..9899b1d1f4 100644
  #src-git-full oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..f8221bcf5b
+index 0000000000..5d92817225
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r19863-fd72e595c2 / 2022-06-20 18:58
++OpenWrt master r20751-6e9613844c / 2022-09-25 20:59
 +---
-+main      2022-06-20 fd72e59 ramips: fix booting on ZyXEL NBG-419N v2
-+luci      2022-06-20 cc3d97c luci-base: remove redundant english trans
-+packages  2022-06-19 b9a47cc django: bump to version 4.0.5
-+routing   2022-06-18 217330b cjdns: bump v21.1 and patch find-python (
++main      2022-09-25 6e96138 mt76: fix compilation error with mt7915 a
++luci      2022-09-24 27060f3 luci-app-adblock: remove stub lua control
++packages  2022-09-25 256d026 tang: update directory
++routing   2022-08-10 290ed82 mesh11sd: Release v1.2.0
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -559,7 +563,7 @@ index 0000000000..e64ecc89fd
 +
 diff --git a/hnscripts/newBuildroot.sh b/hnscripts/newBuildroot.sh
 new file mode 100755
-index 0000000000..eb70961a25
+index 0000000000..2a91c0bb5d
 --- /dev/null
 +++ b/hnscripts/newBuildroot.sh
 @@ -0,0 +1,74 @@
@@ -570,7 +574,7 @@ index 0000000000..eb70961a25
 +# Creates the build environment with the current directory as the root
 +# To avoid problems with long paths, something like /Openwrt is preferable
 +#
-+# Script creates subdir for trunk or the release branch, and dl for downloads
++# Script creates subdir for master (or the release branch), and dl for downloads
 +# Creates main source repository and luci, packages & routing feeds
 +
 +### Target definitions
@@ -578,9 +582,9 @@ index 0000000000..eb70961a25
 +GITREPO=https://git.openwrt.org/openwrt/openwrt.git
 +
 +## Current version
-+FILESTAMP=R7800-master-r19696-af6cd37f42-20220522-1742
++FILESTAMP=R7800-master-r20650-8b06e06832-20220915-1939
 +
-+### Prerequisites for buildroot
++### Prerequisites for buildroot for the current Ubuntu
 +sudo apt-get install build-essential libncurses5-dev zlib1g-dev
 +sudo apt-get install gawk gcc-multilib flex git gettext libssl-dev
 +sudo apt-get install python3-distutils
@@ -731,10 +735,10 @@ index 0000000000..8eff1db078
 +hnscripts/parallelcompile.sh
 +
 diff --git a/package/base-files/files/bin/config_generate b/package/base-files/files/bin/config_generate
-index 596fcf41fa..76be93800a 100755
+index 38362813d1..78ae890829 100755
 --- a/package/base-files/files/bin/config_generate
 +++ b/package/base-files/files/bin/config_generate
-@@ -302,9 +302,10 @@ generate_static_system() {
+@@ -303,9 +303,10 @@ generate_static_system() {
  		delete system.@system[0]
  		add system system
  		set system.@system[-1].hostname='OpenWrt'
@@ -809,10 +813,10 @@ index 8c42ef782e..296ce32641 100644
  	option readethers	1
  	option leasefile	'/tmp/dhcp.leases'
 diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
-index fa344bd2dd..309bda5991 100644
+index 7eeb74e984..d6d26b95e4 100644
 --- a/package/network/services/hostapd/files/hostapd.sh
 +++ b/package/network/services/hostapd/files/hostapd.sh
-@@ -786,6 +786,11 @@ hostapd_set_bss_options() {
+@@ -802,6 +802,11 @@ hostapd_set_bss_options() {
  		set_default wps_manufacturer "www.openwrt.org"
  		set_default wps_independent 1
  
@@ -824,13 +828,11 @@ index fa344bd2dd..309bda5991 100644
  		wps_state=2
  		[ -n "$wps_not_configured" ] && wps_state=1
  
-@@ -871,8 +876,8 @@ hostapd_set_bss_options() {
- 			json_get_vars mobility_domain ft_psk_generate_local ft_over_ds reassociation_deadline
+@@ -890,7 +895,7 @@ hostapd_set_bss_options() {
  
  			set_default mobility_domain "$(echo "$ssid" | md5sum | head -c 4)"
--			set_default ft_over_ds 1
+ 			set_default ft_over_ds 0
 -			set_default reassociation_deadline 1000
-+			set_default ft_over_ds 0
 +			set_default reassociation_deadline 20000
  
  			case "$auth_type" in
