@@ -190,13 +190,13 @@ index a80cdbbea3..bd42cb89f3 100644
  .#*
  *#
 diff --git a/feeds.conf.default b/feeds.conf.default
-index 50ae67cb9d..59962eb7d6 100644
+index 50ae67cb9d..c57970c0c4 100644
 --- a/feeds.conf.default
 +++ b/feeds.conf.default
 @@ -1,7 +1,8 @@
  src-git-full packages https://git.openwrt.org/feed/packages.git
  src-git-full luci https://git.openwrt.org/project/luci.git
-+###src-git-full luci https://github.com/jow-/luci.git;ucode
++##src-git-full luci https://github.com/jow-/luci.git;ucode
  src-git-full routing https://git.openwrt.org/feed/routing.git
 -src-git-full telephony https://git.openwrt.org/feed/telephony.git
 +#src-git-full telephony https://git.openwrt.org/feed/telephony.git
@@ -205,15 +205,15 @@ index 50ae67cb9d..59962eb7d6 100644
  #src-git-full oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..5d92817225
+index 0000000000..f1990258a2
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r20751-6e9613844c / 2022-09-25 20:59
++OpenWrt master r20867-ee38573093 / 2022-10-05 21:49
 +---
-+main      2022-09-25 6e96138 mt76: fix compilation error with mt7915 a
-+luci      2022-09-24 27060f3 luci-app-adblock: remove stub lua control
-+packages  2022-09-25 256d026 tang: update directory
++main      2022-10-05 ee38573 ipq40xx: pakedge_wr-1: convert to DSA
++luci      2022-10-04 ca9a6d3 Merge pull request #6004 from stangri/mas
++packages  2022-10-05 fc60a65 Merge pull request #19520 from dyarkovoy/
 +routing   2022-08-10 290ed82 mesh11sd: Release v1.2.0
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
