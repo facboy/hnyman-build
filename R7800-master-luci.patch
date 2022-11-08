@@ -62,7 +62,7 @@ index 46947ae4c1..2bd9b85f5e 100644
  config internal apply
  	option rollback 90
 diff --git a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
-index e5e2173462..688c3f9121 100644
+index dec4586268..c4d00f9448 100644
 --- a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
 +++ b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
 @@ -1538,7 +1538,7 @@ return view.extend({

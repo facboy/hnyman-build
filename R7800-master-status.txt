@@ -1,10 +1,10 @@
-master-r20867-ee38573093-20221005-2212
+master-r21210-961e01fc67-20221107-1844
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2022-10-05 ee38573 ipq40xx: pakedge_wr-1: convert to DSA
+2022-11-07 961e01f ramips: gl-mt1300: downclock SPI to 50MHz
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -39,10 +39,9 @@ M  package/network/services/odhcpd/files/odhcpd-update
 A  package/utils/busybox/patches/310-save-history-in-tmp.patch
 A  package/utils/busybox/patches/520-move-coreutils-to-bin.patch
 M  target/linux/ipq806x/base-files/etc/init.d/cpufreq
-?? .config.init040922
-?? .config.init220422
-?? .config.init220522
-?? .config.minimal
+A  target/linux/ipq806x/patches-5.15/132-01-clk-qcom-clk-hfpll-check-PLL-lock-after-enabling-PLL.patch
+A  target/linux/ipq806x/patches-5.15/132-02-clk-qcom-krait-cc-set-every-mux-to-safe-sel-while-sc.patch
+?? .config.init20102022
 ?? files/etc/HNsettings.r7800-030122.cpt
 ?? version.date
 
@@ -50,7 +49,7 @@ M  target/linux/ipq806x/base-files/etc/init.d/cpufreq
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2022-10-04 ca9a6d3 Merge pull request #6004 from stangri/mas
+2022-11-07 7409523 luci-base: rebase i18n
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
@@ -61,14 +60,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2022-10-05 fc60a65 Merge pull request #19520 from dyarkovoy/
+2022-11-07 8e2091c sudo: bump to verison 1.9.12p1
 M  net/adblock/files/adblock.conf
- M net/bcp38/Makefile
 M  net/bcp38/files/bcp38.config
- M net/bcp38/files/bcp38.defaults
- M net/bcp38/files/run.sh
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
-?? 19354.patch
-?? 4043.patch
-?? 951-upstream-NUT-plugin-fix1.patch
-?? 952-upstream-NUT-plugin-fix2.patch
