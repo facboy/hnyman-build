@@ -8,12 +8,12 @@ fi
 set -ex
 
 script_dir="$(dirname "$(realpath "$0")")"
+OPENWRT_ROOT="$(realpath "$1")"
 
 # get commit message
 cd "${script_dir}/../"
 COMMIT_MESSAGE="$(git log --format='tformat:%s' | grep "Update to version R7800-master-" | head -n1)"
 
-OPENWRT_ROOT="$1"
 cd "${OPENWRT_ROOT}"
 
 # reset master

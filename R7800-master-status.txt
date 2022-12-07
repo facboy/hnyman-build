@@ -1,10 +1,10 @@
-master-r21210-961e01fc67-20221107-1844
+master-r21407-84183f0d98-20221206-1324
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2022-11-07 961e01f ramips: gl-mt1300: downclock SPI to 50MHz
+2022-12-06 84183f0 firewall4: update to latest Git HEAD
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -39,9 +39,13 @@ M  package/network/services/odhcpd/files/odhcpd-update
 A  package/utils/busybox/patches/310-save-history-in-tmp.patch
 A  package/utils/busybox/patches/520-move-coreutils-to-bin.patch
 M  target/linux/ipq806x/base-files/etc/init.d/cpufreq
-A  target/linux/ipq806x/patches-5.15/132-01-clk-qcom-clk-hfpll-check-PLL-lock-after-enabling-PLL.patch
-A  target/linux/ipq806x/patches-5.15/132-02-clk-qcom-krait-cc-set-every-mux-to-safe-sel-while-sc.patch
+ M tools/cmake/Makefile
+ M tools/cmake/patches/120-curl-fix-libressl-linking.patch
+ M tools/cmake/patches/130-bootstrap_parallel_make_flag.patch
+ M tools/cmake/patches/150-zstd-libarchive.patch
+?? .config.init18112022
 ?? .config.init20102022
+?? .config.init21112022
 ?? files/etc/HNsettings.r7800-030122.cpt
 ?? version.date
 
@@ -49,7 +53,8 @@ A  target/linux/ipq806x/patches-5.15/132-02-clk-qcom-krait-cc-set-every-mux-to-s
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2022-11-07 7409523 luci-base: rebase i18n
+2022-12-05 785792a luci-proto-wireguard: fix configuration i
+M  applications/luci-app-attendedsysupgrade/htdocs/luci-static/resources/view/attendedsysupgrade/overview.js
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
@@ -60,7 +65,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2022-11-07 8e2091c sudo: bump to verison 1.9.12p1
+2022-12-05 ec2f58a Merge pull request #19613 from wormi4ok/t
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
