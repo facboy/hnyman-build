@@ -1,9 +1,9 @@
 diff --git a/.config.init b/.config.init
 new file mode 100644
-index 0000000000..ac32d8a445
+index 0000000000..55f49d86c1
 --- /dev/null
 +++ b/.config.init
-@@ -0,0 +1,165 @@
+@@ -0,0 +1,161 @@
 +# Use "make defconfig" to expand this to a full .config
 +CONFIG_TARGET_ipq806x=y
 +CONFIG_TARGET_ipq806x_generic=y
@@ -69,8 +69,7 @@ index 0000000000..ac32d8a445
 +CONFIG_PACKAGE_kmod-fs-ext4=y
 +CONFIG_PACKAGE_kmod-fs-hfsplus=y
 +CONFIG_PACKAGE_kmod-fs-msdos=y
-+CONFIG_PACKAGE_kmod-fs-vfat=y
-+CONFIG_PACKAGE_ntfs-3g=y
++CONFIG_PACKAGE_kmod-fs-ntfs3=y
 +CONFIG_PACKAGE_kmod-nls-cp1250=y
 +CONFIG_PACKAGE_kmod-nls-cp437=y
 +CONFIG_PACKAGE_kmod-nls-cp850=y
@@ -82,9 +81,6 @@ index 0000000000..ac32d8a445
 +CONFIG_PACKAGE_6in4=y
 +CONFIG_PACKAGE_6to4=y
 +CONFIG_PACKAGE_6rd=y
-+
-+# IPv6 NAT support (ip6tables NAT extensions, ipt-nat6 and nf-nat6 kmods)
-+####CONFIG_PACKAGE_ip6tables-mod-nat=y
 +
 +# WLAN/WPS support
 +CONFIG_PACKAGE_hostapd-utils=y
@@ -118,14 +114,13 @@ index 0000000000..ac32d8a445
 +CONFIG_PACKAGE_collectd-mod-uptime=y
 +
 +# Build openwrt-2020 theme, default is still bootstrap
-+###CONFIG_PACKAGE_luci-theme-material=y
 +CONFIG_PACKAGE_luci-theme-openwrt-2020=y
 +
 +# kernel support for tunnels, VPNs
 +CONFIG_PACKAGE_kmod-tun=y
 +
 +# wireguard and unetd (new wg-based mesh VPN)
-+CONFIG_PACKAGE_luci-app-wireguard=y
++CONFIG_PACKAGE_luci-proto-wireguard=y
 +CONFIG_PACKAGE_unetd=y
 +CONFIG_PACKAGE_unet-cli=y
 +
@@ -151,16 +146,14 @@ index 0000000000..ac32d8a445
 +# chaoskey TRNG USB dongle
 +####CONFIG_PACKAGE_kmod-chaoskey=y
 +
-+# kernel module needed for qosify
-+CONFIG_PACKAGE_kmod-sched-bpf=y
-+
 +## Build and include qosify, if the LLVM toolchain has been downloaded and
 +## extracted to the buildroot before the build config is started.
 +## The file can be downloaded from buildbot snapshot target downloads.
-+## https://downloads.openwrt.org/snapshots/targets/ipq806x/generic/llvm-bpf-13.0.0.tar.xz
++## https://downloads.openwrt.org/snapshots/targets/ipq806x/generic/llvm-bpf-14.0.6.Linux-x86_64.tar.xz
 +##
 +CONFIG_USE_LLVM_PREBUILT=y
 +CONFIG_PACKAGE_qosify=y
++CONFIG_PACKAGE_kmod-sched-bpf=y
 +
 +# NFT support for iptables
 +CONFIG_PACKAGE_iptables-nft=y
@@ -168,6 +161,9 @@ index 0000000000..ac32d8a445
 +
 +# ipset and kernel module
 +CONFIG_PACKAGE_ipset=y
++
++# sftp server lib for newest scp in Ubuntu
++CONFIG_PACKAGE_openssh-sftp-server=y
 +
 diff --git a/.gitignore b/.gitignore
 index a80cdbbea3..bd42cb89f3 100644
@@ -205,16 +201,16 @@ index 50ae67cb9d..c57970c0c4 100644
  #src-git-full oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..234af4ea4b
+index 0000000000..417f38cf6e
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r21407-84183f0d98 / 2022-12-06 13:21
++OpenWrt master r21778-3d5c5427e1 / 2023-01-13 19:28
 +---
-+main      2022-12-06 84183f0 firewall4: update to latest Git HEAD
-+luci      2022-12-05 785792a luci-proto-wireguard: fix configuration i
-+packages  2022-12-05 ec2f58a Merge pull request #19613 from wormi4ok/t
-+routing   2022-11-23 d5c4ef9 bird1: Add missing dependency on luci-com
++main      2023-01-13 3d5c542 uboot-mediatek: update to U-Boot 2023.01
++luci      2023-01-13 b49fb7b Translated using Weblate (Polish)
++packages  2023-01-13 5c0c407 libreswan: set DNSSEC_ROOTKEY_FILE, LINUX
++routing   2023-01-04 c470bff bird1-openwrt: change maintainer for bird
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -314,6 +310,14 @@ index 0000000000..088bdbb2d5
 +uci commit upnpd
 +/etc/init.d/dnsmasq disable
 +/etc/init.d/miniupnpd disable
++
+diff --git a/files/etc/profile.d/busybox-history-file.sh b/files/etc/profile.d/busybox-history-file.sh
+new file mode 100644
+index 0000000000..f286009627
+--- /dev/null
++++ b/files/etc/profile.d/busybox-history-file.sh
+@@ -0,0 +1,2 @@
++export HISTFILE=/tmp/.busybox_ash_history
 +
 diff --git a/files/etc/restoreStats.sh b/files/etc/restoreStats.sh
 new file mode 100755
@@ -813,10 +817,10 @@ index ec8b1ae950..d5b9dfa018 100644
  	option readethers	1
  	option leasefile	'/tmp/dhcp.leases'
 diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
-index 79daa915ad..3c74f9e723 100644
+index b165995d9f..81429cdcf7 100644
 --- a/package/network/services/hostapd/files/hostapd.sh
 +++ b/package/network/services/hostapd/files/hostapd.sh
-@@ -801,6 +801,11 @@ hostapd_set_bss_options() {
+@@ -810,6 +810,11 @@ hostapd_set_bss_options() {
  		set_default wps_manufacturer "www.openwrt.org"
  		set_default wps_independent 1
  
@@ -828,7 +832,7 @@ index 79daa915ad..3c74f9e723 100644
  		wps_state=2
  		[ -n "$wps_not_configured" ] && wps_state=1
  
-@@ -889,7 +894,7 @@ hostapd_set_bss_options() {
+@@ -898,7 +903,7 @@ hostapd_set_bss_options() {
  
  			set_default mobility_domain "$(echo "$ssid" | md5sum | head -c 4)"
  			set_default ft_over_ds 0
@@ -862,40 +866,55 @@ index c1814e00b0..b2f92bf10d 100755
  . /lib/functions/procd.sh
  
  procd_send_signal dnsmasq
-diff --git a/package/utils/busybox/patches/310-save-history-in-tmp.patch b/package/utils/busybox/patches/310-save-history-in-tmp.patch
+diff --git a/package/utils/busybox/patches/001-upstream-1360-fix-ed-memcpy.patch b/package/utils/busybox/patches/001-upstream-1360-fix-ed-memcpy.patch
 new file mode 100644
-index 0000000000..ff76ddb956
+index 0000000000..07a8f40e6c
 --- /dev/null
-+++ b/package/utils/busybox/patches/310-save-history-in-tmp.patch
-@@ -0,0 +1,11 @@
-+--- a/shell/ash.c
-++++ b/shell/ash.c
-+@@ -14693,7 +14693,7 @@ int ash_main(int argc UNUSED_PARAM, char
-+ 		if (line_input_state) {
-+ 			const char *hp = lookupvar("HISTFILE");
-+ 			if (!hp) {
-+-				hp = lookupvar("HOME");
-++				hp = "/tmp";
-+ 				if (hp) {
-+ 					INT_OFF;
-+ 					hp = concat_path_file(hp, ".ash_history");
-diff --git a/package/utils/busybox/patches/520-move-coreutils-to-bin.patch b/package/utils/busybox/patches/520-move-coreutils-to-bin.patch
-new file mode 100644
-index 0000000000..de94f592f9
---- /dev/null
-+++ b/package/utils/busybox/patches/520-move-coreutils-to-bin.patch
-@@ -0,0 +1,11 @@
-+--- a/coreutils/sort.c
-++++ b/coreutils/sort.c
-+@@ -37,7 +37,7 @@
-+ //config:	Attempt to use less memory (by storing only one copy
-+ //config:	of duplicated lines, and such). Useful if you work on huge files.
++++ b/package/utils/busybox/patches/001-upstream-1360-fix-ed-memcpy.patch
+@@ -0,0 +1,43 @@
++From f15dfd86c4fba78881071dd0f5c63466fa9737a2 Mon Sep 17 00:00:00 2001
++From: =?UTF-8?q?S=C3=B6ren=20Tempel?= <soeren+git@soeren-tempel.net>
++Date: Tue, 8 Feb 2022 20:29:30 +0100
++Subject: ed: don't use memcpy with overlapping memory regions
++MIME-Version: 1.0
++Content-Type: text/plain; charset=UTF-8
++Content-Transfer-Encoding: 8bit
++
++The memcpy invocations in the subCommand function, modified by this
++commit, previously used memcpy with overlapping memory regions. This is
++undefined behavior. On Alpine Linux, it causes BusyBox ed to crash since
++we compile BusyBox with -D_FORTIFY_SOURCE=2 and our fortify-headers
++implementation catches this source of undefined behavior [0]. The issue
++can only be triggered if the replacement string is the same size or
++shorter than the old string.
++
++Looking at the code, it seems to me that a memmove(3) is what was
++actually intended here, this commit modifies the code accordingly.
++
++[0]: https://gitlab.alpinelinux.org/alpine/aports/-/issues/13504
++
++Signed-off-by: Sören Tempel <soeren+git@soeren-tempel.net>
++Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
++---
++ editors/ed.c | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/editors/ed.c b/editors/ed.c
++index 209ce9942..4a84f7433 100644
++--- a/editors/ed.c
+++++ b/editors/ed.c
++@@ -720,7 +720,7 @@ static void subCommand(const char *cmd, int num1, int num2)
++ 		if (deltaLen <= 0) {
++ 			memcpy(&lp->data[offset], newStr, newLen);
++ 			if (deltaLen) {
++-				memcpy(&lp->data[offset + newLen],
+++				memmove(&lp->data[offset + newLen],
++ 					&lp->data[offset + oldLen],
++ 					lp->len - offset - oldLen);
 + 
-+-//applet:IF_SORT(APPLET_NOEXEC(sort, sort, BB_DIR_USR_BIN, BB_SUID_DROP, sort))
-++//applet:IF_SORT(APPLET_NOEXEC(sort, sort, BB_DIR_BIN, BB_SUID_DROP, sort))
-+ 
-+ //kbuild:lib-$(CONFIG_SORT) += sort.o
-+ 
++-- 
++cgit v1.2.3
++
 diff --git a/target/linux/ipq806x/base-files/etc/init.d/cpufreq b/target/linux/ipq806x/base-files/etc/init.d/cpufreq
 index 19278902ed..b61824c877 100755
 --- a/target/linux/ipq806x/base-files/etc/init.d/cpufreq
@@ -909,62 +928,3 @@ index 19278902ed..b61824c877 100755
      echo 50 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
    fi
  }
-diff --git a/tools/cmake/Makefile b/tools/cmake/Makefile
-index 07e2a43218..b7dadee733 100644
---- a/tools/cmake/Makefile
-+++ b/tools/cmake/Makefile
-@@ -7,7 +7,7 @@
- include $(TOPDIR)/rules.mk
- 
- PKG_NAME:=cmake
--PKG_VERSION:=3.24.2
-+PKG_VERSION:=3.25.1
- PKG_VERSION_MAJOR:=$(word 1,$(subst ., ,$(PKG_VERSION))).$(word 2,$(subst ., ,$(PKG_VERSION)))
- PKG_RELEASE:=1
- PKG_CPE_ID:=cpe:/a:kitware:cmake
-@@ -15,7 +15,7 @@ PKG_CPE_ID:=cpe:/a:kitware:cmake
- PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
- PKG_SOURCE_URL:=https://github.com/Kitware/CMake/releases/download/v$(PKG_VERSION)/ \
- 		https://cmake.org/files/v$(PKG_VERSION_MAJOR)/
--PKG_HASH:=0d9020f06f3ddf17fb537dc228e1a56c927ee506b486f55fe2dc19f69bf0c8db
-+PKG_HASH:=1c511d09516af493694ed9baf13c55947a36389674d657a2d5e0ccedc6b291d8
- 
- HOST_BUILD_PARALLEL:=1
- HOST_CONFIGURE_PARALLEL:=1
-diff --git a/tools/cmake/patches/120-curl-fix-libressl-linking.patch b/tools/cmake/patches/120-curl-fix-libressl-linking.patch
-index 6ef37c22cb..1744fe5b04 100644
---- a/tools/cmake/patches/120-curl-fix-libressl-linking.patch
-+++ b/tools/cmake/patches/120-curl-fix-libressl-linking.patch
-@@ -20,7 +20,7 @@ Signed-off-by: Jo-Philipp Wich <jo@mein.io>
- ---
- --- a/Utilities/cmcurl/CMakeLists.txt
- +++ b/Utilities/cmcurl/CMakeLists.txt
--@@ -594,6 +594,14 @@ if(CURL_USE_OPENSSL)
-+@@ -611,6 +611,14 @@ if(CURL_USE_OPENSSL)
-    endif()
-    set(SSL_ENABLED ON)
-    set(USE_OPENSSL ON)
-diff --git a/tools/cmake/patches/130-bootstrap_parallel_make_flag.patch b/tools/cmake/patches/130-bootstrap_parallel_make_flag.patch
-index 2b3ba361bd..70d122c9d9 100644
---- a/tools/cmake/patches/130-bootstrap_parallel_make_flag.patch
-+++ b/tools/cmake/patches/130-bootstrap_parallel_make_flag.patch
-@@ -1,6 +1,6 @@
- --- a/bootstrap
- +++ b/bootstrap
--@@ -1441,7 +1441,10 @@ int main(){ printf("1%c", (char)0x0a); r
-+@@ -1449,7 +1449,10 @@ int main(){ printf("1%c", (char)0x0a); r
-  ' > "test.c"
-  cmake_original_make_flags="${cmake_make_flags}"
-  if test "x${cmake_parallel_make}" != "x"; then
-diff --git a/tools/cmake/patches/150-zstd-libarchive.patch b/tools/cmake/patches/150-zstd-libarchive.patch
-index 603ac03775..34f7240fe4 100644
---- a/tools/cmake/patches/150-zstd-libarchive.patch
-+++ b/tools/cmake/patches/150-zstd-libarchive.patch
-@@ -1,6 +1,6 @@
- --- a/Utilities/cmlibarchive/CMakeLists.txt
- +++ b/Utilities/cmlibarchive/CMakeLists.txt
--@@ -630,8 +630,13 @@ IF(ENABLE_ZSTD)
-+@@ -632,8 +632,13 @@ IF(ENABLE_ZSTD)
-      SET(ZSTD_FIND_QUIETLY TRUE)
-    ENDIF (ZSTD_INCLUDE_DIR)
-  

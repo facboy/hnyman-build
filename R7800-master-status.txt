@@ -1,10 +1,10 @@
-master-r21407-84183f0d98-20221206-1324
+master-r21778-3d5c5427e1-20230113-1946
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2022-12-06 84183f0 firewall4: update to latest Git HEAD
+2023-01-13 3d5c542 uboot-mediatek: update to U-Boot 2023.01
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -15,6 +15,7 @@ A  files/etc/checksettings.sh
 A  files/etc/config/fstab
 A  files/etc/hotplug.d/ntp/20-ntpd-logger
 A  files/etc/lan-repeater.sh
+A  files/etc/profile.d/busybox-history-file.sh
 A  files/etc/restoreStats.sh
 A  files/etc/saveHNsettings.sh
 A  files/etc/storeStats.sh
@@ -36,14 +37,11 @@ M  package/network/services/dnsmasq/files/dhcp.conf
 M  package/network/services/hostapd/files/hostapd.sh
 M  package/network/services/hostapd/files/wps-hotplug.sh
 M  package/network/services/odhcpd/files/odhcpd-update
-A  package/utils/busybox/patches/310-save-history-in-tmp.patch
-A  package/utils/busybox/patches/520-move-coreutils-to-bin.patch
+A  package/utils/busybox/patches/001-upstream-1360-fix-ed-memcpy.patch
 M  target/linux/ipq806x/base-files/etc/init.d/cpufreq
- M tools/cmake/Makefile
- M tools/cmake/patches/120-curl-fix-libressl-linking.patch
- M tools/cmake/patches/130-bootstrap_parallel_make_flag.patch
- M tools/cmake/patches/150-zstd-libarchive.patch
+?? .config.init06012023
 ?? .config.init18112022
+?? .config.init18122022
 ?? .config.init20102022
 ?? .config.init21112022
 ?? files/etc/HNsettings.r7800-030122.cpt
@@ -53,7 +51,7 @@ M  target/linux/ipq806x/base-files/etc/init.d/cpufreq
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2022-12-05 785792a luci-proto-wireguard: fix configuration i
+2023-01-13 b49fb7b Translated using Weblate (Polish)
 M  applications/luci-app-attendedsysupgrade/htdocs/luci-static/resources/view/attendedsysupgrade/overview.js
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
@@ -65,7 +63,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2022-12-05 ec2f58a Merge pull request #19613 from wormi4ok/t
+2023-01-13 5c0c407 libreswan: set DNSSEC_ROOTKEY_FILE, LINUX
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch

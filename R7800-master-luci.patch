@@ -13,7 +13,7 @@ index 55ed0509e1..2f3701c4af 100644
  				'class': 'btn cbi-button cbi-button-positive important',
  				'click': ui.createHandlerFn(this, this.handleCheck)
 diff --git a/applications/luci-app-statistics/root/etc/config/luci_statistics b/applications/luci-app-statistics/root/etc/config/luci_statistics
-index 43d825bc95..1822d9fd7f 100644
+index bb9ca15e8e..a049ad52e7 100644
 --- a/applications/luci-app-statistics/root/etc/config/luci_statistics
 +++ b/applications/luci-app-statistics/root/etc/config/luci_statistics
 @@ -67,7 +67,7 @@ config statistics 'collectd_chrony'
@@ -76,12 +76,12 @@ index 46947ae4c1..2bd9b85f5e 100644
  config internal apply
  	option rollback 90
 diff --git a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
-index dec4586268..c4d00f9448 100644
+index 420b381e2f..a6efb251eb 100644
 --- a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
 +++ b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
-@@ -1538,7 +1538,7 @@ return view.extend({
+@@ -1572,7 +1572,7 @@ return view.extend({
  
- 					o = ss.taboption('encryption', form.Value, 'reassociation_deadline', _('Reassociation Deadline'), _('time units (TUs / 1.024 ms) [1000-65535]'));
+ 					o = ss.taboption('roaming', form.Value, 'reassociation_deadline', _('Reassociation Deadline'), _('time units (TUs / 1.024 ms) [1000-65535]'));
  					o.depends({ ieee80211r: '1' });
 -					o.placeholder = '1000';
 +					o.placeholder = '20000';
