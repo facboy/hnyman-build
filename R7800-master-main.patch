@@ -1,6 +1,6 @@
 diff --git a/.config.init b/.config.init
 new file mode 100644
-index 0000000000..55f49d86c1
+index 0000000000..c6cb9033a1
 --- /dev/null
 +++ b/.config.init
 @@ -0,0 +1,161 @@
@@ -22,9 +22,9 @@ index 0000000000..55f49d86c1
 +CONFIG_INCLUDE_CONFIG=y
 +
 +# Longer waiting for failsafe button push
-+CONFIG_IMAGEOPT=y
-+CONFIG_PREINITOPT=y
-+CONFIG_TARGET_PREINIT_TIMEOUT=5
++###CONFIG_IMAGEOPT=y
++###CONFIG_PREINITOPT=y
++###CONFIG_TARGET_PREINIT_TIMEOUT=5
 +
 +# Busybox tweaks
 +CONFIG_BUSYBOX_CUSTOM=y
@@ -86,8 +86,8 @@ index 0000000000..55f49d86c1
 +CONFIG_PACKAGE_hostapd-utils=y
 +#CONFIG_WPA_MSG_MIN_PRIORITY=2
 +CONFIG_PACKAGE_wpad-openssl=y
-+# CONFIG_PACKAGE_wpad-basic-wolfssl is not set
-+# CONFIG_PACKAGE_libustream-wolfssl is not set
++# CONFIG_PACKAGE_wpad-basic-mbedtls is not set
++# CONFIG_PACKAGE_libustream-mbedtls is not set
 +
 +# SSL certificates
 +CONFIG_PACKAGE_ca-certificates=y
@@ -96,10 +96,10 @@ index 0000000000..55f49d86c1
 +CONFIG_PACKAGE_luci-ssl-openssl=y
 +CONFIG_PACKAGE_luci-app-commands=y
 +CONFIG_PACKAGE_luci-app-ddns=y
++CONFIG_PACKAGE_luci-app-opkg=y
 +CONFIG_PACKAGE_luci-app-sqm=y
 +CONFIG_PACKAGE_luci-app-uhttpd=y
 +CONFIG_PACKAGE_luci-app-upnp=y
-+CONFIG_PACKAGE_luci-app-wol=y
 +# CONFIG_LUCI_JSMIN is not set
 +
 +# Luci statistics
@@ -201,16 +201,16 @@ index 50ae67cb9d..c57970c0c4 100644
  #src-git-full oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..417f38cf6e
+index 0000000000..02a9e5d099
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r21778-3d5c5427e1 / 2023-01-13 19:28
++OpenWrt master r22036-1a145ccb0a / 2023-02-11 11:07
 +---
-+main      2023-01-13 3d5c542 uboot-mediatek: update to U-Boot 2023.01
-+luci      2023-01-13 b49fb7b Translated using Weblate (Polish)
-+packages  2023-01-13 5c0c407 libreswan: set DNSSEC_ROOTKEY_FILE, LINUX
-+routing   2023-01-04 c470bff bird1-openwrt: change maintainer for bird
++main      2023-02-09 1a145cc kernel: kmod-fs-ntfs3: fix typo
++luci      2023-02-09 a53164c Merge remote-tracking branch 'weblate/mas
++packages  2023-02-11 6b53f12 docker-compose: Update to version 2.16.0
++routing   2023-02-10 20e1b16 babeld: remove AUTORELEASE
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -336,7 +336,7 @@ index 0000000000..ef205bd577
 +/etc/init.d/collectd start
 diff --git a/files/etc/saveHNsettings.sh b/files/etc/saveHNsettings.sh
 new file mode 100755
-index 0000000000..5e19c8fd33
+index 0000000000..a6696cd51c
 --- /dev/null
 +++ b/files/etc/saveHNsettings.sh
 @@ -0,0 +1,13 @@
@@ -344,7 +344,7 @@ index 0000000000..5e19c8fd33
 +cd /etc
 +tar -czv -f /tmp/HNsettings \
 +  config/network config/wireless config/firewall config/dhcp config/sqm \
-+  config/luci_statistics config/bcp38 \
++  config/luci_statistics config/bcp38 sysupgrade.conf \
 +  dropbear/authorized_keys adblock/adblock.whitelist crontabs/root
 +if [ "$?" -eq 0 ] ; then
 +  ccencrypt -vf /tmp/HNsettings
@@ -567,7 +567,7 @@ index 0000000000..e64ecc89fd
 +
 diff --git a/hnscripts/newBuildroot.sh b/hnscripts/newBuildroot.sh
 new file mode 100755
-index 0000000000..c6255f21d2
+index 0000000000..073bf34567
 --- /dev/null
 +++ b/hnscripts/newBuildroot.sh
 @@ -0,0 +1,74 @@
@@ -586,7 +586,7 @@ index 0000000000..c6255f21d2
 +GITREPO=https://git.openwrt.org/openwrt/openwrt.git
 +
 +## Current version
-+FILESTAMP=R7800-master-r21108-a31b598590-20221025-1833
++FILESTAMP=R7800-master-r21778-3d5c5427e1-20230113-1946
 +
 +### Prerequisites for buildroot for the current Ubuntu
 +sudo apt-get install build-essential libncurses5-dev zlib1g-dev
@@ -738,6 +738,19 @@ index 0000000000..8eff1db078
 +echo "...make the firmware..."
 +hnscripts/parallelcompile.sh
 +
+diff --git a/package/base-files/Makefile b/package/base-files/Makefile
+index 914f0598ff..cdf5c185e8 100644
+--- a/package/base-files/Makefile
++++ b/package/base-files/Makefile
+@@ -77,7 +77,7 @@ endef
+ define ImageConfigOptions
+ 	mkdir -p $(1)/lib/preinit
+ 	echo 'pi_suppress_stderr="$(CONFIG_TARGET_PREINIT_SUPPRESS_STDERR)"' >$(1)/lib/preinit/00_preinit.conf
+-	echo 'fs_failsafe_wait_timeout=$(if $(CONFIG_TARGET_PREINIT_TIMEOUT),$(CONFIG_TARGET_PREINIT_TIMEOUT),2)' >>$(1)/lib/preinit/00_preinit.conf
++	echo 'fs_failsafe_wait_timeout=$(if $(CONFIG_TARGET_PREINIT_TIMEOUT),$(CONFIG_TARGET_PREINIT_TIMEOUT),4)' >>$(1)/lib/preinit/00_preinit.conf
+ 	echo 'pi_init_path="$(TARGET_INIT_PATH)"' >>$(1)/lib/preinit/00_preinit.conf
+ 	echo 'pi_init_env=$(if $(CONFIG_TARGET_INIT_ENV),$(CONFIG_TARGET_INIT_ENV),"")' >>$(1)/lib/preinit/00_preinit.conf
+ 	echo 'pi_init_cmd=$(if $(CONFIG_TARGET_INIT_CMD),$(CONFIG_TARGET_INIT_CMD),"/sbin/init")' >>$(1)/lib/preinit/00_preinit.conf
 diff --git a/package/base-files/files/bin/config_generate b/package/base-files/files/bin/config_generate
 index 0001f88746..162940d7ef 100755
 --- a/package/base-files/files/bin/config_generate
@@ -776,6 +789,19 @@ index 2403122ad2..5746ea237a 100755
  ;;
  esac
  
+diff --git a/package/base-files/image-config.in b/package/base-files/image-config.in
+index ac406bc456..aa5f148e25 100644
+--- a/package/base-files/image-config.in
++++ b/package/base-files/image-config.in
+@@ -37,7 +37,7 @@ config TARGET_PREINIT_DISABLE_FAILSAFE
+ config TARGET_PREINIT_TIMEOUT
+ 	int
+ 	prompt "Failsafe/Debug wait timeout" if PREINITOPT
+-	default 2
++	default 4
+ 	help
+ 		How long to wait for failsafe mode to be entered or for
+ 		a debug option to be pressed before continuing with a
 diff --git a/package/network/config/qosify/files/qosify.conf b/package/network/config/qosify/files/qosify.conf
 index 7a3d0d068a..31abfb7274 100644
 --- a/package/network/config/qosify/files/qosify.conf
@@ -804,18 +830,6 @@ index 5b5c7b36af..d75c6f4f41 100755
  
  		(while [ $((timeout--)) -gt 0 ]; do
  			sleep 1
-diff --git a/package/network/services/dnsmasq/files/dhcp.conf b/package/network/services/dnsmasq/files/dhcp.conf
-index ec8b1ae950..d5b9dfa018 100644
---- a/package/network/services/dnsmasq/files/dhcp.conf
-+++ b/package/network/services/dnsmasq/files/dhcp.conf
-@@ -10,6 +10,7 @@ config dnsmasq
- 	option domain	'lan'
- 	option expandhosts	1
- 	option nonegcache	0
-+	option cachesize	1000
- 	option authoritative	1
- 	option readethers	1
- 	option leasefile	'/tmp/dhcp.leases'
 diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
 index b165995d9f..81429cdcf7 100644
 --- a/package/network/services/hostapd/files/hostapd.sh
