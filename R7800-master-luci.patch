@@ -88,7 +88,7 @@ index 46947ae4c1..1a90776a6c 100644
 +	option command '/etc/restoreStats.sh'
 +
 diff --git a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
-index a2b0c84ce2..126159400a 100644
+index 6b1bd262fb..557989fbd8 100644
 --- a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
 +++ b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
 @@ -1566,7 +1566,7 @@ return view.extend({
