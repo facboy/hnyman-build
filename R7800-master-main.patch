@@ -1,6 +1,6 @@
 diff --git a/.config.init b/.config.init
 new file mode 100644
-index 0000000000..b098d47bf6
+index 0000000000..787c9755f4
 --- /dev/null
 +++ b/.config.init
 @@ -0,0 +1,160 @@
@@ -137,7 +137,7 @@ index 0000000000..b098d47bf6
 +CONFIG_PACKAGE_luci-app-adblock=y
 +
 +# BanIP package with Luci support, initially disabled
-+####CONFIG_PACKAGE_luci-app-banip=y
++CONFIG_PACKAGE_luci-app-banip=y
 +
 +# nlbwmon app
 +CONFIG_PACKAGE_luci-app-nlbwmon=y
@@ -148,7 +148,7 @@ index 0000000000..b098d47bf6
 +## Build and include qosify, if the LLVM toolchain has been downloaded and
 +## extracted to the buildroot before the build config is started.
 +## The file can be downloaded from buildbot snapshot target downloads.
-+## https://downloads.openwrt.org/snapshots/targets/ipq806x/generic/llvm-bpf-14.0.6.Linux-x86_64.tar.xz
++## https://downloads.openwrt.org/snapshots/targets/ipq806x/generic/llvm-bpf-15.0.7.Linux-x86_64.tar.xz
 +##
 +CONFIG_USE_LLVM_PREBUILT=y
 +CONFIG_PACKAGE_qosify=y
@@ -185,13 +185,12 @@ index a80cdbbea3..bd42cb89f3 100644
  .#*
  *#
 diff --git a/feeds.conf.default b/feeds.conf.default
-index 50ae67cb9d..c57970c0c4 100644
+index 50ae67cb9d..9899b1d1f4 100644
 --- a/feeds.conf.default
 +++ b/feeds.conf.default
-@@ -1,7 +1,8 @@
+@@ -1,7 +1,7 @@
  src-git-full packages https://git.openwrt.org/feed/packages.git
  src-git-full luci https://git.openwrt.org/project/luci.git
-+##src-git-full luci https://github.com/jow-/luci.git;ucode
  src-git-full routing https://git.openwrt.org/feed/routing.git
 -src-git-full telephony https://git.openwrt.org/feed/telephony.git
 +#src-git-full telephony https://git.openwrt.org/feed/telephony.git
@@ -200,16 +199,16 @@ index 50ae67cb9d..c57970c0c4 100644
  #src-git-full oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..fabaea86da
+index 0000000000..56a608e0b0
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r22362-68883278ab / 2023-03-21 22:36
++OpenWrt master r22702-cf8d861978 / 2023-05-01 16:28
 +---
-+main      2023-03-21 6888327 bmips: dts: nand: add missing address/siz
-+luci      2023-03-20 ec82674 Translated using Weblate (Romanian)
-+packages  2023-03-21 ab573bd netbird: update to 0.14.4
-+routing   2023-03-11 1b063f3 oonf-olsrd2: update to current develop br
++openwrt   2023-04-30 cf8d861 realtek: hpe_1920-8g: add phy-handle for 
++luci      2023-04-30 9628bd5 Merge pull request #6362 from stangri/mas
++packages  2023-05-01 b9b641d sing-box: update to 1.2.6
++routing   2023-04-27 3e96c85 treewide: remove AUTORELEASE
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -354,19 +353,22 @@ index 0000000000..a6696cd51c
 +
 diff --git a/files/etc/storeStats.sh b/files/etc/storeStats.sh
 new file mode 100755
-index 0000000000..c72960f579
+index 0000000000..2c0a2451e6
 --- /dev/null
 +++ b/files/etc/storeStats.sh
-@@ -0,0 +1,9 @@
+@@ -0,0 +1,12 @@
 +#!/bin/sh
++BACKUPNAME=stats-$(date +%Y%m%dT%H%M).tar.gz
 +/etc/init.d/collectd stop
 +logger -t "LuCI statistics" Create backup archive
 +mkdir -p /etc/backup.stats
 +cd /tmp/rrd/$(uname -n)
-+tar c -zvf /etc/backup.stats/stats.tar.gz *
-+cp /etc/backup.stats/stats.tar.gz /etc/backup.stats/stats-$(date +%Y%m%dT%H%M).tar.gz
++tar c -zvf /etc/backup.stats/$BACKUPNAME *
++cd /etc/backup.stats
++ln -fs $BACKUPNAME stats.tar.gz
 +sync
 +/etc/init.d/collectd start
++
 diff --git a/files/etc/wifi-suite.sh b/files/etc/wifi-suite.sh
 new file mode 100755
 index 0000000000..3b002ec409
@@ -566,7 +568,7 @@ index 0000000000..e64ecc89fd
 +
 diff --git a/hnscripts/newBuildroot.sh b/hnscripts/newBuildroot.sh
 new file mode 100755
-index 0000000000..073bf34567
+index 0000000000..6baf9bccb9
 --- /dev/null
 +++ b/hnscripts/newBuildroot.sh
 @@ -0,0 +1,74 @@
@@ -585,7 +587,7 @@ index 0000000000..073bf34567
 +GITREPO=https://git.openwrt.org/openwrt/openwrt.git
 +
 +## Current version
-+FILESTAMP=R7800-master-r21778-3d5c5427e1-20230113-1946
++FILESTAMP=R7800-master-r22602-42eeb22450-20230420-2155
 +
 +### Prerequisites for buildroot for the current Ubuntu
 +sudo apt-get install build-essential libncurses5-dev zlib1g-dev
@@ -686,7 +688,7 @@ index 0000000000..ac05bd6434
 +
 diff --git a/hnscripts/timestampVersion.sh b/hnscripts/timestampVersion.sh
 new file mode 100755
-index 0000000000..b360759e2f
+index 0000000000..4179ca24b0
 --- /dev/null
 +++ b/hnscripts/timestampVersion.sh
 @@ -0,0 +1,19 @@
@@ -699,7 +701,7 @@ index 0000000000..b360759e2f
 +
 +echo OpenWrt $Nickname `scripts/getver.sh` / `date "+%F %H:%M"` > $STATUSFILE
 +echo "---" >> $STATUSFILE
-+echo "main      $(git log -1 --format="%cd %h %s" --abbrev=7 --date=short | head -n 1 | cut -b1-60)" >> $STATUSFILE
++echo "openwrt   $(git log -1 --format="%cd %h %s" --abbrev=7 --date=short | head -n 1 | cut -b1-60)" >> $STATUSFILE
 +echo "luci      $(cd feeds/luci && git log -1 --format="%cd %h %s" --abbrev=7 --date=short | cut -b1-60)" >> $STATUSFILE
 +echo "packages  $(cd feeds/packages && git log -1 --format="%cd %h %s" --abbrev=7 --date=short | cut -b1-60)" >> $STATUSFILE
 +echo "routing   $(cd feeds/routing && git log -1 --format="%cd %h %s" --abbrev=7 --date=short | cut -b1-60)" >> $STATUSFILE
@@ -941,3 +943,940 @@ index 19278902ed..b61824c877 100755
      echo 50 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
    fi
  }
+diff --git a/target/linux/ipq806x/config-5.15 b/target/linux/ipq806x/config-5.15
+index 0bd6dde11c..bdac2886cf 100644
+--- a/target/linux/ipq806x/config-5.15
++++ b/target/linux/ipq806x/config-5.15
+@@ -34,8 +34,8 @@ CONFIG_ARM_CPU_SUSPEND=y
+ # CONFIG_ARM_CPU_TOPOLOGY is not set
+ CONFIG_ARM_GIC=y
+ CONFIG_ARM_HAS_SG_CHAIN=y
+-# CONFIG_ARM_IPQ806X_FAB_DEVFREQ is not set
+-# CONFIG_ARM_KRAIT_CACHE_DEVFREQ is not set
++CONFIG_ARM_IPQ806X_FAB_DEVFREQ=y
++CONFIG_ARM_KRAIT_CACHE_DEVFREQ=y
+ CONFIG_ARM_L1_CACHE_SHIFT=6
+ CONFIG_ARM_L1_CACHE_SHIFT_6=y
+ CONFIG_ARM_MODULE_PLTS=y
+diff --git a/target/linux/ipq806x/patches-5.15/122-02-clk-qcom-krait-cc-register-REAL-qsb-fixed-clock.patch b/target/linux/ipq806x/patches-5.15/122-02-clk-qcom-krait-cc-register-REAL-qsb-fixed-clock.patch
+deleted file mode 100644
+index e2f78f79fb..0000000000
+--- a/target/linux/ipq806x/patches-5.15/122-02-clk-qcom-krait-cc-register-REAL-qsb-fixed-clock.patch
++++ /dev/null
+@@ -1,36 +0,0 @@
+-From fca6f185a9d9ef0892a719bc6da955b22d326ec7 Mon Sep 17 00:00:00 2001
+-From: Christian Marangi <ansuelsmth@gmail.com>
+-Date: Thu, 15 Sep 2022 02:24:33 +0200
+-Subject: [PATCH 4/9] clk: qcom: krait-cc: register REAL qsb fixed clock
+-
+-With some tools it was discovered the real frequency of the qsb fixed
+-clock. While not 100% correct it's still better than using 1 as a dummy
+-frequency.
+-Correctly register the qsb fixed clock with the frequency of 225 MHz
+-instead of 1.
+-
+-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+----
+- drivers/clk/qcom/krait-cc.c | 8 +++++---
+- 1 file changed, 5 insertions(+), 3 deletions(-)
+-
+---- a/drivers/clk/qcom/krait-cc.c
+-+++ b/drivers/clk/qcom/krait-cc.c
+-@@ -25,6 +25,8 @@ enum {
+- 	clks_max,
+- };
+- 
+-+#define QSB_RATE	2250000000
+-+
+- static unsigned int sec_mux_map[] = {
+- 	2,
+- 	0,
+-@@ -364,7 +366,7 @@ static int krait_cc_probe(struct platfor
+- 	 */
+- 	clk = clk_get(dev, "qsb");
+- 	if (IS_ERR(clk))
+--		clk = clk_register_fixed_rate(dev, "qsb", NULL, 0, 1);
+-+		clk = clk_register_fixed_rate(dev, "qsb", NULL, 0, QSB_RATE);
+- 	if (IS_ERR(clk))
+- 		return PTR_ERR(clk);
+- 
+diff --git a/target/linux/ipq806x/patches-5.15/122-03-clk-qcom-krait-cc-drop-pr_info-and-use-dev_info.patch b/target/linux/ipq806x/patches-5.15/122-03-clk-qcom-krait-cc-drop-pr_info-and-use-dev_info.patch
+deleted file mode 100644
+index d95a63fc44..0000000000
+--- a/target/linux/ipq806x/patches-5.15/122-03-clk-qcom-krait-cc-drop-pr_info-and-use-dev_info.patch
++++ /dev/null
+@@ -1,44 +0,0 @@
+-From 2399d181557d94ae9a2686926cd25768f132e4b4 Mon Sep 17 00:00:00 2001
+-From: Christian Marangi <ansuelsmth@gmail.com>
+-Date: Fri, 18 Mar 2022 16:12:14 +0100
+-Subject: [PATCH 7/9] clk: qcom: krait-cc: drop pr_info and use dev_info
+-
+-Replace pr_info() with dev_info() to provide better diagnostics.
+-
+-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+----
+- drivers/clk/qcom/krait-cc.c | 8 ++++----
+- 1 file changed, 4 insertions(+), 4 deletions(-)
+-
+---- a/drivers/clk/qcom/krait-cc.c
+-+++ b/drivers/clk/qcom/krait-cc.c
+-@@ -423,25 +423,25 @@ static int krait_cc_probe(struct platfor
+- 	cur_rate = clk_get_rate(clks[l2_mux]);
+- 	aux_rate = 384000000;
+- 	if (cur_rate < aux_rate) {
+--		pr_info("L2 @ Undefined rate. Forcing new rate.\n");
+-+		dev_info(dev, "L2 @ Undefined rate. Forcing new rate.\n");
+- 		cur_rate = aux_rate;
+- 	}
+- 	clk_set_rate(clks[l2_mux], aux_rate);
+- 	clk_set_rate(clks[l2_mux], 2);
+- 	clk_set_rate(clks[l2_mux], cur_rate);
+--	pr_info("L2 @ %lu KHz\n", clk_get_rate(clks[l2_mux]) / 1000);
+-+	dev_info(dev, "L2 @ %lu KHz\n", clk_get_rate(clks[l2_mux]) / 1000);
+- 	for_each_possible_cpu(cpu) {
+- 		clk = clks[cpu];
+- 		cur_rate = clk_get_rate(clk);
+- 		if (cur_rate < aux_rate) {
+--			pr_info("CPU%d @ Undefined rate. Forcing new rate.\n", cpu);
+-+			dev_info(dev, "CPU%d @ Undefined rate. Forcing new rate.\n", cpu);
+- 			cur_rate = aux_rate;
+- 		}
+- 
+- 		clk_set_rate(clk, aux_rate);
+- 		clk_set_rate(clk, 2);
+- 		clk_set_rate(clk, cur_rate);
+--		pr_info("CPU%d @ %lu KHz\n", cpu, clk_get_rate(clk) / 1000);
+-+		dev_info(dev, "CPU%d @ %lu KHz\n", cpu, clk_get_rate(clk) / 1000);
+- 	}
+- 
+- 	of_clk_add_provider(dev->of_node, krait_of_get, clks);
+diff --git a/target/linux/ipq806x/patches-5.15/122-04-clk-qcom-krait-cc-rework-mux-reset-logic-and-reset-h.patch b/target/linux/ipq806x/patches-5.15/122-04-clk-qcom-krait-cc-rework-mux-reset-logic-and-reset-h.patch
+deleted file mode 100644
+index 8f88e06991..0000000000
+--- a/target/linux/ipq806x/patches-5.15/122-04-clk-qcom-krait-cc-rework-mux-reset-logic-and-reset-h.patch
++++ /dev/null
+@@ -1,88 +0,0 @@
+-From 6a77cf3f5f95ec0058e1b4d1ada018748cb0b83b Mon Sep 17 00:00:00 2001
+-From: Christian Marangi <ansuelsmth@gmail.com>
+-Date: Thu, 15 Sep 2022 03:33:13 +0200
+-Subject: [PATCH 9/9] clk: qcom: krait-cc: rework mux reset logic and reset
+- hfpll
+-
+-Rework and clean mux reset logic.
+-Compact it to a for loop to handle both CPU and L2 in one place.
+-Move hardcoded aux_rate to define and add a new hfpll_rate value to
+-reset hfpll settings.
+-Change logic to now reset the hfpll to the lowest value of 600 Mhz and
+-then restoring the previous frequency. This permits to reset the hfpll if
+-the primary mux was set to source out of the secondary mux.
+-
+-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+----
+- drivers/clk/qcom/krait-cc.c | 50 +++++++++++++++++--------------------
+- 1 file changed, 23 insertions(+), 27 deletions(-)
+-
+---- a/drivers/clk/qcom/krait-cc.c
+-+++ b/drivers/clk/qcom/krait-cc.c
+-@@ -25,7 +25,9 @@ enum {
+- 	clks_max,
+- };
+- 
+--#define QSB_RATE	2250000000
+-+#define QSB_RATE	225000000
+-+#define AUX_RATE	384000000
+-+#define HFPLL_RATE	600000000
+- 
+- static unsigned int sec_mux_map[] = {
+- 	2,
+-@@ -350,7 +352,7 @@ static int krait_cc_probe(struct platfor
+- {
+- 	struct device *dev = &pdev->dev;
+- 	const struct of_device_id *id;
+--	unsigned long cur_rate, aux_rate, qsb_rate;
+-+	unsigned long cur_rate, qsb_rate;
+- 	int cpu;
+- 	struct clk_hw *mux, *l2_pri_mux;
+- 	struct clk *clk, **clks;
+-@@ -420,28 +422,29 @@ static int krait_cc_probe(struct platfor
+- 	 * two different rates to force a HFPLL reinit under all
+- 	 * circumstances.
+- 	 */
+--	cur_rate = clk_get_rate(clks[l2_mux]);
+--	aux_rate = 384000000;
+--	if (cur_rate < aux_rate) {
+--		dev_info(dev, "L2 @ Undefined rate. Forcing new rate.\n");
+--		cur_rate = aux_rate;
+--	}
+--	clk_set_rate(clks[l2_mux], aux_rate);
+--	clk_set_rate(clks[l2_mux], 2);
+--	clk_set_rate(clks[l2_mux], cur_rate);
+--	dev_info(dev, "L2 @ %lu KHz\n", clk_get_rate(clks[l2_mux]) / 1000);
+--	for_each_possible_cpu(cpu) {
+-+	for (cpu = 0; cpu < 5; cpu++) {
+-+		const char *l2_s = "L2";
+-+		char cpu_s[5];
+-+
+- 		clk = clks[cpu];
+-+		if (!clk)
+-+			continue;
+-+
+-+		if (cpu < 4)
+-+			snprintf(cpu_s, 5, "CPU%d", cpu);
+-+
+- 		cur_rate = clk_get_rate(clk);
+--		if (cur_rate < aux_rate) {
+--			dev_info(dev, "CPU%d @ Undefined rate. Forcing new rate.\n", cpu);
+--			cur_rate = aux_rate;
+-+		if (cur_rate < AUX_RATE) {
+-+			dev_info(dev, "%s @ Undefined rate. Forcing new rate.\n",
+-+				 cpu < 4 ? cpu_s : l2_s);
+-+			cur_rate = AUX_RATE;
+- 		}
+- 
+--		clk_set_rate(clk, aux_rate);
+--		clk_set_rate(clk, 2);
+-+		clk_set_rate(clk, AUX_RATE);
+-+		clk_set_rate(clk, HFPLL_RATE);
+- 		clk_set_rate(clk, cur_rate);
+--		dev_info(dev, "CPU%d @ %lu KHz\n", cpu, clk_get_rate(clk) / 1000);
+-+		dev_info(dev, "%s @ %lu KHz\n", cpu < 4 ? cpu_s : l2_s,
+-+			 clk_get_rate(clk) / 1000);
+- 	}
+- 
+- 	of_clk_add_provider(dev->of_node, krait_of_get, clks);
+diff --git a/target/linux/ipq806x/patches-5.15/122-05-clk-qcom-clk-krait-generilize-div-functions.patch b/target/linux/ipq806x/patches-5.15/122-05-clk-qcom-clk-krait-generilize-div-functions.patch
+deleted file mode 100644
+index a7c0f046c8..0000000000
+--- a/target/linux/ipq806x/patches-5.15/122-05-clk-qcom-clk-krait-generilize-div-functions.patch
++++ /dev/null
+@@ -1,156 +0,0 @@
+-From 908c361b3c3a139eb3e6a798cb620a6da7514d5c Mon Sep 17 00:00:00 2001
+-From: Christian Marangi <ansuelsmth@gmail.com>
+-Date: Fri, 23 Sep 2022 19:05:39 +0200
+-Subject: [PATCH 2/4] clk: qcom: clk-krait: generilize div functions
+-
+-Generilize div functions and remove hardcode to a divisor of 2.
+-This is just a cleanup and permit to make it more clear the settings of
+-the devisor when used by the krait-cc driver.
+-
+-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+----
+- drivers/clk/qcom/clk-krait.c | 57 ++++++++++++++++++++----------------
+- drivers/clk/qcom/clk-krait.h | 11 ++++---
+- drivers/clk/qcom/krait-cc.c  |  7 +++--
+- 3 files changed, 42 insertions(+), 33 deletions(-)
+-
+---- a/drivers/clk/qcom/clk-krait.c
+-+++ b/drivers/clk/qcom/clk-krait.c
+-@@ -97,53 +97,58 @@ const struct clk_ops krait_mux_clk_ops =
+- EXPORT_SYMBOL_GPL(krait_mux_clk_ops);
+- 
+- /* The divider can divide by 2, 4, 6 and 8. But we only really need div-2. */
+--static long krait_div2_round_rate(struct clk_hw *hw, unsigned long rate,
+-+static long krait_div_round_rate(struct clk_hw *hw, unsigned long rate,
+- 				  unsigned long *parent_rate)
+- {
+--	*parent_rate = clk_hw_round_rate(clk_hw_get_parent(hw), rate * 2);
+--	return DIV_ROUND_UP(*parent_rate, 2);
+-+	struct krait_div_clk *d = to_krait_div_clk(hw);
+-+
+-+	*parent_rate = clk_hw_round_rate(clk_hw_get_parent(hw),
+-+					 rate * d->divisor);
+-+
+-+	return DIV_ROUND_UP(*parent_rate, d->divisor);
+- }
+- 
+--static int krait_div2_set_rate(struct clk_hw *hw, unsigned long rate,
+-+static int krait_div_set_rate(struct clk_hw *hw, unsigned long rate,
+- 			       unsigned long parent_rate)
+- {
+--	struct krait_div2_clk *d = to_krait_div2_clk(hw);
+-+	struct krait_div_clk *d = to_krait_div_clk(hw);
+-+	u8 div_val = krait_div_to_val(d->divisor);
+- 	unsigned long flags;
+--	u32 val;
+--	u32 mask = BIT(d->width) - 1;
+--
+--	if (d->lpl)
+--		mask = mask << (d->shift + LPL_SHIFT) | mask << d->shift;
+--	else
+--		mask <<= d->shift;
+-+	u32 regval;
+- 
+- 	spin_lock_irqsave(&krait_clock_reg_lock, flags);
+--	val = krait_get_l2_indirect_reg(d->offset);
+--	val &= ~mask;
+--	krait_set_l2_indirect_reg(d->offset, val);
+-+	regval = krait_get_l2_indirect_reg(d->offset);
+-+
+-+	regval &= ~(d->mask << d->shift);
+-+	regval |= (div_val & d->mask) << d->shift;
+-+
+-+	if (d->lpl) {
+-+		regval &= ~(d->mask << (d->shift + LPL_SHIFT));
+-+		regval |= (div_val & d->mask) << (d->shift + LPL_SHIFT);
+-+	}
+-+
+-+	krait_set_l2_indirect_reg(d->offset, regval);
+- 	spin_unlock_irqrestore(&krait_clock_reg_lock, flags);
+- 
+- 	return 0;
+- }
+- 
+- static unsigned long
+--krait_div2_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+-+krait_div_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+- {
+--	struct krait_div2_clk *d = to_krait_div2_clk(hw);
+--	u32 mask = BIT(d->width) - 1;
+-+	struct krait_div_clk *d = to_krait_div_clk(hw);
+- 	u32 div;
+- 
+- 	div = krait_get_l2_indirect_reg(d->offset);
+- 	div >>= d->shift;
+--	div &= mask;
+--	div = (div + 1) * 2;
+-+	div &= d->mask;
+- 
+--	return DIV_ROUND_UP(parent_rate, div);
+-+	return DIV_ROUND_UP(parent_rate, krait_val_to_div(div));
+- }
+- 
+--const struct clk_ops krait_div2_clk_ops = {
+--	.round_rate = krait_div2_round_rate,
+--	.set_rate = krait_div2_set_rate,
+--	.recalc_rate = krait_div2_recalc_rate,
+-+const struct clk_ops krait_div_clk_ops = {
+-+	.round_rate = krait_div_round_rate,
+-+	.set_rate = krait_div_set_rate,
+-+	.recalc_rate = krait_div_recalc_rate,
+- };
+--EXPORT_SYMBOL_GPL(krait_div2_clk_ops);
+-+EXPORT_SYMBOL_GPL(krait_div_clk_ops);
+---- a/drivers/clk/qcom/clk-krait.h
+-+++ b/drivers/clk/qcom/clk-krait.h
+-@@ -25,17 +25,20 @@ struct krait_mux_clk {
+- 
+- extern const struct clk_ops krait_mux_clk_ops;
+- 
+--struct krait_div2_clk {
+-+struct krait_div_clk {
+- 	u32		offset;
+--	u8		width;
+-+	u32		mask;
+-+	u8		divisor;
+- 	u32		shift;
+- 	bool		lpl;
+- 
+- 	struct clk_hw	hw;
+- };
+- 
+--#define to_krait_div2_clk(_hw) container_of(_hw, struct krait_div2_clk, hw)
+-+#define to_krait_div_clk(_hw) container_of(_hw, struct krait_div_clk, hw)
+-+#define krait_div_to_val(_div)		((_div) / 2) - 1
+-+#define krait_val_to_div(_val)		((_val) + 1) * 2
+- 
+--extern const struct clk_ops krait_div2_clk_ops;
+-+extern const struct clk_ops krait_div_clk_ops;
+- 
+- #endif
+---- a/drivers/clk/qcom/krait-cc.c
+-+++ b/drivers/clk/qcom/krait-cc.c
+-@@ -86,11 +86,11 @@ static int krait_notifier_register(struc
+- static struct clk_hw *
+- krait_add_div(struct device *dev, int id, const char *s, unsigned int offset)
+- {
+--	struct krait_div2_clk *div;
+-+	struct krait_div_clk *div;
+- 	static struct clk_parent_data p_data[1];
+- 	struct clk_init_data init = {
+- 		.num_parents = ARRAY_SIZE(p_data),
+--		.ops = &krait_div2_clk_ops,
+-+		.ops = &krait_div_clk_ops,
+- 		.flags = CLK_SET_RATE_PARENT,
+- 	};
+- 	struct clk_hw *clk;
+-@@ -101,7 +101,8 @@ krait_add_div(struct device *dev, int id
+- 	if (!div)
+- 		return ERR_PTR(-ENOMEM);
+- 
+--	div->width = 2;
+-+	div->mask = 0x3;
+-+	div->divisor = 2;
+- 	div->shift = 6;
+- 	div->lpl = id >= 0;
+- 	div->offset = offset;
+diff --git a/target/linux/ipq806x/patches-5.15/122-v6.2-clk-qcom-krait-cc-fix-wrong-pointer-passed-to-IS_ERR.patch b/target/linux/ipq806x/patches-5.15/122-v6.2-clk-qcom-krait-cc-fix-wrong-pointer-passed-to-IS_ERR.patch
+new file mode 100644
+index 0000000000..660233e637
+--- /dev/null
++++ b/target/linux/ipq806x/patches-5.15/122-v6.2-clk-qcom-krait-cc-fix-wrong-pointer-passed-to-IS_ERR.patch
+@@ -0,0 +1,33 @@
++From 3b36713d69d99318592d261eaca9b7460313c8c2 Mon Sep 17 00:00:00 2001
++From: Yang Yingliang <yangyingliang@huawei.com>
++Date: Wed, 4 Jan 2023 16:02:35 +0800
++Subject: [PATCH] clk: qcom: krait-cc: fix wrong pointer passed to IS_ERR()
++
++It should be 'mux' passed to IS_ERR/PTR_ERR().
++
++Fixes: 56a655e1c41a ("clk: qcom: krait-cc: convert to parent_data API")
++Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
++Signed-off-by: Bjorn Andersson <andersson@kernel.org>
++Link: https://lore.kernel.org/r/20230104080235.1748953-1-yangyingliang@huawei.com
++---
++ drivers/clk/qcom/krait-cc.c | 4 ++--
++ 1 file changed, 2 insertions(+), 2 deletions(-)
++
++diff --git a/drivers/clk/qcom/krait-cc.c b/drivers/clk/qcom/krait-cc.c
++index 2f9287c263ec..410ae8390f1c 100644
++--- a/drivers/clk/qcom/krait-cc.c
+++++ b/drivers/clk/qcom/krait-cc.c
++@@ -376,8 +376,8 @@ static int krait_cc_probe(struct platform_device *pdev)
++ 
++ 	for_each_possible_cpu(cpu) {
++ 		mux = krait_add_clks(dev, cpu, id->data);
++-		if (IS_ERR(clk))
++-			return PTR_ERR(clk);
+++		if (IS_ERR(mux))
+++			return PTR_ERR(mux);
++ 		clks[cpu] = mux->clk;
++ 	}
++ 
++-- 
++2.39.2
++
+diff --git a/target/linux/ipq806x/patches-5.15/999-01-clk-qcom-krait-cc-move-mux-clks-to-local-static-stru.patch b/target/linux/ipq806x/patches-5.15/999-01-clk-qcom-krait-cc-move-mux-clks-to-local-static-stru.patch
+new file mode 100644
+index 0000000000..18dfae392a
+--- /dev/null
++++ b/target/linux/ipq806x/patches-5.15/999-01-clk-qcom-krait-cc-move-mux-clks-to-local-static-stru.patch
+@@ -0,0 +1,249 @@
++From 0011f11e0be8030ed059404358bf0b395897fdfa Mon Sep 17 00:00:00 2001
++From: Christian Marangi <ansuelsmth@gmail.com>
++Date: Sun, 16 Apr 2023 19:12:21 +0200
++Subject: [PATCH 1/3] clk: qcom: krait-cc: move mux clks to local static struct
++
++Move mux clks to local static struct.
++
++Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
++---
++ drivers/clk/qcom/krait-cc.c | 82 ++++++++++++++++++-------------------
++ 1 file changed, 39 insertions(+), 43 deletions(-)
++
++diff --git a/drivers/clk/qcom/krait-cc.c b/drivers/clk/qcom/krait-cc.c
++index 410ae8390f1c..83c72364e89d 100644
++--- a/drivers/clk/qcom/krait-cc.c
+++++ b/drivers/clk/qcom/krait-cc.c
++@@ -25,6 +25,13 @@ enum {
++ 	clks_max,
++ };
++ 
+++struct krait_cc_clk {
+++	struct clk *clk;
+++	struct krait_mux_clk pri_mux;
+++	struct krait_mux_clk sec_mux;
+++	struct krait_div2_clk div;
+++};
+++
++ static unsigned int sec_mux_map[] = {
++ 	2,
++ 	0,
++@@ -36,6 +43,8 @@ static unsigned int pri_mux_map[] = {
++ 	0,
++ };
++ 
+++static struct krait_cc_clk krait_cc_clks[clks_max];
+++
++ /*
++  * Notifier function for switching the muxes to safe parent
++  * while the hfpll is getting reprogrammed.
++@@ -80,9 +89,10 @@ static int krait_notifier_register(struct device *dev, struct clk *clk,
++ }
++ 
++ static struct clk_hw *
++-krait_add_div(struct device *dev, int id, const char *s, unsigned int offset)
+++krait_add_div(struct device *dev, struct krait_cc_clk *krait_cc,
+++	      int id, const char *s, unsigned int offset)
++ {
++-	struct krait_div2_clk *div;
+++	struct krait_div2_clk *div = &krait_cc->div;
++ 	static struct clk_parent_data p_data[1];
++ 	struct clk_init_data init = {
++ 		.num_parents = ARRAY_SIZE(p_data),
++@@ -93,10 +103,6 @@ krait_add_div(struct device *dev, int id, const char *s, unsigned int offset)
++ 	char *parent_name;
++ 	int cpu, ret;
++ 
++-	div = devm_kzalloc(dev, sizeof(*div), GFP_KERNEL);
++-	if (!div)
++-		return ERR_PTR(-ENOMEM);
++-
++ 	div->width = 2;
++ 	div->shift = 6;
++ 	div->lpl = id >= 0;
++@@ -141,11 +147,12 @@ krait_add_div(struct device *dev, int id, const char *s, unsigned int offset)
++ }
++ 
++ static struct clk_hw *
++-krait_add_sec_mux(struct device *dev, int id, const char *s,
+++krait_add_sec_mux(struct device *dev, struct krait_cc_clk *krait_cc,
+++		  int id, const char *s,
++ 		  unsigned int offset, bool unique_aux)
++ {
++ 	int cpu, ret;
++-	struct krait_mux_clk *mux;
+++	struct krait_mux_clk *mux = &krait_cc->sec_mux;
++ 	static struct clk_parent_data sec_mux_list[2] = {
++ 		{ .name = "qsb", .fw_name = "qsb" },
++ 		{},
++@@ -159,10 +166,6 @@ krait_add_sec_mux(struct device *dev, int id, const char *s,
++ 	struct clk_hw *clk;
++ 	char *parent_name;
++ 
++-	mux = devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
++-	if (!mux)
++-		return ERR_PTR(-ENOMEM);
++-
++ 	mux->offset = offset;
++ 	mux->lpl = id >= 0;
++ 	mux->mask = 0x3;
++@@ -225,11 +228,12 @@ krait_add_sec_mux(struct device *dev, int id, const char *s,
++ }
++ 
++ static struct clk_hw *
++-krait_add_pri_mux(struct device *dev, struct clk_hw *hfpll_div, struct clk_hw *sec_mux,
+++krait_add_pri_mux(struct device *dev, struct krait_cc_clk *krait_cc,
+++		  struct clk_hw *hfpll_div, struct clk_hw *sec_mux,
++ 		  int id, const char *s, unsigned int offset)
++ {
++ 	int ret;
++-	struct krait_mux_clk *mux;
+++	struct krait_mux_clk *mux = &krait_cc->pri_mux;
++ 	static struct clk_parent_data p_data[3];
++ 	struct clk_init_data init = {
++ 		.parent_data = p_data,
++@@ -240,10 +244,6 @@ krait_add_pri_mux(struct device *dev, struct clk_hw *hfpll_div, struct clk_hw *s
++ 	struct clk_hw *clk;
++ 	char *hfpll_name;
++ 
++-	mux = devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
++-	if (!mux)
++-		return ERR_PTR(-ENOMEM);
++-
++ 	mux->mask = 0x3;
++ 	mux->shift = 0;
++ 	mux->offset = offset;
++@@ -288,7 +288,8 @@ krait_add_pri_mux(struct device *dev, struct clk_hw *hfpll_div, struct clk_hw *s
++ }
++ 
++ /* id < 0 for L2, otherwise id == physical CPU number */
++-static struct clk_hw *krait_add_clks(struct device *dev, int id, bool unique_aux)
+++static struct clk_hw *krait_add_clks(struct device *dev, struct krait_cc_clk *krait_cc,
+++				     int id, bool unique_aux)
++ {
++ 	struct clk_hw *hfpll_div, *sec_mux, *pri_mux;
++ 	unsigned int offset;
++@@ -305,19 +306,19 @@ static struct clk_hw *krait_add_clks(struct device *dev, int id, bool unique_aux
++ 		s = "_l2";
++ 	}
++ 
++-	hfpll_div = krait_add_div(dev, id, s, offset);
+++	hfpll_div = krait_add_div(dev, krait_cc, id, s, offset);
++ 	if (IS_ERR(hfpll_div)) {
++ 		pri_mux = hfpll_div;
++ 		goto err;
++ 	}
++ 
++-	sec_mux = krait_add_sec_mux(dev, id, s, offset, unique_aux);
+++	sec_mux = krait_add_sec_mux(dev, krait_cc, id, s, offset, unique_aux);
++ 	if (IS_ERR(sec_mux)) {
++ 		pri_mux = sec_mux;
++ 		goto err;
++ 	}
++ 
++-	pri_mux = krait_add_pri_mux(dev, hfpll_div, sec_mux, id, s, offset);
+++	pri_mux = krait_add_pri_mux(dev, krait_cc, hfpll_div, sec_mux, id, s, offset);
++ 
++ err:
++ 	kfree(p);
++@@ -327,14 +328,14 @@ static struct clk_hw *krait_add_clks(struct device *dev, int id, bool unique_aux
++ static struct clk *krait_of_get(struct of_phandle_args *clkspec, void *data)
++ {
++ 	unsigned int idx = clkspec->args[0];
++-	struct clk **clks = data;
+++	struct krait_cc_clk *clks = data;
++ 
++ 	if (idx >= clks_max) {
++ 		pr_err("%s: invalid clock index %d\n", __func__, idx);
++ 		return ERR_PTR(-EINVAL);
++ 	}
++ 
++-	return clks[idx] ? : ERR_PTR(-ENODEV);
+++	return clks[idx].clk ? : ERR_PTR(-ENODEV);
++ }
++ 
++ static const struct of_device_id krait_cc_match_table[] = {
++@@ -351,7 +352,7 @@ static int krait_cc_probe(struct platform_device *pdev)
++ 	unsigned long cur_rate, aux_rate;
++ 	int cpu;
++ 	struct clk_hw *mux, *l2_pri_mux;
++-	struct clk *clk, **clks;
+++	struct clk *clk;
++ 
++ 	id = of_match_device(krait_cc_match_table, dev);
++ 	if (!id)
++@@ -369,22 +370,17 @@ static int krait_cc_probe(struct platform_device *pdev)
++ 			return PTR_ERR(clk);
++ 	}
++ 
++-	/* Krait configurations have at most 4 CPUs and one L2 */
++-	clks = devm_kcalloc(dev, clks_max, sizeof(*clks), GFP_KERNEL);
++-	if (!clks)
++-		return -ENOMEM;
++-
++ 	for_each_possible_cpu(cpu) {
++-		mux = krait_add_clks(dev, cpu, id->data);
+++		mux = krait_add_clks(dev, &krait_cc_clks[cpu], cpu, id->data);
++ 		if (IS_ERR(mux))
++ 			return PTR_ERR(mux);
++-		clks[cpu] = mux->clk;
+++		krait_cc_clks[cpu].clk = mux->clk;
++ 	}
++ 
++-	l2_pri_mux = krait_add_clks(dev, -1, id->data);
+++	l2_pri_mux = krait_add_clks(dev, &krait_cc_clks[l2_mux], -1, id->data);
++ 	if (IS_ERR(l2_pri_mux))
++ 		return PTR_ERR(l2_pri_mux);
++-	clks[l2_mux] = l2_pri_mux->clk;
+++	krait_cc_clks[l2_mux].clk = l2_pri_mux->clk;
++ 
++ 	/*
++ 	 * We don't want the CPU or L2 clocks to be turned off at late init
++@@ -394,8 +390,8 @@ static int krait_cc_probe(struct platform_device *pdev)
++ 	 * they take over.
++ 	 */
++ 	for_each_online_cpu(cpu) {
++-		clk_prepare_enable(clks[l2_mux]);
++-		WARN(clk_prepare_enable(clks[cpu]),
+++		clk_prepare_enable(krait_cc_clks[l2_mux].clk);
+++		WARN(clk_prepare_enable(krait_cc_clks[cpu].clk),
++ 		     "Unable to turn on CPU%d clock", cpu);
++ 	}
++ 
++@@ -410,18 +406,18 @@ static int krait_cc_probe(struct platform_device *pdev)
++ 	 * two different rates to force a HFPLL reinit under all
++ 	 * circumstances.
++ 	 */
++-	cur_rate = clk_get_rate(clks[l2_mux]);
+++	cur_rate = clk_get_rate(krait_cc_clks[l2_mux].clk);
++ 	aux_rate = 384000000;
++ 	if (cur_rate < aux_rate) {
++ 		pr_info("L2 @ Undefined rate. Forcing new rate.\n");
++ 		cur_rate = aux_rate;
++ 	}
++-	clk_set_rate(clks[l2_mux], aux_rate);
++-	clk_set_rate(clks[l2_mux], 2);
++-	clk_set_rate(clks[l2_mux], cur_rate);
++-	pr_info("L2 @ %lu KHz\n", clk_get_rate(clks[l2_mux]) / 1000);
+++	clk_set_rate(krait_cc_clks[l2_mux].clk, aux_rate);
+++	clk_set_rate(krait_cc_clks[l2_mux].clk, 2);
+++	clk_set_rate(krait_cc_clks[l2_mux].clk, cur_rate);
+++	pr_info("L2 @ %lu KHz\n", clk_get_rate(krait_cc_clks[l2_mux].clk) / 1000);
++ 	for_each_possible_cpu(cpu) {
++-		clk = clks[cpu];
+++		clk = krait_cc_clks[cpu].clk;
++ 		cur_rate = clk_get_rate(clk);
++ 		if (cur_rate < aux_rate) {
++ 			pr_info("CPU%d @ Undefined rate. Forcing new rate.\n", cpu);
++@@ -434,7 +430,7 @@ static int krait_cc_probe(struct platform_device *pdev)
++ 		pr_info("CPU%d @ %lu KHz\n", cpu, clk_get_rate(clk) / 1000);
++ 	}
++ 
++-	of_clk_add_provider(dev->of_node, krait_of_get, clks);
+++	of_clk_add_provider(dev->of_node, krait_of_get, &krait_cc_clks);
++ 
++ 	return 0;
++ }
++-- 
++2.39.2
++
+diff --git a/target/linux/ipq806x/patches-5.15/999-02-clk-qcom-krait-cc-add-specific-notifier-for-L2-pri-a.patch b/target/linux/ipq806x/patches-5.15/999-02-clk-qcom-krait-cc-add-specific-notifier-for-L2-pri-a.patch
+new file mode 100644
+index 0000000000..77ecea7555
+--- /dev/null
++++ b/target/linux/ipq806x/patches-5.15/999-02-clk-qcom-krait-cc-add-specific-notifier-for-L2-pri-a.patch
+@@ -0,0 +1,148 @@
++From 9a45bd6f1585bb24583a8534cd52569c9268e837 Mon Sep 17 00:00:00 2001
++From: Christian Marangi <ansuelsmth@gmail.com>
++Date: Sun, 16 Apr 2023 19:31:18 +0200
++Subject: [PATCH 2/3] clk: qcom: krait-cc: add specific notifier for L2 pri and
++ sec mux
++
++Add specific notifier for L2 pri and sec mux.
++
++Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
++---
++ drivers/clk/qcom/krait-cc.c | 75 ++++++++++++++++++++++++++++++++++---
++ 1 file changed, 70 insertions(+), 5 deletions(-)
++
++diff --git a/drivers/clk/qcom/krait-cc.c b/drivers/clk/qcom/krait-cc.c
++index 83c72364e89d..8fffe9bf88ba 100644
++--- a/drivers/clk/qcom/krait-cc.c
+++++ b/drivers/clk/qcom/krait-cc.c
++@@ -37,14 +37,71 @@ static unsigned int sec_mux_map[] = {
++ 	0,
++ };
++ 
+++#define SEC_MUX_SAFE_INDEX	1
+++
++ static unsigned int pri_mux_map[] = {
++ 	1,
++ 	2,
++ 	0,
++ };
+++#define PRI_MUX_SAFE_INDEX	2
++ 
++ static struct krait_cc_clk krait_cc_clks[clks_max];
++ 
+++/*
+++ * Notifier function for switching the muxes to safe parent
+++ * while the hfpll is getting reprogrammed.
+++ */
+++static int krait_l2_pri_mux_notifier_cb(struct notifier_block *nb,
+++				unsigned long event,
+++				void *data)
+++{
+++	struct krait_mux_clk *mux = &krait_cc_clks[l2_mux].pri_mux;
+++	int ret = 0;
+++	/* Switch to safe parent */
+++	if (event == PRE_RATE_CHANGE) {
+++		mux->old_index = krait_mux_clk_ops.get_parent(&mux->hw);
+++		ret = krait_mux_clk_ops.set_parent(&mux->hw, PRI_MUX_SAFE_INDEX);
+++		mux->reparent = false;
+++	/*
+++	 * By the time POST_RATE_CHANGE notifier is called,
+++	 * clk framework itself would have changed the parent for the new rate.
+++	 * Only otherwise, put back to the old parent.
+++	 */
+++	} else if (event == POST_RATE_CHANGE) {
+++		if (!mux->reparent)
+++			ret = krait_mux_clk_ops.set_parent(&mux->hw,
+++							   mux->old_index);
+++	}
+++
+++	return notifier_from_errno(ret);
+++}
+++
+++static int krait_l2_sec_mux_notifier_cb(struct notifier_block *nb,
+++				unsigned long event,
+++				void *data)
+++{
+++	struct krait_mux_clk *mux = &krait_cc_clks[l2_mux].sec_mux;
+++	int ret = 0;
+++	/* Switch to safe parent */
+++	if (event == PRE_RATE_CHANGE) {
+++		mux->old_index = krait_mux_clk_ops.get_parent(&mux->hw);
+++		ret = krait_mux_clk_ops.set_parent(&mux->hw, SEC_MUX_SAFE_INDEX);
+++		mux->reparent = false;
+++	/*
+++	 * By the time POST_RATE_CHANGE notifier is called,
+++	 * clk framework itself would have changed the parent for the new rate.
+++	 * Only otherwise, put back to the old parent.
+++	 */
+++	} else if (event == POST_RATE_CHANGE) {
+++		if (!mux->reparent)
+++			ret = krait_mux_clk_ops.set_parent(&mux->hw,
+++							   mux->old_index);
+++	}
+++
+++	return notifier_from_errno(ret);
+++}
+++
++ /*
++  * Notifier function for switching the muxes to safe parent
++  * while the hfpll is getting reprogrammed.
++@@ -75,12 +132,12 @@ static int krait_notifier_cb(struct notifier_block *nb,
++ 	return notifier_from_errno(ret);
++ }
++ 
++-static int krait_notifier_register(struct device *dev, struct clk *clk,
++-				   struct krait_mux_clk *mux)
+++static int krait_notifier_register(struct device *dev, notifier_fn_t notifier_cb,
+++				   struct clk *clk, struct krait_mux_clk *mux)
++ {
++ 	int ret = 0;
++ 
++-	mux->clk_nb.notifier_call = krait_notifier_cb;
+++	mux->clk_nb.notifier_call = notifier_cb;
++ 	ret = devm_clk_notifier_register(dev, clk, &mux->clk_nb);
++ 	if (ret)
++ 		dev_err(dev, "failed to register clock notifier: %d\n", ret);
++@@ -152,6 +209,7 @@ krait_add_sec_mux(struct device *dev, struct krait_cc_clk *krait_cc,
++ 		  unsigned int offset, bool unique_aux)
++ {
++ 	int cpu, ret;
+++	notifier_fn_t notifier_cb;
++ 	struct krait_mux_clk *mux = &krait_cc->sec_mux;
++ 	static struct clk_parent_data sec_mux_list[2] = {
++ 		{ .name = "qsb", .fw_name = "qsb" },
++@@ -206,7 +264,10 @@ krait_add_sec_mux(struct device *dev, struct krait_cc_clk *krait_cc,
++ 
++ 	clk = &mux->hw;
++ 
++-	ret = krait_notifier_register(dev, mux->hw.clk, mux);
+++	notifier_cb = krait_notifier_cb;
+++	if (id < 0)
+++		notifier_cb = krait_l2_sec_mux_notifier_cb;
+++	ret = krait_notifier_register(dev, notifier_cb, mux->hw.clk, mux);
++ 	if (ret) {
++ 		clk = ERR_PTR(ret);
++ 		goto err_clk;
++@@ -233,6 +294,7 @@ krait_add_pri_mux(struct device *dev, struct krait_cc_clk *krait_cc,
++ 		  int id, const char *s, unsigned int offset)
++ {
++ 	int ret;
+++	notifier_fn_t notifier_cb;
++ 	struct krait_mux_clk *mux = &krait_cc->pri_mux;
++ 	static struct clk_parent_data p_data[3];
++ 	struct clk_init_data init = {
++@@ -276,7 +338,10 @@ krait_add_pri_mux(struct device *dev, struct krait_cc_clk *krait_cc,
++ 
++ 	clk = &mux->hw;
++ 
++-	ret = krait_notifier_register(dev, mux->hw.clk, mux);
+++	notifier_cb = krait_notifier_cb;
+++	if (id < 0)
+++		notifier_cb = krait_l2_pri_mux_notifier_cb;
+++	ret = krait_notifier_register(dev, notifier_cb, mux->hw.clk, mux);
++ 	if (ret)
++ 		clk = ERR_PTR(ret);
++ 
++-- 
++2.39.2
++
+diff --git a/target/linux/ipq806x/patches-5.15/999-03-clk-qcom-krait-cc-protect-L2-pri-and-sec-mux-safe-pa.patch b/target/linux/ipq806x/patches-5.15/999-03-clk-qcom-krait-cc-protect-L2-pri-and-sec-mux-safe-pa.patch
+new file mode 100644
+index 0000000000..c05f527433
+--- /dev/null
++++ b/target/linux/ipq806x/patches-5.15/999-03-clk-qcom-krait-cc-protect-L2-pri-and-sec-mux-safe-pa.patch
+@@ -0,0 +1,78 @@
++From 3dc925bd14f50c5834b6b2896ef1a4460234c91c Mon Sep 17 00:00:00 2001
++From: Christian Marangi <ansuelsmth@gmail.com>
++Date: Sun, 16 Apr 2023 19:33:39 +0200
++Subject: [PATCH 3/3] clk: qcom: krait-cc: protect L2 pri and sec mux safe
++ parent with locks
++
++Protect L2 pri and sec mux safe parent with spin locks.
++
++Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
++---
++ drivers/clk/qcom/krait-cc.c | 14 ++++++++++++++
++ 1 file changed, 14 insertions(+)
++
++diff --git a/drivers/clk/qcom/krait-cc.c b/drivers/clk/qcom/krait-cc.c
++index 8fffe9bf88ba..58b45ded63d3 100644
++--- a/drivers/clk/qcom/krait-cc.c
+++++ b/drivers/clk/qcom/krait-cc.c
++@@ -12,6 +12,7 @@
++ #include <linux/clk.h>
++ #include <linux/clk-provider.h>
++ #include <linux/slab.h>
+++#include <linux/spinlock.h>
++ 
++ #include "clk-krait.h"
++ 
++@@ -47,6 +48,7 @@ static unsigned int pri_mux_map[] = {
++ #define PRI_MUX_SAFE_INDEX	2
++ 
++ static struct krait_cc_clk krait_cc_clks[clks_max];
+++static DEFINE_SPINLOCK(krait_cc_l2_mux_lock);
++ 
++ /*
++  * Notifier function for switching the muxes to safe parent
++@@ -57,7 +59,11 @@ static int krait_l2_pri_mux_notifier_cb(struct notifier_block *nb,
++ 				void *data)
++ {
++ 	struct krait_mux_clk *mux = &krait_cc_clks[l2_mux].pri_mux;
+++	unsigned long flags;
++ 	int ret = 0;
+++
+++	spin_lock_irqsave(&krait_cc_l2_mux_lock, flags);
+++
++ 	/* Switch to safe parent */
++ 	if (event == PRE_RATE_CHANGE) {
++ 		mux->old_index = krait_mux_clk_ops.get_parent(&mux->hw);
++@@ -74,6 +80,8 @@ static int krait_l2_pri_mux_notifier_cb(struct notifier_block *nb,
++ 							   mux->old_index);
++ 	}
++ 
+++	spin_unlock_irqrestore(&krait_cc_l2_mux_lock, flags);
+++
++ 	return notifier_from_errno(ret);
++ }
++ 
++@@ -82,7 +90,11 @@ static int krait_l2_sec_mux_notifier_cb(struct notifier_block *nb,
++ 				void *data)
++ {
++ 	struct krait_mux_clk *mux = &krait_cc_clks[l2_mux].sec_mux;
+++	unsigned long flags;
++ 	int ret = 0;
+++
+++	spin_lock_irqsave(&krait_cc_l2_mux_lock, flags);
+++
++ 	/* Switch to safe parent */
++ 	if (event == PRE_RATE_CHANGE) {
++ 		mux->old_index = krait_mux_clk_ops.get_parent(&mux->hw);
++@@ -99,6 +111,8 @@ static int krait_l2_sec_mux_notifier_cb(struct notifier_block *nb,
++ 							   mux->old_index);
++ 	}
++ 
+++	spin_unlock_irqrestore(&krait_cc_l2_mux_lock, flags);
+++
++ 	return notifier_from_errno(ret);
++ }
++ 
++-- 
++2.39.2
++
+diff --git a/target/linux/ipq806x/patches-5.15/999-04-clk-qcom-krait-cc-fix-wrong-parent-order-for-sec-mux.patch b/target/linux/ipq806x/patches-5.15/999-04-clk-qcom-krait-cc-fix-wrong-parent-order-for-sec-mux.patch
+new file mode 100644
+index 0000000000..c7b2dc9120
+--- /dev/null
++++ b/target/linux/ipq806x/patches-5.15/999-04-clk-qcom-krait-cc-fix-wrong-parent-order-for-sec-mux.patch
+@@ -0,0 +1,36 @@
++From 49691f86f5e3f6229681deafa2c8e197a4d54919 Mon Sep 17 00:00:00 2001
++From: Christian Marangi <ansuelsmth@gmail.com>
++Date: Sun, 16 Apr 2023 21:17:42 +0200
++Subject: [PATCH 4/4] clk: qcom: krait-cc: fix wrong parent order for sec mux
++
++Fix wrong parent order for sec mux. With the help of debug regs to
++measure clk, it was discovered that
++- sel 0 refer to the qsb clock (that is the parent clock)
++- sel 2 refer to the pll8_vote clock
++
++Set the parent order to follow:
++- index 0 --> qsb clock --> sel 0
++- index 1 --> pll8_vote clock --> sel 2
++
++Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
++---
++ drivers/clk/qcom/krait-cc.c | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/drivers/clk/qcom/krait-cc.c b/drivers/clk/qcom/krait-cc.c
++index 58b45ded63d3..d61aaa7ea518 100644
++--- a/drivers/clk/qcom/krait-cc.c
+++++ b/drivers/clk/qcom/krait-cc.c
++@@ -226,8 +226,8 @@ krait_add_sec_mux(struct device *dev, struct krait_cc_clk *krait_cc,
++ 	notifier_fn_t notifier_cb;
++ 	struct krait_mux_clk *mux = &krait_cc->sec_mux;
++ 	static struct clk_parent_data sec_mux_list[2] = {
++-		{ .name = "qsb", .fw_name = "qsb" },
++ 		{},
+++		{ .name = "qsb", .fw_name = "qsb" },
++ 	};
++ 	struct clk_init_data init = {
++ 		.parent_data = sec_mux_list,
++-- 
++2.39.2
++
