@@ -199,16 +199,16 @@ index 50ae67cb9d..9899b1d1f4 100644
  #src-git-full oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..56a608e0b0
+index 0000000000..84aa66d1ea
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt master r22702-cf8d861978 / 2023-05-01 16:28
++OpenWrt master r22899-466be0612a / 2023-05-16 20:16
 +---
-+openwrt   2023-04-30 cf8d861 realtek: hpe_1920-8g: add phy-handle for 
-+luci      2023-04-30 9628bd5 Merge pull request #6362 from stangri/mas
-+packages  2023-05-01 b9b641d sing-box: update to 1.2.6
-+routing   2023-04-27 3e96c85 treewide: remove AUTORELEASE
++openwrt   2023-05-16 466be06 e2fsprogs: fix compilation with musl 1.2.
++luci      2023-05-14 451e63d Translated using Weblate (Polish)
++packages  2023-05-16 c64d613 arp-scan: update to 1.10.0
++routing   2023-05-16 c9a8f2d ci: change default packages
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -944,11 +944,11 @@ index 19278902ed..b61824c877 100755
    fi
  }
 diff --git a/target/linux/ipq806x/config-5.15 b/target/linux/ipq806x/config-5.15
-index 0bd6dde11c..bdac2886cf 100644
+index 69e17cfa50..2c9b3d4c03 100644
 --- a/target/linux/ipq806x/config-5.15
 +++ b/target/linux/ipq806x/config-5.15
-@@ -34,8 +34,8 @@ CONFIG_ARM_CPU_SUSPEND=y
- # CONFIG_ARM_CPU_TOPOLOGY is not set
+@@ -35,8 +35,8 @@ CONFIG_ARM_CPU_SUSPEND=y
+ CONFIG_ARM_CRYPTO=y
  CONFIG_ARM_GIC=y
  CONFIG_ARM_HAS_SG_CHAIN=y
 -# CONFIG_ARM_IPQ806X_FAB_DEVFREQ is not set

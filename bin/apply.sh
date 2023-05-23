@@ -29,7 +29,8 @@ git reset --hard upstream/master
 ${script_dir}/apply_main.sh
 git add ".gitignore" ".config.init" "feeds.conf.default" "files/" "hnscripts/" \
 	"package/base-files/" "package/network/" "package/utils/busybox/" \
-	"target/linux/ipq806x/base-files/etc/"
+	"target/linux/ipq806x/base-files/etc/" "target/linux/ipq806x/config-5.15/" \
+	"target/linux/ipq806x/patches-5.15/"
 git commit -m "${COMMIT_MESSAGE}"
 
 # reset luci

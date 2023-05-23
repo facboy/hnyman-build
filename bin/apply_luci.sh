@@ -5,4 +5,4 @@ script_dir="$(dirname "$(realpath "$0")")"
 
 . ${script_dir}/apply_common.sh
 
-(cd feeds/luci;     patch -p1 -i ${arc_dir}/$FILESTAMP-luci.patch)
+(cd feeds/luci;     patch -p1 -i ${arc_dir}/$FILESTAMP-luci.patch || true)

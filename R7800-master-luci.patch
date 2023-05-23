@@ -1,17 +1,20 @@
 diff --git a/applications/luci-app-attendedsysupgrade/htdocs/luci-static/resources/view/attendedsysupgrade/overview.js b/applications/luci-app-attendedsysupgrade/htdocs/luci-static/resources/view/attendedsysupgrade/overview.js
-index 55ed0509e1..2f3701c4af 100644
+index 76e504086e..218779e54c 100644
 --- a/applications/luci-app-attendedsysupgrade/htdocs/luci-static/resources/view/attendedsysupgrade/overview.js
 +++ b/applications/luci-app-attendedsysupgrade/htdocs/luci-static/resources/view/attendedsysupgrade/overview.js
-@@ -437,7 +437,8 @@ return view.extend({
- 			E('h2', _('Attended Sysupgrade')),
- 			E('p', _('The attended sysupgrade service allows to easily upgrade vanilla and custom firmware images.')),
- 			E('p', _('This is done by building a new firmware on demand via an online service.')),
--			E('p', _('Currently running: %s - %s').format(this.firmware.version, this.data.revision)),
-+			E('p', _('Currently running: %s - %s  (private build)').format(this.firmware.version, this.data.revision)),
-+			E('p', _('Note: you are currently running a private build. If you use Attended sysupgrade, your new image will be a normal OpenWrt build with the package selection taken from here, but without the source code modifications included in this build.')),
- 			E('button', {
- 				'class': 'btn cbi-button cbi-button-positive important',
- 				'click': ui.createHandlerFn(this, this.handleCheck)
+@@ -624,6 +624,12 @@ return view.extend({
+ 					this.data.revision
+ 				)
+ 			),
++			E(
++				'p',
++				_(
++					'Note: you are currently running a private build. If you use Attended sysupgrade, your new image will be a normal OpenWrt build with the package selection taken from here, but without the source code modifications included in this build.'
++				)
++			),
+ 			E(
+ 				'button',
+ 				{
 diff --git a/applications/luci-app-statistics/root/etc/config/luci_statistics b/applications/luci-app-statistics/root/etc/config/luci_statistics
 index bb9ca15e8e..a049ad52e7 100644
 --- a/applications/luci-app-statistics/root/etc/config/luci_statistics
