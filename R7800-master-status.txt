@@ -1,10 +1,10 @@
-master-r22899-466be0612a-20230516-2019
+master-r23201-4c5a9da869-20230601-1808
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2023-05-16 466be06 e2fsprogs: fix compilation with musl 1.2.
+2023-05-31 4c5a9da selinux-policy: update to 1.2.5
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -38,7 +38,6 @@ M  package/network/ipv6/6in4/files/6in4.sh
 M  package/network/services/hostapd/files/hostapd.sh
 M  package/network/services/hostapd/files/wps-hotplug.sh
 M  package/network/services/odhcpd/files/odhcpd-update
-A  package/utils/busybox/patches/001-upstream-1360-fix-ed-memcpy.patch
 M  target/linux/ipq806x/base-files/etc/init.d/cpufreq
 M  target/linux/ipq806x/config-5.15
 D  target/linux/ipq806x/patches-5.15/122-02-clk-qcom-krait-cc-register-REAL-qsb-fixed-clock.patch
@@ -58,7 +57,7 @@ A  target/linux/ipq806x/patches-5.15/999-04-clk-qcom-krait-cc-fix-wrong-parent-o
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2023-05-14 451e63d Translated using Weblate (Polish)
+2023-05-31 c9c3959 luci-app-statistics: enhance tcpconns plu
 M  applications/luci-app-attendedsysupgrade/htdocs/luci-static/resources/view/attendedsysupgrade/overview.js
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
@@ -70,8 +69,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2023-05-16 c64d613 arp-scan: update to 1.10.0
+2023-06-01 56de9f9 v2ray-geodata: Update to latest version
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
-A  utils/acl/patches/001-fix.patch

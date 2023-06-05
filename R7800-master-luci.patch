@@ -16,7 +16,7 @@ index 76e504086e..218779e54c 100644
  				'button',
  				{
 diff --git a/applications/luci-app-statistics/root/etc/config/luci_statistics b/applications/luci-app-statistics/root/etc/config/luci_statistics
-index bb9ca15e8e..a049ad52e7 100644
+index 2008a7966a..2c57449039 100644
 --- a/applications/luci-app-statistics/root/etc/config/luci_statistics
 +++ b/applications/luci-app-statistics/root/etc/config/luci_statistics
 @@ -67,7 +67,7 @@ config statistics 'collectd_chrony'
@@ -53,8 +53,8 @@ index bb9ca15e8e..a049ad52e7 100644
  
  config statistics 'collectd_interface'
  	option enable '1'
-@@ -206,9 +207,9 @@ config statistics 'collectd_tcpconns'
- 	option LocalPorts '22 80'
+@@ -207,9 +208,9 @@ config statistics 'collectd_tcpconns'
+ 	option AllPortsSummary '0'
  
  config statistics 'collectd_thermal'
 -	option enable '0'
