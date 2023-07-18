@@ -19,19 +19,19 @@ function normalize_dir() {
     chmod a-x *
     chmod a+x *.sh
 
-    local version="$(ls ./R7800-master-*-checksums.txt | sed 's/^\.\///' | sed 's/-checksums.txt//g')"
+    local version="$(ls ./R7800-main-*-checksums.txt | sed 's/^\.\///' | sed 's/-checksums.txt//g')"
     echo "${version}" > "${tmp_dir}/VERSION"
 
-    local trunc_version="$(echo "${version}" | sed 's/^R7800-master//')"
+    local trunc_version="$(echo "${version}" | sed 's/^R7800-main//')"
 
-    for file in ./R7800-master-*; do
+    for file in ./R7800-main-*; do
         local trunc_file="$(echo "${file}" | sed 's/'${trunc_version}'//')"
         echo "Renaming \"${file}\" to \"${trunc_file}\""
         mv "${file}" "${trunc_file}"
     done
 
-    dos2unix "./R7800-master-checksums.txt"
-    dos2unix "./R7800-master-status.txt"
+    dos2unix "./R7800-main-checksums.txt"
+    dos2unix "./R7800-main-status.txt"
 }
 
 # extract zip and normalize contents

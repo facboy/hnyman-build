@@ -12,11 +12,11 @@ OPENWRT_ROOT="$(realpath "$1")"
 
 # get commit message
 cd "${script_dir}/../"
-COMMIT_MESSAGE="$(git log --format='tformat:%s' | grep "Update to version R7800-master-" | head -n1)"
+COMMIT_MESSAGE="$(git log --format='tformat:%s' | grep "Update to version R7800-main-" | head -n1)"
 
 cd "${OPENWRT_ROOT}"
 
-# reset master
+# reset main
 # Compile_info always has some junk in it
 COMPILE_INFO="files/etc/Compile_info.txt"
 if [[ -e "${COMPILE_INFO}" ]]; then
@@ -24,9 +24,9 @@ if [[ -e "${COMPILE_INFO}" ]]; then
 fi
 git fetch upstream
 git co hnyman-build-apply
-git reset --hard upstream/master
+git reset --hard upstream/main
 
-${script_dir}/apply_main.sh
+${script_dir}/apply_openwrt.sh
 git add ".gitignore" ".config.init" "feeds.conf.default" "files/" "hnscripts/" \
 	"package/base-files/" "package/network/" "package/utils/busybox/" \
 	"target/linux/ipq806x/base-files/etc/" "target/linux/ipq806x/config-5.15" \
