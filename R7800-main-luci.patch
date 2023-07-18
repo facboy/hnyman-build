@@ -1,0 +1,131 @@
+diff --git a/applications/luci-app-attendedsysupgrade/htdocs/luci-static/resources/view/attendedsysupgrade/overview.js b/applications/luci-app-attendedsysupgrade/htdocs/luci-static/resources/view/attendedsysupgrade/overview.js
+index 76e504086e..218779e54c 100644
+--- a/applications/luci-app-attendedsysupgrade/htdocs/luci-static/resources/view/attendedsysupgrade/overview.js
++++ b/applications/luci-app-attendedsysupgrade/htdocs/luci-static/resources/view/attendedsysupgrade/overview.js
+@@ -624,6 +624,12 @@ return view.extend({
+ 					this.data.revision
+ 				)
+ 			),
++			E(
++				'p',
++				_(
++					'Note: you are currently running a private build. If you use Attended sysupgrade, your new image will be a normal OpenWrt build with the package selection taken from here, but without the source code modifications included in this build.'
++				)
++			),
+ 			E(
+ 				'button',
+ 				{
+diff --git a/applications/luci-app-statistics/root/etc/config/luci_statistics b/applications/luci-app-statistics/root/etc/config/luci_statistics
+index 2008a7966a..2c57449039 100644
+--- a/applications/luci-app-statistics/root/etc/config/luci_statistics
++++ b/applications/luci-app-statistics/root/etc/config/luci_statistics
+@@ -67,7 +67,7 @@ config statistics 'collectd_chrony'
+ 	option Timeout '2'
+ 
+ config statistics 'collectd_conntrack'
+-	option enable '0'
++	option enable '1'
+ 
+ config statistics 'collectd_contextswitch'
+ 	option enable '0'
+@@ -80,7 +80,8 @@ config statistics 'collectd_cpu'
+ 	option ValuesPercentage '1'
+ 
+ config statistics 'collectd_cpufreq'
+-	option enable '0'
++	option enable '1'
++	option ExtraItems '1'
+ 
+ config statistics 'collectd_curl'
+ 	option enable '0'
+@@ -114,10 +115,10 @@ config statistics 'collectd_exec'
+ 	option enable '0'
+ 
+ #example for sqm_collect plugin
+-#config collectd_exec_input
+-#        option cmduser 'nobody'
+-#        option cmdgroup 'nogroup'
+-#        option cmdline '/usr/libexec/collectd/sqm_collectd.sh eth0 ifb4eth0'
++config collectd_exec_input
++        option cmduser 'nobody'
++        option cmdgroup 'nogroup'
++        option cmdline '/usr/libexec/collectd/sqm_collectd.sh eth0.2'
+ 
+ config statistics 'collectd_interface'
+ 	option enable '1'
+@@ -207,9 +208,9 @@ config statistics 'collectd_tcpconns'
+ 	option AllPortsSummary '0'
+ 
+ config statistics 'collectd_thermal'
+-	option enable '0'
+-	option IgnoreSelected '0'
+-	option Device ''
++	option enable '1'
++	option IgnoreSelected '1'
++	option Device 'cooling_device0 cooling_device1'
+ 
+ config statistics 'collectd_uptime'
+ 	option enable '0'
+diff --git a/modules/luci-base/root/etc/config/luci b/modules/luci-base/root/etc/config/luci
+index 46947ae4c1..1a90776a6c 100644
+--- a/modules/luci-base/root/etc/config/luci
++++ b/modules/luci-base/root/etc/config/luci
+@@ -23,9 +23,19 @@ config internal ccache
+ 	option enable 1
+ 		
+ config internal themes
++	option Bootstrap '/luci-static/bootstrap'
+ 
+ config internal apply
+ 	option rollback 90
+ 	option holdoff 4
+ 	option timeout 5
+ 	option display 1.5
++
++config command
++	option name 'Backup LuCI stats'
++	option command '/etc/storeStats.sh'
++
++config command
++	option name 'Restore LuCI stats backup'
++	option command '/etc/restoreStats.sh'
++
+diff --git a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+index 5eb07ae41e..b85885272d 100644
+--- a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
++++ b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+@@ -1567,7 +1567,7 @@ return view.extend({
+ 
+ 					o = ss.taboption('roaming', form.Value, 'reassociation_deadline', _('Reassociation Deadline'), _('time units (TUs / 1.024 ms) [1000-65535]'));
+ 					o.depends({ ieee80211r: '1' });
+-					o.placeholder = '1000';
++					o.placeholder = '20000';
+ 					o.datatype = 'range(1000,65535)';
+ 					o.rmempty = true;
+ 
+diff --git a/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material b/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
+index 7f07239ec0..e7c376df80 100755
+--- a/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
++++ b/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
+@@ -4,7 +4,7 @@ if [ "$PKG_UPGRADE" != 1 ]; then
+ 	uci get luci.themes.Material >/dev/null 2>&1 || \
+ 	uci batch <<-EOF
+ 		set luci.themes.Material=/luci-static/material
+-		set luci.main.mediaurlbase=/luci-static/material
++#		set luci.main.mediaurlbase=/luci-static/material
+ 		commit luci
+ 	EOF
+ fi
+diff --git a/themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020 b/themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020
+index 7c49acfda9..07d87b3951 100755
+--- a/themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020
++++ b/themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020
+@@ -4,7 +4,7 @@ if [ "$PKG_UPGRADE" != 1 ]; then
+ 	uci get luci.themes.OpenWrt2020 >/dev/null 2>&1 || \
+ 	uci batch <<-EOF
+ 		set luci.themes.OpenWrt2020=/luci-static/openwrt2020
+-		set luci.main.mediaurlbase=/luci-static/openwrt2020
++#		set luci.main.mediaurlbase=/luci-static/openwrt2020
+ 		commit luci
+ 	EOF
+ fi

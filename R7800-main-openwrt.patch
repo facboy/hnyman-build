@@ -1,0 +1,885 @@
+diff --git a/.config.init b/.config.init
+new file mode 100644
+index 0000000000..787c9755f4
+--- /dev/null
++++ b/.config.init
+@@ -0,0 +1,160 @@
++# Use "make defconfig" to expand this to a full .config
++CONFIG_TARGET_ipq806x=y
++CONFIG_TARGET_ipq806x_generic=y
++CONFIG_TARGET_ipq806x_generic_DEVICE_netgear_r7800=y
++#CONFIG_TESTING_KERNEL=y
++
++# Per-package build logs in <buildroot>/logs
++CONFIG_DEVEL=y
++CONFIG_BUILD_LOG=y
++
++# Debugging options (build gdbserver, include package debug)
++CONFIG_PACKAGE_gdbserver=y
++CONFIG_DEBUG=y
++
++# Include package list in build
++CONFIG_INCLUDE_CONFIG=y
++
++# Longer waiting for failsafe button push
++###CONFIG_IMAGEOPT=y
++###CONFIG_PREINITOPT=y
++###CONFIG_TARGET_PREINIT_TIMEOUT=5
++
++# Busybox tweaks
++CONFIG_BUSYBOX_CUSTOM=y
++#CONFIG_BUSYBOX_CONFIG_DIFF=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_EDITING_SAVEHISTORY=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_EDITING_SAVE_ON_EXIT=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_LESS_FLAGS=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_LESS_REGEXP=y
++CONFIG_BUSYBOX_CONFIG_FEATURE_LESS_WINCH=y
++
++### Build also ath10k mainline .ipk
++### (disable this if you use the below section to fully switch to mainline)
++CONFIG_PACKAGE_kmod-ath10k=m
++
++## # Mainline ath10k wifi firmware and driver instead of -ct
++## CONFIG_PACKAGE_ath10k-firmware-qca9984=y
++## # CONFIG_PACKAGE_ath10k-firmware-qca9984-ct is not set
++## CONFIG_PACKAGE_kmod-ath10k=y
++## # CONFIG_PACKAGE_kmod-ath10k-ct is not set
++
++# Add-on programs
++CONFIG_PACKAGE_ccrypt=y
++CONFIG_PACKAGE_curl=y
++CONFIG_LIBCURL_OPENSSL=y
++CONFIG_PACKAGE_diffutils=y
++CONFIG_DROPBEAR_ECC=y
++CONFIG_PACKAGE_htop=y
++CONFIG_PACKAGE_irqbalance=y
++CONFIG_PACKAGE_mtr-nojson=y
++CONFIG_PACKAGE_nano-full=y
++CONFIG_PACKAGE_patch=y
++CONFIG_PACKAGE_tcpdump-mini=y
++CONFIG_PACKAGE_tree=y
++CONFIG_PACKAGE_wget-ssl=y
++
++# USB device mount & file systems support
++CONFIG_PACKAGE_block-mount=y
++CONFIG_PACKAGE_kmod-usb-storage=y
++CONFIG_PACKAGE_kmod-fs-cifs=y
++CONFIG_PACKAGE_kmod-fs-exfat=y
++CONFIG_PACKAGE_libblkid=y
++CONFIG_PACKAGE_kmod-fs-ext4=y
++CONFIG_PACKAGE_kmod-fs-hfsplus=y
++CONFIG_PACKAGE_kmod-fs-msdos=y
++CONFIG_PACKAGE_kmod-fs-ntfs3=y
++CONFIG_PACKAGE_kmod-nls-cp1250=y
++CONFIG_PACKAGE_kmod-nls-cp437=y
++CONFIG_PACKAGE_kmod-nls-cp850=y
++CONFIG_PACKAGE_kmod-nls-iso8859-1=y
++CONFIG_PACKAGE_kmod-nls-iso8859-15=y
++CONFIG_PACKAGE_kmod-nls-utf8=y
++
++# IPv6 support
++CONFIG_PACKAGE_6in4=y
++CONFIG_PACKAGE_6to4=y
++CONFIG_PACKAGE_6rd=y
++
++# WLAN/WPS support
++CONFIG_PACKAGE_hostapd-utils=y
++#CONFIG_WPA_MSG_MIN_PRIORITY=2
++CONFIG_PACKAGE_wpad-openssl=y
++# CONFIG_PACKAGE_wpad-basic-mbedtls is not set
++# CONFIG_PACKAGE_libustream-mbedtls is not set
++
++# SSL certificates
++CONFIG_PACKAGE_ca-certificates=y
++
++# Luci (SSL from OpenSSL)
++CONFIG_PACKAGE_luci-ssl-openssl=y
++CONFIG_PACKAGE_luci-app-commands=y
++CONFIG_PACKAGE_luci-app-ddns=y
++CONFIG_PACKAGE_luci-app-opkg=y
++CONFIG_PACKAGE_luci-app-sqm=y
++CONFIG_PACKAGE_luci-app-uhttpd=y
++CONFIG_PACKAGE_luci-app-upnp=y
++# CONFIG_LUCI_JSMIN is not set
++
++# Luci statistics
++CONFIG_PACKAGE_luci-app-statistics=y
++CONFIG_PACKAGE_collectd-mod-conntrack=y
++CONFIG_PACKAGE_collectd-mod-cpufreq=y
++CONFIG_PACKAGE_collectd-mod-dhcpleases=y
++CONFIG_PACKAGE_collectd-mod-entropy=y
++CONFIG_PACKAGE_collectd-mod-ping=y
++CONFIG_PACKAGE_collectd-mod-sqm=y
++CONFIG_PACKAGE_collectd-mod-thermal=y
++CONFIG_PACKAGE_collectd-mod-uptime=y
++
++# Build openwrt-2020 theme, default is still bootstrap
++CONFIG_PACKAGE_luci-theme-openwrt-2020=y
++
++# kernel support for tunnels, VPNs
++CONFIG_PACKAGE_kmod-tun=y
++
++# wireguard and unetd (new wg-based mesh VPN)
++CONFIG_PACKAGE_luci-proto-wireguard=y
++CONFIG_PACKAGE_luci-proto-unet=y
++
++# PPTP support
++CONFIG_PACKAGE_luci-proto-ppp=y
++CONFIG_PACKAGE_ppp-mod-pptp=y
++
++# iptables add-on ipsec
++CONFIG_PACKAGE_iptables-mod-ipsec=y
++
++# Support for IETF BCP38
++CONFIG_PACKAGE_luci-app-bcp38=y
++
++# Adblock package with Luci support, initially disabled
++CONFIG_PACKAGE_luci-app-adblock=y
++
++# BanIP package with Luci support, initially disabled
++CONFIG_PACKAGE_luci-app-banip=y
++
++# nlbwmon app
++CONFIG_PACKAGE_luci-app-nlbwmon=y
++
++# chaoskey TRNG USB dongle
++####CONFIG_PACKAGE_kmod-chaoskey=y
++
++## Build and include qosify, if the LLVM toolchain has been downloaded and
++## extracted to the buildroot before the build config is started.
++## The file can be downloaded from buildbot snapshot target downloads.
++## https://downloads.openwrt.org/snapshots/targets/ipq806x/generic/llvm-bpf-15.0.7.Linux-x86_64.tar.xz
++##
++CONFIG_USE_LLVM_PREBUILT=y
++CONFIG_PACKAGE_qosify=y
++CONFIG_PACKAGE_kmod-sched-bpf=y
++
++# NFT support for iptables
++CONFIG_PACKAGE_iptables-nft=y
++CONFIG_PACKAGE_ip6tables-nft=y
++
++# ipset and kernel module
++CONFIG_PACKAGE_ipset=y
++
++# sftp server lib for newest scp in Ubuntu
++CONFIG_PACKAGE_openssh-sftp-server=y
++
+diff --git a/.gitignore b/.gitignore
+index a80cdbbea3..bd42cb89f3 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -13,15 +13,12 @@
+ /logs
+ /feeds
+ /feeds.conf
+-/files
+ /overlay
+ /package/feeds
+ /package/openwrt-packages
+ /*.patch
+ /llvm-bpf*
+ key-build*
+-*.orig
+-*.rej
+ *~
+ .#*
+ *#
+diff --git a/feeds.conf.default b/feeds.conf.default
+index fc679335e0..4c03e92d72 100644
+--- a/feeds.conf.default
++++ b/feeds.conf.default
+@@ -1,7 +1,7 @@
+-src-git packages https://git.openwrt.org/feed/packages.git
+-src-git luci https://git.openwrt.org/project/luci.git
++src-git-full packages https://git.openwrt.org/feed/packages.git
++src-git-full luci https://git.openwrt.org/project/luci.git
+ src-git routing https://git.openwrt.org/feed/routing.git
+-src-git telephony https://git.openwrt.org/feed/telephony.git
++#src-git telephony https://git.openwrt.org/feed/telephony.git
+ #src-git video https://github.com/openwrt/video.git
+ #src-git targets https://github.com/openwrt/targets.git
+ #src-git oldpackages http://git.openwrt.org/packages.git
+diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
+new file mode 100644
+index 0000000000..b60ce89d44
+--- /dev/null
++++ b/files/etc/Compile_info.txt
+@@ -0,0 +1,6 @@
++OpenWrt main r23486-a3e173e00e / 2023-07-02 14:53
++---
++openwrt   2023-07-02 a3e173e mt76: fix download hash
++luci      2023-07-01 0f39d0b Translated using Weblate (Japanese)
++packages  2023-07-01 6a897e2 libwebsockets: Fix -Werror=enum-int-misma
++routing   2023-06-30 bdf9237 bird2: bump to version 2.13.1
+diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
+new file mode 100755
+index 0000000000..d49760d772
+--- /dev/null
++++ b/files/etc/applyHNsettings.sh
+@@ -0,0 +1,11 @@
++#!/bin/sh
++cp -f $1 /tmp/HNsettings.cpt
++if [ "$?" -eq 0 ] ; then
++  ccdecrypt -vf /tmp/HNsettings.cpt
++  if [ "$?" -eq 0 ] ; then
++    tar -xzv -f /tmp/HNsettings -C /etc
++    chmod 744 /etc/dropbear/authorized_keys
++    sync
++  fi
++fi
++
+diff --git a/files/etc/backup.stats/.placeholder b/files/etc/backup.stats/.placeholder
+new file mode 100644
+index 0000000000..e69de29bb2
+diff --git a/files/etc/checksettings.sh b/files/etc/checksettings.sh
+new file mode 100755
+index 0000000000..e7a1c42c19
+--- /dev/null
++++ b/files/etc/checksettings.sh
+@@ -0,0 +1,13 @@
++#!/bin/sh
++cd /etc/config
++for F in *
++do
++        echo
++        echo "===== $F ====="
++        uci -c /rom/etc/config export $F >/tmp/$F.default 2>/dev/null
++        case $? in 0) ;; *) echo '>> no default in /rom <<' ;; esac
++        uci export $F >/tmp/$F.current
++        diff -u /tmp/$F.default /tmp/$F.current
++        rm -f /tmp/$F.default /tmp/$F.current
++done
++
+diff --git a/files/etc/config/fstab b/files/etc/config/fstab
+new file mode 100644
+index 0000000000..4bc3fdc594
+--- /dev/null
++++ b/files/etc/config/fstab
+@@ -0,0 +1,11 @@
++config 'global'
++	option anon_swap  '0'
++	option anon_mount '1'
++	option auto_swap  '1'
++	option auto_mount '1'
++	option delay_root '0'
++	option check_fs   '0'
++
++## use 'block detect' to find out uuid, if you want device specific mount.
++## anon_mount enables the automatic mounting of /dev/sdXy to /mnt/sdXy
++
+diff --git a/files/etc/hotplug.d/ntp/20-ntpd-logger b/files/etc/hotplug.d/ntp/20-ntpd-logger
+new file mode 100644
+index 0000000000..7f1ff28f8b
+--- /dev/null
++++ b/files/etc/hotplug.d/ntp/20-ntpd-logger
+@@ -0,0 +1,4 @@
++#!/bin/sh
++[ $ACTION = "step" ]    && logger -t ntpd Time set, stratum=$stratum interval=$poll_interval offset=$offset
++[ $ACTION = "stratum" ] && logger -t ntpd Stratum change, stratum=$stratum interval=$poll_interval offset=$offset
++
+diff --git a/files/etc/lan-repeater.sh b/files/etc/lan-repeater.sh
+new file mode 100755
+index 0000000000..088bdbb2d5
+--- /dev/null
++++ b/files/etc/lan-repeater.sh
+@@ -0,0 +1,28 @@
++#!/bin/sh
++uci set system.@system[0].hostname=router2
++uci set network.lan.ipaddr=192.168.1.2
++uci set network.lan.ip6ifaceid='::2'
++uci set network.lan.gateway=192.168.1.1
++uci set network.lan.dns=192.168.1.1
++uci set network.henet.auto=0
++uci set network.lan6=interface
++uci set network.lan6.ifname=@lan
++uci set network.lan6.proto=dhcpv6
++uci set network.lan6.reqprefix=no
++uci set wireless.@wifi-device[0].channel=48
++uci set wireless.@wifi-device[1].channel=9
++uci set dhcp.lan.ignore=1
++uci set dhcp.lan.force=0
++uci delete dhcp.lan.dhcpv6
++uci delete dhcp.lan.ra
++uci delete dhcp.lan.ndp
++uci set upnpd.config.enable_natpmp=0
++uci set upnpd.config.enable_upnp=0
++uci commit dhcp
++uci commit network
++uci commit wireless
++uci commit system
++uci commit upnpd
++/etc/init.d/dnsmasq disable
++/etc/init.d/miniupnpd disable
++
+diff --git a/files/etc/profile.d/busybox-history-file.sh b/files/etc/profile.d/busybox-history-file.sh
+new file mode 100644
+index 0000000000..f286009627
+--- /dev/null
++++ b/files/etc/profile.d/busybox-history-file.sh
+@@ -0,0 +1,2 @@
++export HISTFILE=/tmp/.busybox_ash_history
++
+diff --git a/files/etc/restoreStats.sh b/files/etc/restoreStats.sh
+new file mode 100755
+index 0000000000..ef205bd577
+--- /dev/null
++++ b/files/etc/restoreStats.sh
+@@ -0,0 +1,9 @@
++#!/bin/sh
++
++/etc/init.d/collectd stop
++logger -t "LuCI statistics" collectd stopped, stats being restored
++mkdir -p /tmp/rrd/$(uname -n)
++cd /tmp/rrd/$(uname -n)
++tar x -zvf /etc/backup.stats/stats.tar.gz
++sync
++/etc/init.d/collectd start
+diff --git a/files/etc/saveHNsettings.sh b/files/etc/saveHNsettings.sh
+new file mode 100755
+index 0000000000..a6696cd51c
+--- /dev/null
++++ b/files/etc/saveHNsettings.sh
+@@ -0,0 +1,13 @@
++#!/bin/sh
++cd /etc
++tar -czv -f /tmp/HNsettings \
++  config/network config/wireless config/firewall config/dhcp config/sqm \
++  config/luci_statistics config/bcp38 sysupgrade.conf \
++  dropbear/authorized_keys adblock/adblock.whitelist crontabs/root
++if [ "$?" -eq 0 ] ; then
++  ccencrypt -vf /tmp/HNsettings
++  if [ "$?" -eq 0 ] ; then
++    cp -f /tmp/HNsettings.cpt /etc/HNsettings.$1.cpt
++  fi
++fi
++
+diff --git a/files/etc/storeStats.sh b/files/etc/storeStats.sh
+new file mode 100755
+index 0000000000..2c0a2451e6
+--- /dev/null
++++ b/files/etc/storeStats.sh
+@@ -0,0 +1,12 @@
++#!/bin/sh
++BACKUPNAME=stats-$(date +%Y%m%dT%H%M).tar.gz
++/etc/init.d/collectd stop
++logger -t "LuCI statistics" Create backup archive
++mkdir -p /etc/backup.stats
++cd /tmp/rrd/$(uname -n)
++tar c -zvf /etc/backup.stats/$BACKUPNAME *
++cd /etc/backup.stats
++ln -fs $BACKUPNAME stats.tar.gz
++sync
++/etc/init.d/collectd start
++
+diff --git a/files/etc/wifi-suite.sh b/files/etc/wifi-suite.sh
+new file mode 100755
+index 0000000000..3b002ec409
+--- /dev/null
++++ b/files/etc/wifi-suite.sh
+@@ -0,0 +1,36 @@
++#!/bin/sh
++
++echo "Associated wifi stations' AKM suites:"
++cd /var/run/hostapd
++for socket in *; do
++  [ -S "$socket" ] || continue
++  [ "$socket" = "global" ] && continue
++  for assoc in $(hostapd_cli -i "$socket" list_sta); do
++    suite=$(hostapd_cli -i "$socket" sta "$assoc" | grep "AKMSuiteSelector" | cut -f 2 -d"=")
++    case "$suite" in
++        00-0f-ac-1) akm=802.1x  ;;
++        00-0f-ac-2) akm=WPA-PSK  ;;
++        00-0f-ac-3) akm=FT-802.1x  ;;
++        00-0f-ac-4) akm=WPA-PSK-FT  ;;
++        00-0f-ac-5) akm=802.1x-SHA256  ;;
++        00-0f-ac-6) akm=WPA-PSK-SHA256  ;;
++        00-0f-ac-7) akm=TDLS  ;;
++        00-0f-ac-8) akm=WPA3-SAE  ;;
++        00-0f-ac-9) akm=FT-SAE  ;;
++        00-0f-ac-10) akm=AP-PEER-KEY  ;;
++        00-0f-ac-11) akm=802.1x-suite-B  ;;
++        00-0f-ac-12) akm=802.1x-suite-B-192  ;;
++        00-0f-ac-13) akm=FT-802.1x-SHA384  ;;
++        00-0f-ac-14) akm=FILS-SHA256  ;;
++        00-0f-ac-15) akm=FILS-SHA384  ;;
++        00-0f-ac-16) akm=FT-FILS-SHA256  ;;
++        00-0f-ac-17) akm=FT-FILS-SHA384  ;;
++        00-0f-ac-18) akm=OWE  ;;
++        00-0f-ac-19) akm=FT-WPA2-PSK-SHA384  ;;
++        00-0f-ac-20) akm=WPA2-PSK-SHA384  ;;
++        *) akm="undefined" ;;
++    esac
++    echo "$socket: AKM suite of $assoc is $suite ($akm)"
++  done
++done
++
+diff --git a/hnscripts/copyPackages2tmp.sh b/hnscripts/copyPackages2tmp.sh
+new file mode 100755
+index 0000000000..4222b2c6f0
+--- /dev/null
++++ b/hnscripts/copyPackages2tmp.sh
+@@ -0,0 +1,23 @@
++#!/bin/sh
++#
++# copyPackages2tmp  -  Copy packages to router's /tmp directory
++
++#create new /etc/opkg/customfeeds.conf with base, luci, packages, routing
++cat <<EOF >/tmp/customfeeds.conf
++src/gz TmpBase file:/tmp/arm_cortex-a15_neon-vfpv4/base
++src/gz TmpLuci file:/tmp/arm_cortex-a15_neon-vfpv4/luci
++src/gz TmpPackages file:/tmp/arm_cortex-a15_neon-vfpv4/packages
++src/gz TmpRouting file:/tmp/arm_cortex-a15_neon-vfpv4/routing
++src/gz TmpTarget file:/tmp/target
++EOF
++
++#copy packages
++echo "Copy packages..."
++scp -r bin/packages/arm_cortex-a15_neon-vfpv4 root@192.168.1.1:/tmp/
++scp -r bin/targets/ipq806x/generic/packages root@192.168.1.1:/tmp/target
++
++#copy and overwrite /etc/opkg/customfeeds.conf
++echo "Copy modified /etc/opkg/customfeeds.conf..."
++scp /tmp/customfeeds.conf root@192.168.1.1:/etc/opkg/customfeeds.conf
++echo "done."
++
+diff --git a/hnscripts/createbuildinfo.sh b/hnscripts/createbuildinfo.sh
+new file mode 100755
+index 0000000000..46ba1f1f00
+--- /dev/null
++++ b/hnscripts/createbuildinfo.sh
+@@ -0,0 +1,65 @@
++#!/bin/sh
++#
++# createbuildinfo  -  Create info on current config and source code changes
++
++getGitInfo() {
++#params: directory patchfile infofile
++ echo "\n######################################################\n" >> $3
++ (cd $1
++  git diff HEAD > $2
++  git remote -v show | grep fetch >> $3
++  git branch --list >> $3
++  git show --format="%cd %h %s" --abbrev=7 --date=short | head -n 1 | cut -b1-60 >> $3
++  git status --porcelain >> $3
++ )
++}
++
++BinDir=$PWD/bin/targets/ipq806x/generic
++Device=R7800
++Prefix=openwrt-ipq806x-generic-netgear_r7800
++Branch=main
++
++VersTime=$Branch-$(scripts/getver.sh)-$(date +%Y%m%d-%H%M)
++TFile=$BinDir/$Device-$VersTime
++
++echo process $Branch...
++
++# cleanup old binaries & patches
++rm -f $BinDir/$Device-* $BinDir/ath10k-*
++
++# remove unnecessary files
++rm -f $BinDir/*root.img $BinDir/*vmlinux.elf $BinDir/*initramfs-uImage
++
++# create status info and patches
++echo "$VersTime" > $TFile-status.txt
++getGitInfo . $TFile-openwrt.patch $TFile-status.txt
++getGitInfo feeds/luci $TFile-luci.patch $TFile-status.txt
++getGitInfo feeds/packages $TFile-packages.patch $TFile-status.txt
++#getGitInfo feeds/routing $TFile-routing.patch $TFile-status.txt
++sed -i -e 's/$/\r/' $TFile-status.txt
++
++# collect config info
++cp .config $TFile.config
++cp .config.init $TFile.config.init
++scripts/diffconfig.sh > $TFile.diffconfig.txt 2>/dev/null
++
++# copy buildroot creation script and patch timestamp info
++cp hnscripts/newBuildroot.sh $TFile-newBuildroot.sh
++sed -i "s/^FILESTAMP=.*/FILESTAMP=$Device-$VersTime/" $TFile-newBuildroot.sh
++
++# cleanup checksum files
++grep -sh $Prefix.*-squashfs $BinDir/md5sums $BinDir/sha256sums \
++  | sed -e 's/$/\r/' -e 's/\*'$Prefix'/'$Device'/' -e 's/squashfs-//' \
++  > $TFile-checksums.txt
++rm -f $BinDir/md5sums $BinDir/sha256sums
++
++# rename manifest and firmware files
++cd $BinDir
++mv *.manifest $Device-$VersTime-manifest.txt
++mv $Prefix-squashfs-sysupgrade.bin $Device-$VersTime-sysupgrade.bin
++mv $Prefix-squashfs-factory.img $Device-$VersTime-factory.img
++
++# copy ath10k ct+mainline kmods
++cp packages/kmod-ath10k_* ath10k-mainline-$VersTime.ipk
++cp packages/kmod-ath10k-ct_* ath10k-ct-$VersTime.ipk
++
+diff --git a/hnscripts/kernelcompile.sh b/hnscripts/kernelcompile.sh
+new file mode 100755
+index 0000000000..8bf93a3a53
+--- /dev/null
++++ b/hnscripts/kernelcompile.sh
+@@ -0,0 +1,9 @@
++#!/bin/bash
++#
++# kernelcompile  -  Clean & compile kernel using a single thread. No update.
++
++echo "...make kernel..."
++make target/linux/clean
++mkdir -p logs
++make target/linux/compile V=s 2>&1 | tee logs/build.log | grep -i -E "^make.*(error|[12345]...Entering dir)"
++
+diff --git a/hnscripts/mountNcopy.sh b/hnscripts/mountNcopy.sh
+new file mode 100755
+index 0000000000..e64ecc89fd
+--- /dev/null
++++ b/hnscripts/mountNcopy.sh
+@@ -0,0 +1,34 @@
++#!/bin/sh
++#
++# mount & copy  -  Mount the Virtualbox shared folder and copy files to PC
++
++Mounttype=vboxsf
++Mountname=PCSHARE
++Mountpoint=/media/windows-share
++BinDir=bin/targets/ipq806x/generic
++
++echo Check for existing mount of the shared folder $Mountpoint
++df | grep $Mountpoint
++if [ "$?" -ne 0 ]; then
++  echo Mounting $Mountpoint as $Mountname...
++  sudo mount -t $Mounttype $Mountname $Mountpoint
++  [ "$?" -ne 0 ] && echo "Sudo/mount failed." && exit 1
++fi
++
++echo "\nCopy from $PWD ..."
++cp $BinDir/*bin $Mountpoint
++sleep 2
++cp $BinDir/*img $Mountpoint
++sleep 2
++cp $BinDir/ath10k* $Mountpoint
++sleep 1
++cp $BinDir/*patch $Mountpoint
++sleep 1
++cp $BinDir/*sh $Mountpoint
++sleep 1
++cp $BinDir/*txt $Mountpoint
++sleep 1
++cp $BinDir/*config.init $Mountpoint
++cp $BinDir/*config $Mountpoint
++echo done.
++
+diff --git a/hnscripts/newBuildroot.sh b/hnscripts/newBuildroot.sh
+new file mode 100755
+index 0000000000..2bd6383b21
+--- /dev/null
++++ b/hnscripts/newBuildroot.sh
+@@ -0,0 +1,74 @@
++#!/bin/sh
++#
++# newBuildroot.sh
++#
++# Creates the build environment with the current directory as the root
++# To avoid problems with long paths, something like /Openwrt is preferable
++#
++# Script creates subdir for the main branch (or a release branch), and dl for downloads
++# Creates OpenWrt source repository and luci, packages & routing feeds
++
++### Target definitions
++TARGET=main
++GITREPO=https://git.openwrt.org/openwrt/openwrt.git
++
++## Current version
++FILESTAMP=R7800-main-r22602-42eeb22450-20230420-2155
++
++### Prerequisites for buildroot for the current Ubuntu
++sudo apt-get install build-essential libncurses5-dev zlib1g-dev
++sudo apt-get install gawk gcc-multilib flex git gettext libssl-dev
++sudo apt-get install python3-distutils
++
++### Prerequisites for being able to send patches to openwrt-devel
++sudo apt-get install git-email
++
++### Newly patched Ubuntu may not yet have the correct kernel headers.
++# sudo apt-get install linux-headers-$(uname -r)
++
++### set the preferred umask (allowed: 0000-0022)
++umask 0022
++
++### download directory (outside buidroot root directory to protect from make distclean)
++mkdir -p dl
++
++### buildroot directory
++mkdir -p $TARGET
++
++### checkout/clone and change to directory
++git clone $GITREPO $TARGET
++cd $TARGET
++
++### create symlink to dl (after git clone)
++ln -s ../dl dl
++
++### patch OpenWrt source first to set feeds correctly
++### update the feeds, apply patches to feeds
++### re-create index to find new packages, finally install
++patch -p1 -i ../$FILESTAMP-openwrt.patch
++scripts/feeds update -a
++(cd feeds/luci;     patch -p1 -i ../../../$FILESTAMP-luci.patch)
++(cd feeds/packages; patch -p1 -i ../../../$FILESTAMP-packages.patch)
++#(cd feeds/routing;  patch -p1 -i ../../../$FILESTAMP-routing.patch)
++scripts/feeds update -i
++scripts/feeds install -a
++
++### chmod known script files executable
++chmod -f 755 files/etc/*.sh
++chmod -f 755 files/etc/rc.button/*
++
++### chmod buildscripts executable
++chmod -f 755 hnscripts/*.sh
++
++### add created/modified files in OpenWrt repo to version control
++git add -f files
++git add -A
++
++### add created/modified files in feeds to version control
++(cd feeds/luci;     git add -A)
++(cd feeds/packages; git add -A)
++#(cd feeds/routing;  git add -A)
++
++### initialise .config
++cp .config.init .config
++
+diff --git a/hnscripts/parallelcompile.sh b/hnscripts/parallelcompile.sh
+new file mode 100755
+index 0000000000..093c29dbea
+--- /dev/null
++++ b/hnscripts/parallelcompile.sh
+@@ -0,0 +1,14 @@
++#!/bin/bash
++#
++# parallelcompile  -  Compile using multiple threads
++
++echo "...create version info file..."
++hnscripts/timestampVersion.sh
++echo "...make world..."
++mkdir -p logs
++make -j 5 V=s 2>&1 | tee logs/build.log | grep -i -E "^make.*(error|[12345]...Entering dir)|^warning"
++[ ${PIPESTATUS[0]} -ne 0 ] && exit 1
++echo -n "...create build info: "
++hnscripts/createbuildinfo.sh
++echo done.
++
+diff --git a/hnscripts/singlecompile.sh b/hnscripts/singlecompile.sh
+new file mode 100755
+index 0000000000..ac05bd6434
+--- /dev/null
++++ b/hnscripts/singlecompile.sh
+@@ -0,0 +1,14 @@
++#!/bin/bash
++#
++# singlecompile  -  Compile using a single thread. For debug
++
++echo "...create version info file..."
++hnscripts/timestampVersion.sh
++echo "...make world..."
++mkdir -p logs
++make V=s 2>&1 | tee logs/build.log | grep -i -E "^make.*(error|[12345]...Entering dir)|^warning"
++[ ${PIPESTATUS[0]} -ne 0 ] && exit 1
++echo -n "...create build info: "
++hnscripts/createbuildinfo.sh
++echo done.
++
+diff --git a/hnscripts/timestampVersion.sh b/hnscripts/timestampVersion.sh
+new file mode 100755
+index 0000000000..21227e8f98
+--- /dev/null
++++ b/hnscripts/timestampVersion.sh
+@@ -0,0 +1,19 @@
++#!/bin/bash
++#
++# timestampVersion  -  Collect source version info and insert it into firmware
++
++STATUSFILE=files/etc/Compile_info.txt
++Nickname=main
++
++echo OpenWrt $Nickname `scripts/getver.sh` / `date "+%F %H:%M"` > $STATUSFILE
++echo "---" >> $STATUSFILE
++echo "openwrt   $(git log -1 --format="%cd %h %s" --abbrev=7 --date=short | head -n 1 | cut -b1-60)" >> $STATUSFILE
++echo "luci      $(cd feeds/luci && git log -1 --format="%cd %h %s" --abbrev=7 --date=short | cut -b1-60)" >> $STATUSFILE
++echo "packages  $(cd feeds/packages && git log -1 --format="%cd %h %s" --abbrev=7 --date=short | cut -b1-60)" >> $STATUSFILE
++echo "routing   $(cd feeds/routing && git log -1 --format="%cd %h %s" --abbrev=7 --date=short | cut -b1-60)" >> $STATUSFILE
++cat $STATUSFILE
++git add $STATUSFILE
++
++# Override git/svn timestamp after r48583-48594, set initial clock to now
++date +%s > version.date
++
+diff --git a/hnscripts/updateNmake.sh b/hnscripts/updateNmake.sh
+new file mode 100755
+index 0000000000..41ff0c1358
+--- /dev/null
++++ b/hnscripts/updateNmake.sh
+@@ -0,0 +1,22 @@
++#!/bin/bash
++#
++# update & make  -  Update source code and continue to make the build
++
++umask 0022
++echo "...update OpenWrt source..."
++git pull
++[ "$?" -ne 0 ] && echo "Updating the OpenWrt source code failed." && exit 1
++echo "...update feeds..."
++./scripts/feeds update -a
++[ "$?" -ne 0 ] && echo "Updating the feeds failed." && exit 1
++echo "...install feeds..."
++./scripts/feeds install -a
++echo "...make defconfig..."
++make defconfig
++#echo "...make menuconfig..."
++#make menuconfig
++echo "...download new source packages..."
++make download
++echo "...make the firmware..."
++hnscripts/parallelcompile.sh
++
+diff --git a/package/base-files/Makefile b/package/base-files/Makefile
+index 8732f82fb9..7b38826c8a 100644
+--- a/package/base-files/Makefile
++++ b/package/base-files/Makefile
+@@ -77,7 +77,7 @@ endef
+ define ImageConfigOptions
+ 	mkdir -p $(1)/lib/preinit
+ 	echo 'pi_suppress_stderr="$(CONFIG_TARGET_PREINIT_SUPPRESS_STDERR)"' >$(1)/lib/preinit/00_preinit.conf
+-	echo 'fs_failsafe_wait_timeout=$(if $(CONFIG_TARGET_PREINIT_TIMEOUT),$(CONFIG_TARGET_PREINIT_TIMEOUT),2)' >>$(1)/lib/preinit/00_preinit.conf
++	echo 'fs_failsafe_wait_timeout=$(if $(CONFIG_TARGET_PREINIT_TIMEOUT),$(CONFIG_TARGET_PREINIT_TIMEOUT),4)' >>$(1)/lib/preinit/00_preinit.conf
+ 	echo 'pi_init_path="$(TARGET_INIT_PATH)"' >>$(1)/lib/preinit/00_preinit.conf
+ 	echo 'pi_init_env=$(if $(CONFIG_TARGET_INIT_ENV),$(CONFIG_TARGET_INIT_ENV),"")' >>$(1)/lib/preinit/00_preinit.conf
+ 	echo 'pi_init_cmd=$(if $(CONFIG_TARGET_INIT_CMD),$(CONFIG_TARGET_INIT_CMD),"/sbin/init")' >>$(1)/lib/preinit/00_preinit.conf
+diff --git a/package/base-files/files/bin/config_generate b/package/base-files/files/bin/config_generate
+index be21d0079a..dd67b11ea0 100755
+--- a/package/base-files/files/bin/config_generate
++++ b/package/base-files/files/bin/config_generate
+@@ -312,9 +312,10 @@ generate_static_system() {
+ 		delete system.@system[0]
+ 		add system system
+ 		set system.@system[-1].hostname='OpenWrt'
+-		set system.@system[-1].timezone='UTC'
++		set system.@system[-1].timezone='EET-2EEST,M3.5.0/3,M10.5.0/4'
++		set system.@system[-1].zonename='Europe/Helsinki'
+ 		set system.@system[-1].ttylogin='0'
+-		set system.@system[-1].log_size='64'
++		set system.@system[-1].log_size='192'
+ 		set system.@system[-1].urandom_seed='0'
+ 
+ 		delete system.ntp
+diff --git a/package/base-files/files/etc/rc.button/reset b/package/base-files/files/etc/rc.button/reset
+index 2403122ad2..5746ea237a 100755
+--- a/package/base-files/files/etc/rc.button/reset
++++ b/package/base-files/files/etc/rc.button/reset
+@@ -15,16 +15,8 @@ timeout)
+ 	set_state failsafe
+ ;;
+ released)
+-	if [ "$SEEN" -lt 1 ]
+-	then
+-		echo "REBOOT" > /dev/console
+-		sync
+-		reboot
+-	elif [ "$SEEN" -ge 5 -a -n "$OVERLAY" ]
+-	then
+ 		echo "FACTORY RESET" > /dev/console
+ 		jffs2reset -y && reboot &
+-	fi
+ ;;
+ esac
+ 
+diff --git a/package/base-files/image-config.in b/package/base-files/image-config.in
+index 2de2130b84..dee06e9b86 100644
+--- a/package/base-files/image-config.in
++++ b/package/base-files/image-config.in
+@@ -44,7 +44,7 @@ config TARGET_PREINIT_DISABLE_FAILSAFE
+ config TARGET_PREINIT_TIMEOUT
+ 	int
+ 	prompt "Failsafe/Debug wait timeout" if PREINITOPT
+-	default 2
++	default 4
+ 	help
+ 		How long to wait for failsafe mode to be entered or for
+ 		a debug option to be pressed before continuing with a
+diff --git a/package/network/config/qosify/files/qosify.conf b/package/network/config/qosify/files/qosify.conf
+index 7a3d0d068a..31abfb7274 100644
+--- a/package/network/config/qosify/files/qosify.conf
++++ b/package/network/config/qosify/files/qosify.conf
+@@ -27,8 +27,8 @@ config class voice
+ config interface wan
+ 	option name wan
+ 	option disabled 1
+-	option bandwidth_up 100mbit
+-	option bandwidth_down 100mbit
++	option bandwidth_up 55mbit
++	option bandwidth_down 190mbit
+ 	option overhead_type none
+ 	# defaults:
+ 	option ingress 1
+diff --git a/package/network/ipv6/6in4/files/6in4.sh b/package/network/ipv6/6in4/files/6in4.sh
+index 5b5c7b36af..d75c6f4f41 100755
+--- a/package/network/ipv6/6in4/files/6in4.sh
++++ b/package/network/ipv6/6in4/files/6in4.sh
+@@ -25,7 +25,7 @@ test_6in4_rfc1918()
+ 
+ proto_6in4_update() {
+ 	sh -c '
+-		timeout=5
++		timeout=8
+ 
+ 		(while [ $((timeout--)) -gt 0 ]; do
+ 			sleep 1
+diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
+index bf3625c92d..122b2d0a14 100644
+--- a/package/network/services/hostapd/files/hostapd.sh
++++ b/package/network/services/hostapd/files/hostapd.sh
+@@ -813,6 +813,11 @@ hostapd_set_bss_options() {
+ 		set_default wps_manufacturer "www.openwrt.org"
+ 		set_default wps_independent 1
+ 
++		# Set WPS label pin to original Netgear value stored in art partition
++		# Value for wps_pin can be overridden by /etc/config/wireless
++#		local PINdefault="$(dd if=/dev/mtdblock3 bs=1 skip=18 count=8 2>/dev/null)"
++#		set_default wps_pin "$PINdefault"
++
+ 		wps_state=2
+ 		[ -n "$wps_not_configured" ] && wps_state=1
+ 
+@@ -901,7 +906,7 @@ hostapd_set_bss_options() {
+ 
+ 			set_default mobility_domain "$(echo "$ssid" | md5sum | head -c 4)"
+ 			set_default ft_over_ds 0
+-			set_default reassociation_deadline 1000
++			set_default reassociation_deadline 20000
+ 
+ 			case "$auth_type" in
+ 				psk|sae|psk-sae)
+diff --git a/package/network/services/hostapd/files/wps-hotplug.sh b/package/network/services/hostapd/files/wps-hotplug.sh
+index 073bdd1868..dc05718eb7 100644
+--- a/package/network/services/hostapd/files/wps-hotplug.sh
++++ b/package/network/services/hostapd/files/wps-hotplug.sh
+@@ -39,6 +39,7 @@ wps_catch_credentials() {
+ }
+ 
+ if [ "$ACTION" = "released" ] && [ "$BUTTON" = "wps" ]; then
++	logger "WPS button pressed, looking for active radios"
+ 	# If the button was pressed for 3 seconds or more, trigger WPS on
+ 	# wpa_supplicant only, no matter if hostapd is running or not.  If
+ 	# was pressed for less than 3 seconds, try triggering on
+diff --git a/package/network/services/odhcpd/files/odhcpd-update b/package/network/services/odhcpd/files/odhcpd-update
+index c1814e00b0..b2f92bf10d 100755
+--- a/package/network/services/odhcpd/files/odhcpd-update
++++ b/package/network/services/odhcpd/files/odhcpd-update
+@@ -1,6 +1,8 @@
+ #!/bin/sh
+ # Make dnsmasq reread hostfile by sending SIGHUP signal
+ 
++logger -t odhcpd "*** ODHCPD triggers DNSMASQ reload ***"
++
+ . /lib/functions/procd.sh
+ 
+ procd_send_signal dnsmasq

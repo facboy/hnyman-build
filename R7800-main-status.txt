@@ -1,0 +1,64 @@
+main-r23486-a3e173e00e-20230702-1517
+
+######################################################
+
+origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
+* master
+2023-07-02 a3e173e mt76: fix download hash
+A  .config.init
+M  .gitignore
+M  feeds.conf.default
+A  files/etc/Compile_info.txt
+A  files/etc/applyHNsettings.sh
+A  files/etc/backup.stats/.placeholder
+A  files/etc/checksettings.sh
+A  files/etc/config/fstab
+A  files/etc/hotplug.d/ntp/20-ntpd-logger
+A  files/etc/lan-repeater.sh
+A  files/etc/profile.d/busybox-history-file.sh
+A  files/etc/restoreStats.sh
+A  files/etc/saveHNsettings.sh
+A  files/etc/storeStats.sh
+A  files/etc/wifi-suite.sh
+A  hnscripts/copyPackages2tmp.sh
+A  hnscripts/createbuildinfo.sh
+A  hnscripts/kernelcompile.sh
+A  hnscripts/mountNcopy.sh
+A  hnscripts/newBuildroot.sh
+A  hnscripts/parallelcompile.sh
+A  hnscripts/singlecompile.sh
+A  hnscripts/timestampVersion.sh
+A  hnscripts/updateNmake.sh
+M  package/base-files/Makefile
+M  package/base-files/files/bin/config_generate
+M  package/base-files/files/etc/rc.button/reset
+M  package/base-files/image-config.in
+M  package/network/config/qosify/files/qosify.conf
+M  package/network/ipv6/6in4/files/6in4.sh
+M  package/network/services/hostapd/files/hostapd.sh
+M  package/network/services/hostapd/files/wps-hotplug.sh
+M  package/network/services/odhcpd/files/odhcpd-update
+?? .config.init20042023
+?? files/etc/HNsettings.r7800-040223.cpt
+?? version.date
+
+######################################################
+
+origin	https://git.openwrt.org/project/luci.git (fetch)
+* master
+2023-07-01 0f39d0b Translated using Weblate (Japanese)
+M  applications/luci-app-attendedsysupgrade/htdocs/luci-static/resources/view/attendedsysupgrade/overview.js
+M  applications/luci-app-statistics/root/etc/config/luci_statistics
+M  modules/luci-base/root/etc/config/luci
+M  modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
+M  themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
+M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020
+
+######################################################
+
+origin	https://git.openwrt.org/feed/packages.git (fetch)
+* master
+2023-07-01 6a897e2 libwebsockets: Fix -Werror=enum-int-misma
+M  net/adblock/files/adblock.conf
+M  net/bcp38/files/bcp38.config
+A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
