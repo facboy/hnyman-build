@@ -165,17 +165,18 @@ index 0000000000..787c9755f4
 +CONFIG_PACKAGE_openssh-sftp-server=y
 +
 diff --git a/.gitignore b/.gitignore
-index a80cdbbea3..bd42cb89f3 100644
+index 84cfc99770..e971f93bab 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -13,15 +13,12 @@
+@@ -13,7 +13,6 @@
  /logs
  /feeds
  /feeds.conf
 -/files
+ /target/linux/feeds
  /overlay
  /package/feeds
- /package/openwrt-packages
+@@ -21,8 +20,6 @@
  /*.patch
  /llvm-bpf*
  key-build*
@@ -201,16 +202,16 @@ index fc679335e0..4c03e92d72 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..b60ce89d44
+index 0000000000..d56ce94b14
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r23486-a3e173e00e / 2023-07-02 14:53
++OpenWrt main r23773-6b63fcf8df / 2023-08-19 15:23
 +---
-+openwrt   2023-07-02 a3e173e mt76: fix download hash
-+luci      2023-07-01 0f39d0b Translated using Weblate (Japanese)
-+packages  2023-07-01 6a897e2 libwebsockets: Fix -Werror=enum-int-misma
-+routing   2023-06-30 bdf9237 bird2: bump to version 2.13.1
++openwrt   2023-08-19 6b63fcf generic: 6.1: backport patch adding suppo
++luci      2023-08-18 09d5de6 Translated using Weblate (Lithuanian)
++packages  2023-08-19 c287e98 rust: correct mistake in previous host-bu
++routing   2023-08-18 6f6bcba Merge pull request #1012 from ecsv/batman
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -834,7 +835,7 @@ index 5b5c7b36af..d75c6f4f41 100755
  		(while [ $((timeout--)) -gt 0 ]; do
  			sleep 1
 diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
-index bf3625c92d..122b2d0a14 100644
+index 65ae662c4d..878ac52420 100644
 --- a/package/network/services/hostapd/files/hostapd.sh
 +++ b/package/network/services/hostapd/files/hostapd.sh
 @@ -813,6 +813,11 @@ hostapd_set_bss_options() {
