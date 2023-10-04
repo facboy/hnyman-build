@@ -1,10 +1,10 @@
-main-r23773-6b63fcf8df-20230819-1548
+main-r24066-5d111b6714-20231001-1852
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2023-08-19 6b63fcf generic: 6.1: backport patch adding suppo
+2023-09-30 5d111b6 ipq806x: disable unused SWCONFIG config f
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -46,8 +46,7 @@ M  package/network/services/odhcpd/files/odhcpd-update
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2023-08-18 09d5de6 Translated using Weblate (Lithuanian)
-M  applications/luci-app-attendedsysupgrade/htdocs/luci-static/resources/view/attendedsysupgrade/overview.js
+2023-09-29 607e9bb Merge pull request #6603 from stangri/mas
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
@@ -58,7 +57,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2023-08-19 c287e98 rust: correct mistake in previous host-bu
+2023-09-30 b3a2a8b Merge pull request #22254 from Ansuel/net
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch

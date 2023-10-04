@@ -202,16 +202,16 @@ index fc679335e0..4c03e92d72 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..d56ce94b14
+index 0000000000..75c4b0da7a
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r23773-6b63fcf8df / 2023-08-19 15:23
++OpenWrt main r24066-5d111b6714 / 2023-10-01 18:27
 +---
-+openwrt   2023-08-19 6b63fcf generic: 6.1: backport patch adding suppo
-+luci      2023-08-18 09d5de6 Translated using Weblate (Lithuanian)
-+packages  2023-08-19 c287e98 rust: correct mistake in previous host-bu
-+routing   2023-08-18 6f6bcba Merge pull request #1012 from ecsv/batman
++openwrt   2023-09-30 5d111b6 ipq806x: disable unused SWCONFIG config f
++luci      2023-09-29 607e9bb Merge pull request #6603 from stangri/mas
++packages  2023-09-30 b3a2a8b Merge pull request #22254 from Ansuel/net
++routing   2023-09-29 c2124dd luci-app-bmx6: drop this because of secur
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -716,10 +716,10 @@ index 0000000000..21227e8f98
 +
 diff --git a/hnscripts/updateNmake.sh b/hnscripts/updateNmake.sh
 new file mode 100755
-index 0000000000..41ff0c1358
+index 0000000000..77d20f2f8c
 --- /dev/null
 +++ b/hnscripts/updateNmake.sh
-@@ -0,0 +1,22 @@
+@@ -0,0 +1,20 @@
 +#!/bin/bash
 +#
 +# update & make  -  Update source code and continue to make the build
@@ -735,8 +735,6 @@ index 0000000000..41ff0c1358
 +./scripts/feeds install -a
 +echo "...make defconfig..."
 +make defconfig
-+#echo "...make menuconfig..."
-+#make menuconfig
 +echo "...download new source packages..."
 +make download
 +echo "...make the firmware..."
@@ -835,10 +833,10 @@ index 5b5c7b36af..d75c6f4f41 100755
  		(while [ $((timeout--)) -gt 0 ]; do
  			sleep 1
 diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
-index 65ae662c4d..878ac52420 100644
+index 271c1f7bec..31c01962f1 100644
 --- a/package/network/services/hostapd/files/hostapd.sh
 +++ b/package/network/services/hostapd/files/hostapd.sh
-@@ -813,6 +813,11 @@ hostapd_set_bss_options() {
+@@ -816,6 +816,11 @@ hostapd_set_bss_options() {
  		set_default wps_manufacturer "www.openwrt.org"
  		set_default wps_independent 1
  
@@ -850,7 +848,7 @@ index 65ae662c4d..878ac52420 100644
  		wps_state=2
  		[ -n "$wps_not_configured" ] && wps_state=1
  
-@@ -901,7 +906,7 @@ hostapd_set_bss_options() {
+@@ -906,7 +911,7 @@ hostapd_set_bss_options() {
  
  			set_default mobility_domain "$(echo "$ssid" | md5sum | head -c 4)"
  			set_default ft_over_ds 0

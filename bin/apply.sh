@@ -20,7 +20,10 @@ cd "${OPENWRT_ROOT}"
 # Compile_info always has some junk in it
 COMPILE_INFO="files/etc/Compile_info.txt"
 if [[ -e "${COMPILE_INFO}" ]]; then
-	git restore --staged --worktree "${COMPILE_INFO}"
+	if [[ $(git lg "${COMPILE_INFO}" | wc -l) -gt 0 ]]; then
+		git restore --staged --worktree "${COMPILE_INFO}"
+	fi
+	rm "${COMPILE_INFO}"
 fi
 git fetch upstream
 git co hnyman-build-apply
@@ -29,8 +32,13 @@ git reset --hard upstream/main
 ${script_dir}/apply_openwrt.sh
 git add ".gitignore" ".config.init" "feeds.conf.default" "files/" "hnscripts/" \
 	"package/base-files/" "package/network/" "package/utils/busybox/" \
-	"target/linux/ipq806x/base-files/etc/" "target/linux/ipq806x/config-5.15" \
-	"target/linux/ipq806x/patches-5.15/"
+	"target/linux/ipq806x/base-files/etc/"
+if [[ -e "target/linux/ipq806x/config-5.15" ]]; then
+	git add "target/linux/ipq806x/config-5.15" "target/linux/ipq806x/patches-5.15/"
+fi
+if [[ -e "target/linux/ipq806x/config-6.1" ]]; then
+	git add "target/linux/ipq806x/config-6.1" "target/linux/ipq806x/patches-6.1/"
+fi
 git commit -m "${COMMIT_MESSAGE}"
 
 # reset luci
