@@ -1,10 +1,10 @@
-main-r24066-5d111b6714-20231001-1852
+main-r24173-002f180a97-20231020-1731
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * master
-2023-09-30 5d111b6 ipq806x: disable unused SWCONFIG config f
+2023-10-20 002f180 dnsmasq: add support for RA option 31
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -38,7 +38,7 @@ M  package/network/ipv6/6in4/files/6in4.sh
 M  package/network/services/hostapd/files/hostapd.sh
 M  package/network/services/hostapd/files/wps-hotplug.sh
 M  package/network/services/odhcpd/files/odhcpd-update
-?? .config.init20042023
+?? .config.init15102023
 ?? files/etc/HNsettings.r7800-040223.cpt
 ?? version.date
 
@@ -46,7 +46,7 @@ M  package/network/services/odhcpd/files/odhcpd-update
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2023-09-29 607e9bb Merge pull request #6603 from stangri/mas
+2023-10-20 5d924ed luci-base, luci-mod-network: fix R0KH & R
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
@@ -57,7 +57,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2023-09-30 b3a2a8b Merge pull request #22254 from Ansuel/net
+2023-10-20 bfb980f Merge pull request #22342 from blocktrron
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch

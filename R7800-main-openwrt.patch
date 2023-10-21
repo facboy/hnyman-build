@@ -202,16 +202,16 @@ index fc679335e0..4c03e92d72 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..75c4b0da7a
+index 0000000000..7770dc9226
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r24066-5d111b6714 / 2023-10-01 18:27
++OpenWrt main r24173-002f180a97 / 2023-10-20 17:07
 +---
-+openwrt   2023-09-30 5d111b6 ipq806x: disable unused SWCONFIG config f
-+luci      2023-09-29 607e9bb Merge pull request #6603 from stangri/mas
-+packages  2023-09-30 b3a2a8b Merge pull request #22254 from Ansuel/net
-+routing   2023-09-29 c2124dd luci-app-bmx6: drop this because of secur
++openwrt   2023-10-20 002f180 dnsmasq: add support for RA option 31
++luci      2023-10-20 5d924ed luci-base, luci-mod-network: fix R0KH & R
++packages  2023-10-20 bfb980f Merge pull request #22342 from blocktrron
++routing   2023-10-16 49da9e9 bird2: bump to version 2.14
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -571,7 +571,7 @@ index 0000000000..e64ecc89fd
 +
 diff --git a/hnscripts/newBuildroot.sh b/hnscripts/newBuildroot.sh
 new file mode 100755
-index 0000000000..2bd6383b21
+index 0000000000..6655ea2b67
 --- /dev/null
 +++ b/hnscripts/newBuildroot.sh
 @@ -0,0 +1,74 @@
@@ -590,7 +590,7 @@ index 0000000000..2bd6383b21
 +GITREPO=https://git.openwrt.org/openwrt/openwrt.git
 +
 +## Current version
-+FILESTAMP=R7800-main-r22602-42eeb22450-20230420-2155
++FILESTAMP=R7800-main-r24139-e0ac782a5e-20231016-2121
 +
 +### Prerequisites for buildroot for the current Ubuntu
 +sudo apt-get install build-essential libncurses5-dev zlib1g-dev

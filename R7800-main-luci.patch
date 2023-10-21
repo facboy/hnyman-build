@@ -1,5 +1,5 @@
 diff --git a/applications/luci-app-statistics/root/etc/config/luci_statistics b/applications/luci-app-statistics/root/etc/config/luci_statistics
-index 2008a7966a..2c57449039 100644
+index f7783d73f3..445b6a426f 100644
 --- a/applications/luci-app-statistics/root/etc/config/luci_statistics
 +++ b/applications/luci-app-statistics/root/etc/config/luci_statistics
 @@ -67,7 +67,7 @@ config statistics 'collectd_chrony'
@@ -36,7 +36,7 @@ index 2008a7966a..2c57449039 100644
  
  config statistics 'collectd_interface'
  	option enable '1'
-@@ -207,9 +208,9 @@ config statistics 'collectd_tcpconns'
+@@ -208,9 +209,9 @@ config statistics 'collectd_tcpconns'
  	option AllPortsSummary '0'
  
  config statistics 'collectd_thermal'
@@ -74,7 +74,7 @@ index 46947ae4c1..1a90776a6c 100644
 +	option command '/etc/restoreStats.sh'
 +
 diff --git a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
-index 8155a15850..0dfa846915 100644
+index 5022d39b7d..9630e498f8 100644
 --- a/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
 +++ b/modules/luci-mod-network/htdocs/luci-static/resources/view/network/wireless.js
 @@ -1567,7 +1567,7 @@ return view.extend({
