@@ -202,16 +202,16 @@ index fc679335e0..4c03e92d72 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..7770dc9226
+index 0000000000..0020888a11
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r24173-002f180a97 / 2023-10-20 17:07
++OpenWrt main r24601-682f8fe7e7 / 2023-12-09 17:02
 +---
-+openwrt   2023-10-20 002f180 dnsmasq: add support for RA option 31
-+luci      2023-10-20 5d924ed luci-base, luci-mod-network: fix R0KH & R
-+packages  2023-10-20 bfb980f Merge pull request #22342 from blocktrron
-+routing   2023-10-16 49da9e9 bird2: bump to version 2.14
++openwrt   2023-12-09 682f8fe ixp4xx: add Generic subtarget definition
++luci      2023-12-08 864bf25 luci-mod-network: exclude alias to self f
++packages  2023-12-09 ec0ea77 Merge pull request #22767 from efahl/issu
++routing   2023-11-28 a5ec54a opennds: update to version 10.2.0
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -571,7 +571,7 @@ index 0000000000..e64ecc89fd
 +
 diff --git a/hnscripts/newBuildroot.sh b/hnscripts/newBuildroot.sh
 new file mode 100755
-index 0000000000..6655ea2b67
+index 0000000000..af78d2906d
 --- /dev/null
 +++ b/hnscripts/newBuildroot.sh
 @@ -0,0 +1,74 @@
@@ -595,7 +595,7 @@ index 0000000000..6655ea2b67
 +### Prerequisites for buildroot for the current Ubuntu
 +sudo apt-get install build-essential libncurses5-dev zlib1g-dev
 +sudo apt-get install gawk gcc-multilib flex git gettext libssl-dev
-+sudo apt-get install python3-distutils
++sudo apt-get install python3-distutils python3-setuptools swig
 +
 +### Prerequisites for being able to send patches to openwrt-devel
 +sudo apt-get install git-email
@@ -741,7 +741,7 @@ index 0000000000..77d20f2f8c
 +hnscripts/parallelcompile.sh
 +
 diff --git a/package/base-files/Makefile b/package/base-files/Makefile
-index 8732f82fb9..7b38826c8a 100644
+index 67fc5d29c1..c3c0079569 100644
 --- a/package/base-files/Makefile
 +++ b/package/base-files/Makefile
 @@ -77,7 +77,7 @@ endef
