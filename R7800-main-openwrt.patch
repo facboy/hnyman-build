@@ -202,16 +202,16 @@ index fc679335e0..4c03e92d72 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..0020888a11
+index 0000000000..d149ce7b02
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r24601-682f8fe7e7 / 2023-12-09 17:02
++OpenWrt main r24887-65fb97b450 / 2024-01-22 19:28
 +---
-+openwrt   2023-12-09 682f8fe ixp4xx: add Generic subtarget definition
-+luci      2023-12-08 864bf25 luci-mod-network: exclude alias to self f
-+packages  2023-12-09 ec0ea77 Merge pull request #22767 from efahl/issu
-+routing   2023-11-28 a5ec54a opennds: update to version 10.2.0
++openwrt   2024-01-22 65fb97b lantiq: fix boot isues on danube boards
++luci      2024-01-21 3d54783 Translated using Weblate (Russian)
++packages  2024-01-21 214df76 openvpn: remove myself as maintainer
++routing   2023-12-23 6f74738 Merge pull request #1038 from ecsv/batadv
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
