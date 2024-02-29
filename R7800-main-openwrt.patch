@@ -202,16 +202,16 @@ index fc679335e0..4c03e92d72 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..d149ce7b02
+index 0000000000..047f8c9cb9
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r24887-65fb97b450 / 2024-01-22 19:28
++OpenWrt main r25219-6e2962d4c5 / 2024-02-17 11:44
 +---
-+openwrt   2024-01-22 65fb97b lantiq: fix boot isues on danube boards
-+luci      2024-01-21 3d54783 Translated using Weblate (Russian)
-+packages  2024-01-21 214df76 openvpn: remove myself as maintainer
-+routing   2023-12-23 6f74738 Merge pull request #1038 from ecsv/batadv
++openwrt   2024-02-17 6e2962d mediatek: mt7622: skip build for MT7622 r
++luci      2024-02-16 29772a6 Merge pull request #6914 from stangri/mas
++packages  2024-02-17 9f78003 haproxy: update to v2.8.6
++routing   2024-02-05 61f15a7 Merge pull request #1045 from ecsv/batadv
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -819,6 +819,22 @@ index 7a3d0d068a..31abfb7274 100644
  	option overhead_type none
  	# defaults:
  	option ingress 1
+diff --git a/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh b/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
+index 1a664abbf2..710c40e51e 100644
+--- a/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
++++ b/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
+@@ -816,6 +816,11 @@ hostapd_set_bss_options() {
+ 		set_default wps_manufacturer "www.openwrt.org"
+ 		set_default wps_independent 1
+ 
++		# Set WPS label pin to original Netgear value stored in art partition
++		# Value for wps_pin can be overridden by /etc/config/wireless
++		local PINdefault="$(dd if=/dev/mtdblock3 bs=1 skip=18 count=8 2>/dev/null)"
++		set_default wps_pin "$PINdefault"
++
+ 		wps_state=2
+ 		[ -n "$wps_not_configured" ] && wps_state=1
+ 
 diff --git a/package/network/ipv6/6in4/files/6in4.sh b/package/network/ipv6/6in4/files/6in4.sh
 index 5b5c7b36af..d75c6f4f41 100755
 --- a/package/network/ipv6/6in4/files/6in4.sh
@@ -832,31 +848,6 @@ index 5b5c7b36af..d75c6f4f41 100755
  
  		(while [ $((timeout--)) -gt 0 ]; do
  			sleep 1
-diff --git a/package/network/services/hostapd/files/hostapd.sh b/package/network/services/hostapd/files/hostapd.sh
-index 271c1f7bec..31c01962f1 100644
---- a/package/network/services/hostapd/files/hostapd.sh
-+++ b/package/network/services/hostapd/files/hostapd.sh
-@@ -816,6 +816,11 @@ hostapd_set_bss_options() {
- 		set_default wps_manufacturer "www.openwrt.org"
- 		set_default wps_independent 1
- 
-+		# Set WPS label pin to original Netgear value stored in art partition
-+		# Value for wps_pin can be overridden by /etc/config/wireless
-+#		local PINdefault="$(dd if=/dev/mtdblock3 bs=1 skip=18 count=8 2>/dev/null)"
-+#		set_default wps_pin "$PINdefault"
-+
- 		wps_state=2
- 		[ -n "$wps_not_configured" ] && wps_state=1
- 
-@@ -906,7 +911,7 @@ hostapd_set_bss_options() {
- 
- 			set_default mobility_domain "$(echo "$ssid" | md5sum | head -c 4)"
- 			set_default ft_over_ds 0
--			set_default reassociation_deadline 1000
-+			set_default reassociation_deadline 20000
- 
- 			case "$auth_type" in
- 				psk|sae|psk-sae)
 diff --git a/package/network/services/hostapd/files/wps-hotplug.sh b/package/network/services/hostapd/files/wps-hotplug.sh
 index 073bdd1868..dc05718eb7 100644
 --- a/package/network/services/hostapd/files/wps-hotplug.sh

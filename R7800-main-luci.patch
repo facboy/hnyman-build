@@ -1,8 +1,17 @@
 diff --git a/applications/luci-app-statistics/root/etc/config/luci_statistics b/applications/luci-app-statistics/root/etc/config/luci_statistics
-index f7783d73f3..445b6a426f 100644
+index 74456720d3..772e2a8925 100644
 --- a/applications/luci-app-statistics/root/etc/config/luci_statistics
 +++ b/applications/luci-app-statistics/root/etc/config/luci_statistics
-@@ -67,7 +67,7 @@ config statistics 'collectd_chrony'
+@@ -23,7 +23,7 @@ config statistics 'collectd_rrdtool'
+ 	option RRARows '288'
+ 	option RRASingle '1'
+ 	option RRATimespans '2hour 1day 1week 1month 1year'
+-	option backup '0'
++	option backup '1'
+ 
+ config statistics 'collectd_csv'
+ 	option enable '0'
+@@ -68,7 +68,7 @@ config statistics 'collectd_chrony'
  	option Timeout '2'
  
  config statistics 'collectd_conntrack'
@@ -11,7 +20,7 @@ index f7783d73f3..445b6a426f 100644
  
  config statistics 'collectd_contextswitch'
  	option enable '0'
-@@ -80,7 +80,8 @@ config statistics 'collectd_cpu'
+@@ -81,7 +81,8 @@ config statistics 'collectd_cpu'
  	option ValuesPercentage '1'
  
  config statistics 'collectd_cpufreq'
@@ -21,7 +30,7 @@ index f7783d73f3..445b6a426f 100644
  
  config statistics 'collectd_curl'
  	option enable '0'
-@@ -114,10 +115,10 @@ config statistics 'collectd_exec'
+@@ -115,10 +116,10 @@ config statistics 'collectd_exec'
  	option enable '0'
  
  #example for sqm_collect plugin
@@ -36,7 +45,7 @@ index f7783d73f3..445b6a426f 100644
  
  config statistics 'collectd_interface'
  	option enable '1'
-@@ -208,9 +209,9 @@ config statistics 'collectd_tcpconns'
+@@ -209,9 +210,9 @@ config statistics 'collectd_tcpconns'
  	option AllPortsSummary '0'
  
  config statistics 'collectd_thermal'
