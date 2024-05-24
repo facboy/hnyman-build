@@ -6,19 +6,22 @@
 # To avoid problems with long paths, something like /Openwrt is preferable
 #
 # Script creates subdir for the main branch (or a release branch), and dl for downloads
-# Creates OpenWrt source repository and luci, packages & routing feeds
+# Creates OpenWrt source repository and luci and packages feeds (routing and telephony disabled)
 
 ### Target definitions
 TARGET=main
 GITREPO=https://git.openwrt.org/openwrt/openwrt.git
 
 ## Current version
-FILESTAMP=R7800-main-r25978-ea609fe486-20240420-1923
+FILESTAMP=R7800-main-r26155-a5a941a997-20240503-2058
 
 ### Prerequisites for buildroot for the current Ubuntu
 sudo apt-get install build-essential libncurses5-dev zlib1g-dev
 sudo apt-get install gawk gcc-multilib flex git gettext libssl-dev
-sudo apt-get install python3-distutils python3-setuptools swig
+sudo apt-get install python3-setuptools swig
+sudo apt-get install python3-distutils
+### python3-distutils fails for Ubintu 24.04, install -extra just in case
+sudo apt-get install python3-distutils-extra
 
 ### Prerequisites for being able to send patches to openwrt-devel
 sudo apt-get install git-email
@@ -29,7 +32,7 @@ sudo apt-get install git-email
 ### set the preferred umask (allowed: 0000-0022)
 umask 0022
 
-### download directory (outside buidroot root directory to protect from make distclean)
+### download directory (outside buildroot directory to protect from make distclean)
 mkdir -p dl
 
 ### buildroot directory

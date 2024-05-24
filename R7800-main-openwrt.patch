@@ -202,15 +202,15 @@ index fc679335e0..4c03e92d72 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..4441ffc979
+index 0000000000..147b4e6827
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r25978-ea609fe486 / 2024-04-20 18:34
++OpenWrt main r26155-a5a941a997 / 2024-05-03 20:09
 +---
-+openwrt   2024-04-19 ea609fe uclient: update to Git HEAD (2024-04-19)
-+luci      2024-04-20 0c92d30 Merge pull request #7071 from dibdot/banI
-+packages  2024-04-20 d5a1347 Merge pull request #23963 from dibdot/ban
++openwrt   2024-05-03 a5a941a kernel: add missing check for TCP GRO
++luci      2024-05-03 0751fb5 Merge pull request #7109 from qosmio/luci
++packages  2024-05-03 69166db nano: update to 8.0
 +routing   2024-04-16 d4e9f92 luci-app-olsrd2: upgrade uci-defaults for
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
@@ -571,10 +571,10 @@ index 0000000000..e64ecc89fd
 +
 diff --git a/hnscripts/newBuildroot.sh b/hnscripts/newBuildroot.sh
 new file mode 100755
-index 0000000000..9f665c315e
+index 0000000000..664047f588
 --- /dev/null
 +++ b/hnscripts/newBuildroot.sh
-@@ -0,0 +1,74 @@
+@@ -0,0 +1,77 @@
 +#!/bin/sh
 +#
 +# newBuildroot.sh
@@ -583,19 +583,22 @@ index 0000000000..9f665c315e
 +# To avoid problems with long paths, something like /Openwrt is preferable
 +#
 +# Script creates subdir for the main branch (or a release branch), and dl for downloads
-+# Creates OpenWrt source repository and luci, packages & routing feeds
++# Creates OpenWrt source repository and luci and packages feeds (routing and telephony disabled)
 +
 +### Target definitions
 +TARGET=main
 +GITREPO=https://git.openwrt.org/openwrt/openwrt.git
 +
 +## Current version
-+FILESTAMP=R7800-main-r25219-6e2962d4c5-20240217-1237
++FILESTAMP=R7800-main-r25978-ea609fe486-20240420-1923
 +
 +### Prerequisites for buildroot for the current Ubuntu
 +sudo apt-get install build-essential libncurses5-dev zlib1g-dev
 +sudo apt-get install gawk gcc-multilib flex git gettext libssl-dev
-+sudo apt-get install python3-distutils python3-setuptools swig
++sudo apt-get install python3-setuptools swig
++sudo apt-get install python3-distutils
++### python3-distutils fails for Ubintu 24.04, install -extra just in case
++sudo apt-get install python3-distutils-extra
 +
 +### Prerequisites for being able to send patches to openwrt-devel
 +sudo apt-get install git-email
@@ -606,7 +609,7 @@ index 0000000000..9f665c315e
 +### set the preferred umask (allowed: 0000-0022)
 +umask 0022
 +
-+### download directory (outside buidroot root directory to protect from make distclean)
++### download directory (outside buildroot directory to protect from make distclean)
 +mkdir -p dl
 +
 +### buildroot directory
@@ -835,19 +838,6 @@ index 763702e76b..810b5989af 100644
  		wps_state=2
  		[ -n "$wps_not_configured" ] && wps_state=1
  
-diff --git a/package/network/ipv6/6in4/files/6in4.sh b/package/network/ipv6/6in4/files/6in4.sh
-index 5b5c7b36af..d75c6f4f41 100755
---- a/package/network/ipv6/6in4/files/6in4.sh
-+++ b/package/network/ipv6/6in4/files/6in4.sh
-@@ -25,7 +25,7 @@ test_6in4_rfc1918()
- 
- proto_6in4_update() {
- 	sh -c '
--		timeout=5
-+		timeout=8
- 
- 		(while [ $((timeout--)) -gt 0 ]; do
- 			sleep 1
 diff --git a/package/network/services/hostapd/files/wps-hotplug.sh b/package/network/services/hostapd/files/wps-hotplug.sh
 index 073bdd1868..dc05718eb7 100644
 --- a/package/network/services/hostapd/files/wps-hotplug.sh
