@@ -165,7 +165,7 @@ index 0000000000..787c9755f4
 +CONFIG_PACKAGE_openssh-sftp-server=y
 +
 diff --git a/.gitignore b/.gitignore
-index 84cfc99770..e971f93bab 100644
+index ad04755919..19ff149ad8 100644
 --- a/.gitignore
 +++ b/.gitignore
 @@ -13,7 +13,6 @@
@@ -176,10 +176,10 @@ index 84cfc99770..e971f93bab 100644
  /target/linux/feeds
  /overlay
  /package/feeds
-@@ -21,8 +20,6 @@
- /*.patch
- /llvm-bpf*
+@@ -23,8 +22,6 @@
  key-build*
+ private-key.pem
+ public-key.pem
 -*.orig
 -*.rej
  *~
@@ -202,16 +202,16 @@ index fc679335e0..4c03e92d72 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..147b4e6827
+index 0000000000..e12939b6cb
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r26155-a5a941a997 / 2024-05-03 20:09
++OpenWrt main r26404-a55ab9e134 / 2024-05-25 18:48
 +---
-+openwrt   2024-05-03 a5a941a kernel: add missing check for TCP GRO
-+luci      2024-05-03 0751fb5 Merge pull request #7109 from qosmio/luci
-+packages  2024-05-03 69166db nano: update to 8.0
-+routing   2024-04-16 d4e9f92 luci-app-olsrd2: upgrade uci-defaults for
++openwrt   2024-05-25 a55ab9e mediatek: filogic: prevent faulty mac add
++luci      2024-05-24 0ae4efb Translated using Weblate (Chinese (Simpli
++packages  2024-05-25 9ced48f nextdns: Update to version 1.43.5
++routing   2024-05-20 1d335a9 bird2: bump to version 2.15.1
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -744,7 +744,7 @@ index 0000000000..77d20f2f8c
 +hnscripts/parallelcompile.sh
 +
 diff --git a/package/base-files/Makefile b/package/base-files/Makefile
-index b1a834e1bf..b05fd36012 100644
+index 4425bb346d..04c04e2bfb 100644
 --- a/package/base-files/Makefile
 +++ b/package/base-files/Makefile
 @@ -77,7 +77,7 @@ endef

@@ -13,7 +13,7 @@ TARGET=main
 GITREPO=https://git.openwrt.org/openwrt/openwrt.git
 
 ## Current version
-FILESTAMP=R7800-main-r26155-a5a941a997-20240503-2058
+FILESTAMP=R7800-main-r26404-a55ab9e134-20240525-1918
 
 ### Prerequisites for buildroot for the current Ubuntu
 sudo apt-get install build-essential libncurses5-dev zlib1g-dev
