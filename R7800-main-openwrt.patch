@@ -202,16 +202,16 @@ index fc679335e0..4c03e92d72 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..e12939b6cb
+index 0000000000..6a427eeaab
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r26404-a55ab9e134 / 2024-05-25 18:48
++OpenWrt main r26714-6fdf3a32d9 / 2024-06-19 21:54
 +---
-+openwrt   2024-05-25 a55ab9e mediatek: filogic: prevent faulty mac add
-+luci      2024-05-24 0ae4efb Translated using Weblate (Chinese (Simpli
-+packages  2024-05-25 9ced48f nextdns: Update to version 1.43.5
-+routing   2024-05-20 1d335a9 bird2: bump to version 2.15.1
++openwrt   2024-06-19 6fdf3a3 bcm27xx: base-files: diag: fix LEDs
++luci      2024-06-16 5a8917b luci-proto-nebula: drop maintainership
++packages  2024-06-19 0a06090 yggdrasil: bump to 0.5.6
++routing   2024-06-10 8d8cfe8 bmx7: cleanup Makefile
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -744,7 +744,7 @@ index 0000000000..77d20f2f8c
 +hnscripts/parallelcompile.sh
 +
 diff --git a/package/base-files/Makefile b/package/base-files/Makefile
-index 4425bb346d..04c04e2bfb 100644
+index 313bf377b4..4da50a2736 100644
 --- a/package/base-files/Makefile
 +++ b/package/base-files/Makefile
 @@ -77,7 +77,7 @@ endef
