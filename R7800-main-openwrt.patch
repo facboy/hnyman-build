@@ -202,16 +202,16 @@ index fc679335e0..4c03e92d72 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..6a427eeaab
+index 0000000000..a51525b555
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r26714-6fdf3a32d9 / 2024-06-19 21:54
++OpenWrt main r27046-940f83cc8d / 2024-07-30 09:39
 +---
-+openwrt   2024-06-19 6fdf3a3 bcm27xx: base-files: diag: fix LEDs
-+luci      2024-06-16 5a8917b luci-proto-nebula: drop maintainership
-+packages  2024-06-19 0a06090 yggdrasil: bump to 0.5.6
-+routing   2024-06-10 8d8cfe8 bmx7: cleanup Makefile
++openwrt   2024-07-30 940f83c rockchip: dw-rockchip: Fix initial PERST#
++luci      2024-07-30 79a7012 luci-theme-openwrt: convert Lua templates
++packages  2024-07-29 744ef57 imagemagick: update to 7.1.1.36
++routing   2024-07-21 3b79b64 mesh11sd: remove unneeded default PKG_BUI
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
