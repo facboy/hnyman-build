@@ -1,10 +1,10 @@
-main-r27046-940f83cc8d-20240730-1009
+main-r27269-c6f04f718e-20240831-0939
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * main
-2024-07-30 940f83c rockchip: dw-rockchip: Fix initial PERST#
+2024-08-30 c6f04f7 ath79: qihoo,c301: use nvmem
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -45,7 +45,7 @@ M  package/network/services/odhcpd/files/odhcpd-update
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2024-07-30 79a7012 luci-theme-openwrt: convert Lua templates
+2024-08-30 648a099 luci-mod-network: routes.js: make interfa
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
@@ -55,7 +55,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2024-07-29 744ef57 imagemagick: update to 7.1.1.36
+2024-08-31 a2d87d2 v2ray-core: Update to 5.17.1
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch

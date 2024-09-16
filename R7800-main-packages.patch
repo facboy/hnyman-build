@@ -1,5 +1,5 @@
 diff --git a/net/adblock/files/adblock.conf b/net/adblock/files/adblock.conf
-index aeceb500f..586bc5b18 100644
+index 28a77738d..c1de9ed99 100644
 --- a/net/adblock/files/adblock.conf
 +++ b/net/adblock/files/adblock.conf
 @@ -1,6 +1,6 @@
