@@ -64,7 +64,7 @@ git commit -m "${COMMIT_MESSAGE}"
 git push -f
 
 # update other feeds
-for feed in "routing" "telephony"; do
+for feed in "routing"; do
 	cd "${OPENWRT_ROOT}/feeds/${feed}"
 	git pull origin master
 done

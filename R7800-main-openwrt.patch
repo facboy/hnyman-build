@@ -202,16 +202,16 @@ index fc679335e0..4c03e92d72 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..9472f6f75b
+index 0000000000..9eff541fba
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r27269-c6f04f718e / 2024-08-31 08:54
++OpenWrt main r27578-23ac1ad951 / 2024-09-25 20:17
 +---
-+openwrt   2024-08-30 c6f04f7 ath79: qihoo,c301: use nvmem
-+luci      2024-08-30 648a099 luci-mod-network: routes.js: make interfa
-+packages  2024-08-31 a2d87d2 v2ray-core: Update to 5.17.1
-+routing   2024-07-31 31e66c0 mesh11sd: update to version 4.1.1
++openwrt   2024-09-24 23ac1ad realtek: d-link: add support for dgs-1210
++luci      2024-09-24 63d8b79 Merge pull request #7292 from stangri/mas
++packages  2024-09-25 d9cc0e1 ddns-scripts: fix update_porkbun_v3 shell
++routing   2024-09-08 233b3c6 babeld: use an array for routing lists us
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -823,7 +823,7 @@ index 7a3d0d068a..31abfb7274 100644
  	# defaults:
  	option ingress 1
 diff --git a/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh b/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
-index 232f9021b9..d167a9c6f5 100644
+index 32b9d9d082..1f9b770d51 100644
 --- a/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
 +++ b/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
 @@ -820,6 +820,11 @@ hostapd_set_bss_options() {
