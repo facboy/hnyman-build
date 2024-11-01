@@ -1,10 +1,10 @@
-main-r27578-23ac1ad951-20240925-2052
+main-r27783-f20893a6bc-20241016-2149
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * main
-2024-09-24 23ac1ad realtek: d-link: add support for dgs-1210
+2024-10-16 f20893a opkg: update to Git HEAD (2024-10-16)
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -45,7 +45,7 @@ M  package/network/services/odhcpd/files/odhcpd-update
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2024-09-24 63d8b79 Merge pull request #7292 from stangri/mas
+2024-10-16 bbb0819 luci-app-tinyproxy: Translate to JS
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
@@ -55,7 +55,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2024-09-25 d9cc0e1 ddns-scripts: fix update_porkbun_v3 shell
+2024-10-16 f7cdf7d gst1-plugins-bad: add support for srt
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
