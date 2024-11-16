@@ -59,10 +59,10 @@ index 74456720d3..772e2a8925 100644
  config statistics 'collectd_uptime'
  	option enable '0'
 diff --git a/modules/luci-base/root/etc/config/luci b/modules/luci-base/root/etc/config/luci
-index 46947ae4c1..1a90776a6c 100644
+index 46947ae4c1..f922d3d44b 100644
 --- a/modules/luci-base/root/etc/config/luci
 +++ b/modules/luci-base/root/etc/config/luci
-@@ -23,9 +23,19 @@ config internal ccache
+@@ -23,9 +23,12 @@ config internal ccache
  	option enable 1
  		
  config internal themes
@@ -74,13 +74,6 @@ index 46947ae4c1..1a90776a6c 100644
  	option timeout 5
  	option display 1.5
 +
-+config command
-+	option name 'Backup LuCI stats'
-+	option command '/etc/storeStats.sh'
-+
-+config command
-+	option name 'Restore LuCI stats backup'
-+	option command '/etc/restoreStats.sh'
 +
 diff --git a/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material b/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
 index 7f07239ec0..e7c376df80 100755
