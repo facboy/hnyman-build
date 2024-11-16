@@ -1,34 +1,31 @@
 diff --git a/.config.init b/.config.init
 new file mode 100644
-index 0000000000..787c9755f4
+index 0000000000..3ebf9e24a8
 --- /dev/null
 +++ b/.config.init
-@@ -0,0 +1,160 @@
+@@ -0,0 +1,154 @@
 +# Use "make defconfig" to expand this to a full .config
 +CONFIG_TARGET_ipq806x=y
 +CONFIG_TARGET_ipq806x_generic=y
 +CONFIG_TARGET_ipq806x_generic_DEVICE_netgear_r7800=y
-+#CONFIG_TESTING_KERNEL=y
 +
 +# Per-package build logs in <buildroot>/logs
 +CONFIG_DEVEL=y
 +CONFIG_BUILD_LOG=y
 +
++# Include package list in build
++CONFIG_INCLUDE_CONFIG=y
++
 +# Debugging options (build gdbserver, include package debug)
 +CONFIG_PACKAGE_gdbserver=y
 +CONFIG_DEBUG=y
 +
-+# Include package list in build
-+CONFIG_INCLUDE_CONFIG=y
-+
-+# Longer waiting for failsafe button push
-+###CONFIG_IMAGEOPT=y
-+###CONFIG_PREINITOPT=y
-+###CONFIG_TARGET_PREINIT_TIMEOUT=5
++##### APK instead of opkg
++CONFIG_PACKAGE_apk-openssl=y
++# CONFIG_PACKAGE_apk-mbedtls is not set
 +
 +# Busybox tweaks
 +CONFIG_BUSYBOX_CUSTOM=y
-+#CONFIG_BUSYBOX_CONFIG_DIFF=y
 +CONFIG_BUSYBOX_CONFIG_FEATURE_EDITING_SAVEHISTORY=y
 +CONFIG_BUSYBOX_CONFIG_FEATURE_EDITING_SAVE_ON_EXIT=y
 +CONFIG_BUSYBOX_CONFIG_FEATURE_LESS_FLAGS=y
@@ -89,14 +86,11 @@ index 0000000000..787c9755f4
 +# CONFIG_PACKAGE_wpad-basic-mbedtls is not set
 +# CONFIG_PACKAGE_libustream-mbedtls is not set
 +
-+# SSL certificates
-+CONFIG_PACKAGE_ca-certificates=y
-+
 +# Luci (SSL from OpenSSL)
 +CONFIG_PACKAGE_luci-ssl-openssl=y
 +CONFIG_PACKAGE_luci-app-commands=y
 +CONFIG_PACKAGE_luci-app-ddns=y
-+CONFIG_PACKAGE_luci-app-opkg=y
++CONFIG_PACKAGE_luci-app-package-manager=y
 +CONFIG_PACKAGE_luci-app-sqm=y
 +CONFIG_PACKAGE_luci-app-uhttpd=y
 +CONFIG_PACKAGE_luci-app-upnp=y
@@ -202,16 +196,16 @@ index fc679335e0..4c03e92d72 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..836942db71
+index 0000000000..695b960e7b
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r27783-f20893a6bc / 2024-10-16 21:27
++OpenWrt main r28085-6720c4ccba / 2024-11-14 17:42
 +---
-+openwrt   2024-10-16 f20893a opkg: update to Git HEAD (2024-10-16)
-+luci      2024-10-16 bbb0819 luci-app-tinyproxy: Translate to JS
-+packages  2024-10-16 f7cdf7d gst1-plugins-bad: add support for srt
-+routing   2024-10-16 0ff4ab0 Merge pull request #1080 from ecsv/batadv
++openwrt   2024-11-14 6720c4c mt76: update to Git HEAD (2024-10-28)
++luci      2024-11-10 d650688 luci-mod-status: channel_analysis: detect
++packages  2024-11-14 19d40c8 ocserv: Use default value for log-level i
++routing   2024-11-08 ab45dac CI: multi-arch-test-build: move to shared
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -229,9 +223,6 @@ index 0000000000..d49760d772
 +  fi
 +fi
 +
-diff --git a/files/etc/backup.stats/.placeholder b/files/etc/backup.stats/.placeholder
-new file mode 100644
-index 0000000000..e69de29bb2
 diff --git a/files/etc/checksettings.sh b/files/etc/checksettings.sh
 new file mode 100755
 index 0000000000..e7a1c42c19
@@ -320,21 +311,6 @@ index 0000000000..f286009627
 @@ -0,0 +1,2 @@
 +export HISTFILE=/tmp/.busybox_ash_history
 +
-diff --git a/files/etc/restoreStats.sh b/files/etc/restoreStats.sh
-new file mode 100755
-index 0000000000..ef205bd577
---- /dev/null
-+++ b/files/etc/restoreStats.sh
-@@ -0,0 +1,9 @@
-+#!/bin/sh
-+
-+/etc/init.d/collectd stop
-+logger -t "LuCI statistics" collectd stopped, stats being restored
-+mkdir -p /tmp/rrd/$(uname -n)
-+cd /tmp/rrd/$(uname -n)
-+tar x -zvf /etc/backup.stats/stats.tar.gz
-+sync
-+/etc/init.d/collectd start
 diff --git a/files/etc/saveHNsettings.sh b/files/etc/saveHNsettings.sh
 new file mode 100755
 index 0000000000..a6696cd51c
@@ -353,24 +329,6 @@ index 0000000000..a6696cd51c
 +    cp -f /tmp/HNsettings.cpt /etc/HNsettings.$1.cpt
 +  fi
 +fi
-+
-diff --git a/files/etc/storeStats.sh b/files/etc/storeStats.sh
-new file mode 100755
-index 0000000000..2c0a2451e6
---- /dev/null
-+++ b/files/etc/storeStats.sh
-@@ -0,0 +1,12 @@
-+#!/bin/sh
-+BACKUPNAME=stats-$(date +%Y%m%dT%H%M).tar.gz
-+/etc/init.d/collectd stop
-+logger -t "LuCI statistics" Create backup archive
-+mkdir -p /etc/backup.stats
-+cd /tmp/rrd/$(uname -n)
-+tar c -zvf /etc/backup.stats/$BACKUPNAME *
-+cd /etc/backup.stats
-+ln -fs $BACKUPNAME stats.tar.gz
-+sync
-+/etc/init.d/collectd start
 +
 diff --git a/files/etc/wifi-suite.sh b/files/etc/wifi-suite.sh
 new file mode 100755
@@ -445,10 +403,10 @@ index 0000000000..4222b2c6f0
 +
 diff --git a/hnscripts/createbuildinfo.sh b/hnscripts/createbuildinfo.sh
 new file mode 100755
-index 0000000000..46ba1f1f00
+index 0000000000..f3a6d7cfc3
 --- /dev/null
 +++ b/hnscripts/createbuildinfo.sh
-@@ -0,0 +1,65 @@
+@@ -0,0 +1,64 @@
 +#!/bin/sh
 +#
 +# createbuildinfo  -  Create info on current config and source code changes
@@ -511,9 +469,8 @@ index 0000000000..46ba1f1f00
 +mv $Prefix-squashfs-factory.img $Device-$VersTime-factory.img
 +
 +# copy ath10k ct+mainline kmods
-+cp packages/kmod-ath10k_* ath10k-mainline-$VersTime.ipk
-+cp packages/kmod-ath10k-ct_* ath10k-ct-$VersTime.ipk
-+
++cp packages/kmod-ath10k-6* ath10k-mainline-$VersTime.apk
++cp packages/kmod-ath10k-ct-6* ath10k-ct-$VersTime.apk
 diff --git a/hnscripts/kernelcompile.sh b/hnscripts/kernelcompile.sh
 new file mode 100755
 index 0000000000..8bf93a3a53
@@ -571,7 +528,7 @@ index 0000000000..e64ecc89fd
 +
 diff --git a/hnscripts/newBuildroot.sh b/hnscripts/newBuildroot.sh
 new file mode 100755
-index 0000000000..664047f588
+index 0000000000..23f8249c31
 --- /dev/null
 +++ b/hnscripts/newBuildroot.sh
 @@ -0,0 +1,77 @@
@@ -590,7 +547,7 @@ index 0000000000..664047f588
 +GITREPO=https://git.openwrt.org/openwrt/openwrt.git
 +
 +## Current version
-+FILESTAMP=R7800-main-r25978-ea609fe486-20240420-1923
++FILESTAMP=R7800-main-r27995-57f2c72505-20241102-1958
 +
 +### Prerequisites for buildroot for the current Ubuntu
 +sudo apt-get install build-essential libncurses5-dev zlib1g-dev
@@ -744,7 +701,7 @@ index 0000000000..77d20f2f8c
 +hnscripts/parallelcompile.sh
 +
 diff --git a/package/base-files/files/bin/config_generate b/package/base-files/files/bin/config_generate
-index 9d1968ce20..b0fcdef8f7 100755
+index ca40a62cd4..b0fcdef8f7 100755
 --- a/package/base-files/files/bin/config_generate
 +++ b/package/base-files/files/bin/config_generate
 @@ -312,9 +312,10 @@ generate_static_system() {
@@ -797,7 +754,7 @@ index 7a3d0d068a..31abfb7274 100644
  	# defaults:
  	option ingress 1
 diff --git a/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh b/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
-index 9ffb46593a..11bfffa588 100644
+index 817ead71af..d03b67c8e9 100644
 --- a/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
 +++ b/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
 @@ -830,6 +830,11 @@ hostapd_set_bss_options() {
