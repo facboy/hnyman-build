@@ -191,7 +191,8 @@ index fc679335e0..4c03e92d72 100644
  src-git routing https://git.openwrt.org/feed/routing.git
 -src-git telephony https://git.openwrt.org/feed/telephony.git
 +#src-git telephony https://git.openwrt.org/feed/telephony.git
- #src-git video https://github.com/openwrt/video.git
+-src-git video https://github.com/openwrt/video.git
++#src-git video https://github.com/openwrt/video.git
  #src-git targets https://github.com/openwrt/targets.git
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
@@ -733,7 +734,7 @@ index 2403122ad2..5746ea237a 100755
 -	elif [ "$SEEN" -ge 5 -a -n "$OVERLAY" ]
 -	then
  		echo "FACTORY RESET" > /dev/console
- 		jffs2reset -y && reboot &
+ 		factoryreset -y && reboot &
 -	fi
  ;;
  esac
