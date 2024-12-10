@@ -1,10 +1,10 @@
-main-r28085-6720c4ccba-20241114-1805
+main-r28200-c857145e03-20241127-1905
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * main
-2024-11-14 6720c4c mt76: update to Git HEAD (2024-10-28)
+2024-11-26 c857145 build: profiles.json: add kernel version 
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -44,9 +44,9 @@ M  package/network/services/odhcpd/files/odhcpd-update
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2024-11-10 d650688 luci-mod-status: channel_analysis: detect
+2024-11-25 fefb9ac luci-base: form: fix sort order bug trigg
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
-MM modules/luci-base/root/etc/config/luci
+M  modules/luci-base/root/etc/config/luci
 M  themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
 M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020
 
@@ -54,7 +54,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2024-11-14 19d40c8 ocserv: Use default value for log-level i
+2024-11-27 9ad1751 gst1-plugins-bad: build videoparsersbad p
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
