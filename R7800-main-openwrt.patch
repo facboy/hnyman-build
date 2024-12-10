@@ -196,16 +196,16 @@ index fc679335e0..4c03e92d72 100644
  #src-git oldpackages http://git.openwrt.org/packages.git
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..695b960e7b
+index 0000000000..0241c3593f
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r28085-6720c4ccba / 2024-11-14 17:42
++OpenWrt main r28200-c857145e03 / 2024-11-27 18:42
 +---
-+openwrt   2024-11-14 6720c4c mt76: update to Git HEAD (2024-10-28)
-+luci      2024-11-10 d650688 luci-mod-status: channel_analysis: detect
-+packages  2024-11-14 19d40c8 ocserv: Use default value for log-level i
-+routing   2024-11-08 ab45dac CI: multi-arch-test-build: move to shared
++openwrt   2024-11-26 c857145 build: profiles.json: add kernel version 
++luci      2024-11-25 fefb9ac luci-base: form: fix sort order bug trigg
++packages  2024-11-27 9ad1751 gst1-plugins-bad: build videoparsersbad p
++routing   2024-11-23 ff47476 bmx7: Make version apk compatible
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
