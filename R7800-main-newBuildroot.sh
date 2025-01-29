@@ -13,15 +13,16 @@ TARGET=main
 GITREPO=https://git.openwrt.org/openwrt/openwrt.git
 
 ## Current version
-FILESTAMP=R7800-main-r28200-c857145e03-20241127-1905
+FILESTAMP=R7800-main-r28676-6a7fa68569-20250124-1849
 
 ### Prerequisites for buildroot for the current Ubuntu
 sudo apt-get install build-essential libncurses5-dev zlib1g-dev
 sudo apt-get install gawk gcc-multilib flex git gettext libssl-dev
 sudo apt-get install python3-setuptools swig
 sudo apt-get install python3-distutils
-### python3-distutils fails for Ubintu 24.04, install -extra just in case
-sudo apt-get install python3-distutils-extra
+
+### python3-distutils failed for Ubintu 24.04, install -extra just in case
+#sudo apt-get install python3-distutils-extra
 
 ### Prerequisites for being able to send patches to openwrt-devel
 sudo apt-get install git-email

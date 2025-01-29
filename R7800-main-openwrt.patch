@@ -1,9 +1,9 @@
 diff --git a/.config.init b/.config.init
 new file mode 100644
-index 0000000000..3ebf9e24a8
+index 0000000000..a14fa1be17
 --- /dev/null
 +++ b/.config.init
-@@ -0,0 +1,154 @@
+@@ -0,0 +1,152 @@
 +# Use "make defconfig" to expand this to a full .config
 +CONFIG_TARGET_ipq806x=y
 +CONFIG_TARGET_ipq806x_generic=y
@@ -26,8 +26,6 @@ index 0000000000..3ebf9e24a8
 +
 +# Busybox tweaks
 +CONFIG_BUSYBOX_CUSTOM=y
-+CONFIG_BUSYBOX_CONFIG_FEATURE_EDITING_SAVEHISTORY=y
-+CONFIG_BUSYBOX_CONFIG_FEATURE_EDITING_SAVE_ON_EXIT=y
 +CONFIG_BUSYBOX_CONFIG_FEATURE_LESS_FLAGS=y
 +CONFIG_BUSYBOX_CONFIG_FEATURE_LESS_REGEXP=y
 +CONFIG_BUSYBOX_CONFIG_FEATURE_LESS_WINCH=y
@@ -180,33 +178,34 @@ index ad04755919..19ff149ad8 100644
  .#*
  *#
 diff --git a/feeds.conf.default b/feeds.conf.default
-index fc679335e0..4c03e92d72 100644
+index 05f5c8c47c..4c03e92d72 100644
 --- a/feeds.conf.default
 +++ b/feeds.conf.default
-@@ -1,7 +1,7 @@
+@@ -1,8 +1,8 @@
 -src-git packages https://git.openwrt.org/feed/packages.git
 -src-git luci https://git.openwrt.org/project/luci.git
 +src-git-full packages https://git.openwrt.org/feed/packages.git
 +src-git-full luci https://git.openwrt.org/project/luci.git
  src-git routing https://git.openwrt.org/feed/routing.git
 -src-git telephony https://git.openwrt.org/feed/telephony.git
-+#src-git telephony https://git.openwrt.org/feed/telephony.git
 -src-git video https://github.com/openwrt/video.git
++#src-git telephony https://git.openwrt.org/feed/telephony.git
 +#src-git video https://github.com/openwrt/video.git
  #src-git targets https://github.com/openwrt/targets.git
  #src-git oldpackages http://git.openwrt.org/packages.git
+ #src-link custom /usr/src/openwrt/custom-feed
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..0241c3593f
+index 0000000000..1e0e28cb4b
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r28200-c857145e03 / 2024-11-27 18:42
++OpenWrt main r28676-6a7fa68569 / 2025-01-24 18:17
 +---
-+openwrt   2024-11-26 c857145 build: profiles.json: add kernel version 
-+luci      2024-11-25 fefb9ac luci-base: form: fix sort order bug trigg
-+packages  2024-11-27 9ad1751 gst1-plugins-bad: build videoparsersbad p
-+routing   2024-11-23 ff47476 bmx7: Make version apk compatible
++openwrt   2025-01-24 6a7fa68 realtek: Fix old compatible for HPE 1920-
++luci      2025-01-24 2c7b18b luci-app-attendedsysupgrade: sort latest 
++packages  2025-01-24 9cd00fb ddns-scripts: get l3 device for bind netw
++routing   2025-01-13 4a65e35 bird2: update to 2.16.1
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -303,14 +302,6 @@ index 0000000000..088bdbb2d5
 +uci commit upnpd
 +/etc/init.d/dnsmasq disable
 +/etc/init.d/miniupnpd disable
-+
-diff --git a/files/etc/profile.d/busybox-history-file.sh b/files/etc/profile.d/busybox-history-file.sh
-new file mode 100644
-index 0000000000..f286009627
---- /dev/null
-+++ b/files/etc/profile.d/busybox-history-file.sh
-@@ -0,0 +1,2 @@
-+export HISTFILE=/tmp/.busybox_ash_history
 +
 diff --git a/files/etc/saveHNsettings.sh b/files/etc/saveHNsettings.sh
 new file mode 100755
@@ -529,10 +520,10 @@ index 0000000000..e64ecc89fd
 +
 diff --git a/hnscripts/newBuildroot.sh b/hnscripts/newBuildroot.sh
 new file mode 100755
-index 0000000000..23f8249c31
+index 0000000000..02a51f4d6a
 --- /dev/null
 +++ b/hnscripts/newBuildroot.sh
-@@ -0,0 +1,77 @@
+@@ -0,0 +1,78 @@
 +#!/bin/sh
 +#
 +# newBuildroot.sh
@@ -555,8 +546,9 @@ index 0000000000..23f8249c31
 +sudo apt-get install gawk gcc-multilib flex git gettext libssl-dev
 +sudo apt-get install python3-setuptools swig
 +sudo apt-get install python3-distutils
-+### python3-distutils fails for Ubintu 24.04, install -extra just in case
-+sudo apt-get install python3-distutils-extra
++
++### python3-distutils failed for Ubintu 24.04, install -extra just in case
++#sudo apt-get install python3-distutils-extra
 +
 +### Prerequisites for being able to send patches to openwrt-devel
 +sudo apt-get install git-email
@@ -702,14 +694,15 @@ index 0000000000..77d20f2f8c
 +hnscripts/parallelcompile.sh
 +
 diff --git a/package/base-files/files/bin/config_generate b/package/base-files/files/bin/config_generate
-index ca40a62cd4..b0fcdef8f7 100755
+index fecf82fcaa..b0fcdef8f7 100755
 --- a/package/base-files/files/bin/config_generate
 +++ b/package/base-files/files/bin/config_generate
-@@ -312,9 +312,10 @@ generate_static_system() {
+@@ -312,10 +312,10 @@ generate_static_system() {
  		delete system.@system[0]
  		add system system
  		set system.@system[-1].hostname='OpenWrt'
--		set system.@system[-1].timezone='UTC'
+-		set system.@system[-1].timezone='GMT0'
+-		set system.@system[-1].zonename='UTC'
 +		set system.@system[-1].timezone='EET-2EEST,M3.5.0/3,M10.5.0/4'
 +		set system.@system[-1].zonename='Europe/Helsinki'
  		set system.@system[-1].ttylogin='0'
@@ -719,7 +712,7 @@ index ca40a62cd4..b0fcdef8f7 100755
  
  		delete system.ntp
 diff --git a/package/base-files/files/etc/rc.button/reset b/package/base-files/files/etc/rc.button/reset
-index 2403122ad2..5746ea237a 100755
+index 8465133471..6f30c6ed84 100755
 --- a/package/base-files/files/etc/rc.button/reset
 +++ b/package/base-files/files/etc/rc.button/reset
 @@ -15,16 +15,8 @@ timeout)
@@ -755,10 +748,10 @@ index 7a3d0d068a..31abfb7274 100644
  	# defaults:
  	option ingress 1
 diff --git a/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh b/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
-index 817ead71af..d03b67c8e9 100644
+index 080f15d7a6..c3c860f981 100644
 --- a/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
 +++ b/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
-@@ -830,6 +830,11 @@ hostapd_set_bss_options() {
+@@ -862,6 +862,11 @@ hostapd_set_bss_options() {
  		set_default wps_manufacturer "www.openwrt.org"
  		set_default wps_independent 1
  
