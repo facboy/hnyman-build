@@ -1,10 +1,10 @@
-main-r28676-6a7fa68569-20250124-1849
+main-r28906-d6977ab33a-20250226-2017
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * main
-2025-01-24 6a7fa68 realtek: Fix old compatible for HPE 1920-
+2025-02-25 d6977ab realtek: rtl930x: sgmii support
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -20,7 +20,7 @@ A  hnscripts/copyPackages2tmp.sh
 A  hnscripts/createbuildinfo.sh
 A  hnscripts/kernelcompile.sh
 A  hnscripts/mountNcopy.sh
-A  hnscripts/newBuildroot.sh
+AM hnscripts/newBuildroot.sh
 A  hnscripts/parallelcompile.sh
 A  hnscripts/singlecompile.sh
 A  hnscripts/timestampVersion.sh
@@ -36,6 +36,7 @@ M  package/network/services/odhcpd/files/odhcpd-update
 ?? .config.init17102024
 ?? .config.init24102024
 ?? .config.init26042024
+?? config/.config.init
 ?? files/etc/HNsettings.r7800-040223.cpt
 ?? version.date
 
@@ -43,7 +44,7 @@ M  package/network/services/odhcpd/files/odhcpd-update
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2025-01-24 2c7b18b luci-app-attendedsysupgrade: sort latest 
+2025-02-26 eb422f5 luci-app-package-manager: Update package-
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
@@ -53,7 +54,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2025-01-24 9cd00fb ddns-scripts: get l3 device for bind netw
+2025-02-26 5cb12d4 modemmanager: add config optional netifd 
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
