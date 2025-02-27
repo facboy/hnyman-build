@@ -196,16 +196,16 @@ index 05f5c8c47c..4c03e92d72 100644
  #src-link custom /usr/src/openwrt/custom-feed
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..1e0e28cb4b
+index 0000000000..4607141d41
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r28676-6a7fa68569 / 2025-01-24 18:17
++OpenWrt main r28906-d6977ab33a / 2025-02-26 19:28
 +---
-+openwrt   2025-01-24 6a7fa68 realtek: Fix old compatible for HPE 1920-
-+luci      2025-01-24 2c7b18b luci-app-attendedsysupgrade: sort latest 
-+packages  2025-01-24 9cd00fb ddns-scripts: get l3 device for bind netw
-+routing   2025-01-13 4a65e35 bird2: update to 2.16.1
++openwrt   2025-02-25 d6977ab realtek: rtl930x: sgmii support
++luci      2025-02-26 eb422f5 luci-app-package-manager: Update package-
++packages  2025-02-26 5cb12d4 modemmanager: add config optional netifd 
++routing   2025-02-08 dbf46e7 Merge pull request #1103 from ecsv/batadv
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -520,7 +520,7 @@ index 0000000000..e64ecc89fd
 +
 diff --git a/hnscripts/newBuildroot.sh b/hnscripts/newBuildroot.sh
 new file mode 100755
-index 0000000000..02a51f4d6a
+index 0000000000..32fbe839ae
 --- /dev/null
 +++ b/hnscripts/newBuildroot.sh
 @@ -0,0 +1,78 @@
@@ -539,7 +539,7 @@ index 0000000000..02a51f4d6a
 +GITREPO=https://git.openwrt.org/openwrt/openwrt.git
 +
 +## Current version
-+FILESTAMP=R7800-main-r27995-57f2c72505-20241102-1958
++FILESTAMP=R7800-main-r28779-6605e45676-20250208-1037
 +
 +### Prerequisites for buildroot for the current Ubuntu
 +sudo apt-get install build-essential libncurses5-dev zlib1g-dev
