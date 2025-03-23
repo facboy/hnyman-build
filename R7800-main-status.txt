@@ -1,10 +1,10 @@
-main-r28906-d6977ab33a-20250226-2017
+main-r29064-696ad7b1aa-20250321-1800
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * main
-2025-02-25 d6977ab realtek: rtl930x: sgmii support
+2025-03-21 696ad7b mediatek: filogic: fix case statement in 
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -20,7 +20,7 @@ A  hnscripts/copyPackages2tmp.sh
 A  hnscripts/createbuildinfo.sh
 A  hnscripts/kernelcompile.sh
 A  hnscripts/mountNcopy.sh
-AM hnscripts/newBuildroot.sh
+A  hnscripts/newBuildroot.sh
 A  hnscripts/parallelcompile.sh
 A  hnscripts/singlecompile.sh
 A  hnscripts/timestampVersion.sh
@@ -44,7 +44,7 @@ M  package/network/services/odhcpd/files/odhcpd-update
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2025-02-26 eb422f5 luci-app-package-manager: Update package-
+2025-03-21 fc8ad20 luci: Make password reveal work with pass
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
@@ -54,7 +54,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2025-02-26 5cb12d4 modemmanager: add config optional netifd 
+2025-03-20 aa89d29 snort3: update to 3.7.1.0
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch

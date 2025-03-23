@@ -196,16 +196,16 @@ index 05f5c8c47c..4c03e92d72 100644
  #src-link custom /usr/src/openwrt/custom-feed
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..4607141d41
+index 0000000000..bedc6f9007
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r28906-d6977ab33a / 2025-02-26 19:28
++OpenWrt main r29064-696ad7b1aa / 2025-03-21 17:41
 +---
-+openwrt   2025-02-25 d6977ab realtek: rtl930x: sgmii support
-+luci      2025-02-26 eb422f5 luci-app-package-manager: Update package-
-+packages  2025-02-26 5cb12d4 modemmanager: add config optional netifd 
-+routing   2025-02-08 dbf46e7 Merge pull request #1103 from ecsv/batadv
++openwrt   2025-03-21 696ad7b mediatek: filogic: fix case statement in 
++luci      2025-03-21 fc8ad20 luci: Make password reveal work with pass
++packages  2025-03-20 aa89d29 snort3: update to 3.7.1.0
++routing   2025-03-06 2fb5af6 opennds: update to version 10.3.1
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -604,7 +604,7 @@ index 0000000000..32fbe839ae
 +
 diff --git a/hnscripts/parallelcompile.sh b/hnscripts/parallelcompile.sh
 new file mode 100755
-index 0000000000..093c29dbea
+index 0000000000..6f83b9d9bc
 --- /dev/null
 +++ b/hnscripts/parallelcompile.sh
 @@ -0,0 +1,14 @@
@@ -616,7 +616,7 @@ index 0000000000..093c29dbea
 +hnscripts/timestampVersion.sh
 +echo "...make world..."
 +mkdir -p logs
-+make -j 5 V=s 2>&1 | tee logs/build.log | grep -i -E "^make.*(error|[12345]...Entering dir)|^warning"
++make -j 5 V=s 2>&1 | tee logs/build.log | grep -i -E "^make.*(error|[12345]...Entering dir|[123]...Leaving)|^warning"
 +[ ${PIPESTATUS[0]} -ne 0 ] && exit 1
 +echo -n "...create build info: "
 +hnscripts/createbuildinfo.sh
