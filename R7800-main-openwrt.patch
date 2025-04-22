@@ -1,6 +1,6 @@
 diff --git a/.config.init b/.config.init
 new file mode 100644
-index 0000000000..a14fa1be17
+index 0000000000..9249ab8830
 --- /dev/null
 +++ b/.config.init
 @@ -0,0 +1,152 @@
@@ -140,7 +140,7 @@ index 0000000000..a14fa1be17
 +## Build and include qosify, if the LLVM toolchain has been downloaded and
 +## extracted to the buildroot before the build config is started.
 +## The file can be downloaded from buildbot snapshot target downloads.
-+## https://downloads.openwrt.org/snapshots/targets/ipq806x/generic/llvm-bpf-15.0.7.Linux-x86_64.tar.xz
++## https://downloads.openwrt.org/snapshots/targets/ipq806x/generic/llvm-bpf-18.1.7.Linux-x86_64.tar.zst
 +##
 +CONFIG_USE_LLVM_PREBUILT=y
 +CONFIG_PACKAGE_qosify=y
@@ -196,15 +196,15 @@ index 05f5c8c47c..4c03e92d72 100644
  #src-link custom /usr/src/openwrt/custom-feed
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..bedc6f9007
+index 0000000000..189d1d63bb
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r29064-696ad7b1aa / 2025-03-21 17:41
++OpenWrt main r29171-4e18d224c8 / 2025-04-09 17:46
 +---
-+openwrt   2025-03-21 696ad7b mediatek: filogic: fix case statement in 
-+luci      2025-03-21 fc8ad20 luci: Make password reveal work with pass
-+packages  2025-03-20 aa89d29 snort3: update to 3.7.1.0
++openwrt   2025-04-09 4e18d22 mac80211: ath9k: simplify probe with devm
++luci      2025-04-08 e79e702 luci-mod-status: consider family when ren
++packages  2025-04-09 d520931 netbird: update to 0.40.0
 +routing   2025-03-06 2fb5af6 opennds: update to version 10.3.1
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755

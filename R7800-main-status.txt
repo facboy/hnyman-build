@@ -1,10 +1,10 @@
-main-r29064-696ad7b1aa-20250321-1800
+main-r29171-4e18d224c8-20250409-1803
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * main
-2025-03-21 696ad7b mediatek: filogic: fix case statement in 
+2025-04-09 4e18d22 mac80211: ath9k: simplify probe with devm
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -34,6 +34,7 @@ M  package/network/services/odhcpd/files/odhcpd-update
 ?? .config.init02112024
 ?? .config.init12112024
 ?? .config.init17102024
+?? .config.init24032025
 ?? .config.init24102024
 ?? .config.init26042024
 ?? config/.config.init
@@ -44,7 +45,7 @@ M  package/network/services/odhcpd/files/odhcpd-update
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2025-03-21 fc8ad20 luci: Make password reveal work with pass
+2025-04-08 e79e702 luci-mod-status: consider family when ren
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
@@ -54,7 +55,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2025-03-20 aa89d29 snort3: update to 3.7.1.0
+2025-04-09 d520931 netbird: update to 0.40.0
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
