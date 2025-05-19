@@ -196,16 +196,16 @@ index 05f5c8c47c..4c03e92d72 100644
  #src-link custom /usr/src/openwrt/custom-feed
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..189d1d63bb
+index 0000000000..c0d5e64271
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r29171-4e18d224c8 / 2025-04-09 17:46
++OpenWrt main r29342-6b1d0ce88c / 2025-04-26 18:15
 +---
-+openwrt   2025-04-09 4e18d22 mac80211: ath9k: simplify probe with devm
-+luci      2025-04-08 e79e702 luci-mod-status: consider family when ren
-+packages  2025-04-09 d520931 netbird: update to 0.40.0
-+routing   2025-03-06 2fb5af6 opennds: update to version 10.3.1
++openwrt   2025-04-25 6b1d0ce mediatek: add missing pipe
++luci      2025-04-26 5af703e Translated using Weblate (Malay)
++packages  2025-04-26 87e552e perl-mail-spamassassin: update to version
++routing   2025-04-22 f1ec6fd Merge pull request #1110 from ecsv/batadv
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
