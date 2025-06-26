@@ -196,16 +196,16 @@ index 05f5c8c47c..4c03e92d72 100644
  #src-link custom /usr/src/openwrt/custom-feed
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..6f04c053df
+index 0000000000..df08117ecc
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r29772-1df56d02cf / 2025-05-25 21:50
++OpenWrt main r30100-143cfd6113 / 2025-06-16 22:30
 +---
-+openwrt   2025-05-25 1df56d0 ath79: refresh 6.12 kernel patches
-+luci      2025-05-22 0336767 Translated using Weblate (Lithuanian)
-+packages  2025-05-25 5f76e1c perlbase-extutils: Adding required perlba
-+routing   2025-05-24 1f77871 mesh11sd: update to version 5.1.2
++openwrt   2025-06-16 143cfd6 ramips: dts: increase maximum MMC clock f
++luci      2025-06-16 fad6b87 luci-app-ltqtapi: drop LUA app
++packages  2025-06-16 cfdf5ff nano: update to 8.5
++routing   2025-05-26 bd56cdc mesh11sd: update to version 5.1.3
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -694,10 +694,10 @@ index 0000000000..77d20f2f8c
 +hnscripts/parallelcompile.sh
 +
 diff --git a/package/base-files/files/bin/config_generate b/package/base-files/files/bin/config_generate
-index fecf82fcaa..b0fcdef8f7 100755
+index 7507aa612c..e197e09716 100755
 --- a/package/base-files/files/bin/config_generate
 +++ b/package/base-files/files/bin/config_generate
-@@ -312,10 +312,10 @@ generate_static_system() {
+@@ -313,10 +313,10 @@ generate_static_system() {
  		delete system.@system[0]
  		add system system
  		set system.@system[-1].hostname='OpenWrt'
