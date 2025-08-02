@@ -1,11 +1,11 @@
-main-r30100-143cfd6113-20250616-2302
+main-r30617-9c26d14489-20250729-1933
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * main
-2025-06-16 143cfd6 ramips: dts: increase maximum MMC clock f
-A  .config.init
+2025-07-28 9c26d14 realtek: add support for Vimin VM-S100-08
+AM .config.init
 M  .gitignore
 M  feeds.conf.default
 A  files/etc/Compile_info.txt
@@ -31,12 +31,8 @@ M  package/network/config/qosify/files/qosify.conf
 M  package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
 M  package/network/services/hostapd/files/wps-hotplug.sh
 M  package/network/services/odhcpd/files/odhcpd-update
-?? .config.init02112024
-?? .config.init12112024
-?? .config.init17102024
 ?? .config.init24032025
-?? .config.init24102024
-?? .config.init26042024
+?? .config.init24072025
 ?? config/.config.init
 ?? files/etc/HNsettings.r7800-040223.cpt
 ?? version.date
@@ -45,7 +41,7 @@ M  package/network/services/odhcpd/files/odhcpd-update
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2025-06-16 fad6b87 luci-app-ltqtapi: drop LUA app
+2025-07-28 5cb2eb6 luci-base: allow submitting new value in 
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
 M  themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
@@ -55,7 +51,7 @@ M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-20
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2025-06-16 cfdf5ff nano: update to 8.5
+2025-07-29 4a02261 sumo: update to 1.23.1
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch
