@@ -196,16 +196,16 @@ index 05f5c8c47c..4c03e92d72 100644
  #src-link custom /usr/src/openwrt/custom-feed
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..c905d97e2d
+index 0000000000..b3913579e2
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r30617-9c26d14489 / 2025-07-29 19:19
++OpenWrt main r31007-35ff70e807 / 2025-09-08 21:52
 +---
-+openwrt   2025-07-28 9c26d14 realtek: add support for Vimin VM-S100-08
-+luci      2025-07-28 5cb2eb6 luci-base: allow submitting new value in 
-+packages  2025-07-29 4a02261 sumo: update to 1.23.1
-+routing   2025-07-19 d539071 opennds: Add PKG_CPE_ID
++openwrt   2025-09-08 35ff70e airoha: backport upstream fixes for pinct
++luci      2025-09-08 6c91e30 luci-app-acme: DNS API: Show Options Titl
++packages  2025-09-08 c2c210f sumo: add missing fmt dependency
++routing   2025-09-08 22487dc Merge pull request #1138 from ecsv/batadv
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -271,14 +271,14 @@ index 0000000000..7f1ff28f8b
 +
 diff --git a/files/etc/lan-repeater.sh b/files/etc/lan-repeater.sh
 new file mode 100755
-index 0000000000..088bdbb2d5
+index 0000000000..97533bb6a7
 --- /dev/null
 +++ b/files/etc/lan-repeater.sh
 @@ -0,0 +1,28 @@
 +#!/bin/sh
-+uci set system.@system[0].hostname=router2
-+uci set network.lan.ipaddr=192.168.1.2
-+uci set network.lan.ip6ifaceid='::2'
++uci set system.@system[0].hostname=router78
++uci set network.lan.ipaddr=192.168.1.78
++uci set network.lan.ip6ifaceid='::78'
 +uci set network.lan.gateway=192.168.1.1
 +uci set network.lan.dns=192.168.1.1
 +uci set network.henet.auto=0
@@ -286,8 +286,8 @@ index 0000000000..088bdbb2d5
 +uci set network.lan6.ifname=@lan
 +uci set network.lan6.proto=dhcpv6
 +uci set network.lan6.reqprefix=no
-+uci set wireless.@wifi-device[0].channel=48
-+uci set wireless.@wifi-device[1].channel=9
++uci set wireless.@wifi-device[0].channel=52
++uci set wireless.@wifi-device[1].channel=11
 +uci set dhcp.lan.ignore=1
 +uci set dhcp.lan.force=0
 +uci delete dhcp.lan.dhcpv6
@@ -748,7 +748,7 @@ index 7a3d0d068a..31abfb7274 100644
  	# defaults:
  	option ingress 1
 diff --git a/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh b/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
-index c0fcf8dba0..9db779629c 100644
+index 32987edfe5..23a85fb80d 100644
 --- a/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
 +++ b/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
 @@ -812,6 +812,11 @@ hostapd_set_bss_options() {
@@ -763,18 +763,6 @@ index c0fcf8dba0..9db779629c 100644
  		wps_state=2
  		[ -n "$wps_not_configured" ] && wps_state=1
  
-diff --git a/package/network/services/hostapd/files/wps-hotplug.sh b/package/network/services/hostapd/files/wps-hotplug.sh
-index 073bdd1868..dc05718eb7 100644
---- a/package/network/services/hostapd/files/wps-hotplug.sh
-+++ b/package/network/services/hostapd/files/wps-hotplug.sh
-@@ -39,6 +39,7 @@ wps_catch_credentials() {
- }
- 
- if [ "$ACTION" = "released" ] && [ "$BUTTON" = "wps" ]; then
-+	logger "WPS button pressed, looking for active radios"
- 	# If the button was pressed for 3 seconds or more, trigger WPS on
- 	# wpa_supplicant only, no matter if hostapd is running or not.  If
- 	# was pressed for less than 3 seconds, try triggering on
 diff --git a/package/network/services/odhcpd/files/odhcpd-update b/package/network/services/odhcpd/files/odhcpd-update
 index c1814e00b0..b2f92bf10d 100755
 --- a/package/network/services/odhcpd/files/odhcpd-update
