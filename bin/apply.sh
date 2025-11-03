@@ -31,8 +31,8 @@ git reset --hard upstream/main
 
 ${script_dir}/apply_openwrt.sh
 git add ".gitignore" ".config.init" "feeds.conf.default" "files/" "hnscripts/" \
-	"package/base-files/" "package/network/" "package/utils/busybox/" \
-	"target/linux/ipq806x/base-files/etc/"
+	"package/base-files/" "package/libs/elfutils/" "package/network/" "package/utils/busybox/" \
+	"target/linux/ipq806x/base-files/etc/" 
 if [[ -e "target/linux/ipq806x/config-5.15" ]]; then
 	git add "target/linux/ipq806x/config-5.15" "target/linux/ipq806x/patches-5.15/"
 fi
