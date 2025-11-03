@@ -196,16 +196,16 @@ index 05f5c8c47c..4c03e92d72 100644
  #src-link custom /usr/src/openwrt/custom-feed
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..7243d3ffe6
+index 0000000000..86074fca3c
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r31264-272a392fe1 / 2025-10-02 18:08
++OpenWrt main r31597-ddd82c8b3d / 2025-10-26 15:38
 +---
-+openwrt   2025-10-02 272a392 realtek: rtl93xx: replace pending I2C pat
-+luci      2025-10-02 7911cef Translated using Weblate (Italian)
-+packages  2025-10-02 9bfc5a2 tor: update to version 0.4.8.18
-+routing   2025-09-23 45221cf bird2: Update to v2.17.2
++openwrt   2025-10-26 ddd82c8 realtek: add 10G_QXGMII serdes mode suppo
++luci      2025-10-26 ab7018c build: Fix variable usage in i18n-update.
++packages  2025-10-25 657f326 php8: update to 8.4.14
++routing   2025-10-26 149ea45 Merge pull request #1143 from ecsv/batadv
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -694,10 +694,10 @@ index 0000000000..77d20f2f8c
 +hnscripts/parallelcompile.sh
 +
 diff --git a/package/base-files/files/bin/config_generate b/package/base-files/files/bin/config_generate
-index 7507aa612c..e197e09716 100755
+index 18fae054d4..e621a88d4c 100755
 --- a/package/base-files/files/bin/config_generate
 +++ b/package/base-files/files/bin/config_generate
-@@ -313,10 +313,10 @@ generate_static_system() {
+@@ -314,10 +314,10 @@ generate_static_system() {
  		delete system.@system[0]
  		add system system
  		set system.@system[-1].hostname='OpenWrt'
@@ -732,6 +732,19 @@ index 8465133471..6f30c6ed84 100755
  ;;
  esac
  
+diff --git a/package/libs/elfutils/Makefile b/package/libs/elfutils/Makefile
+index bbf665d657..4bb13e39f5 100644
+--- a/package/libs/elfutils/Makefile
++++ b/package/libs/elfutils/Makefile
+@@ -87,6 +87,8 @@ TARGET_CFLAGS += \
+ 	-D_GNU_SOURCE \
+ 	-Wno-unused-result \
+ 	-Wno-format-nonliteral \
++	-Wno-error=expansion-to-defined \
++	-Wno-error=nonnull-compare \
+ 	-Wno-error=use-after-free
+ 
+ define Build/InstallDev
 diff --git a/package/network/config/qosify/files/qosify.conf b/package/network/config/qosify/files/qosify.conf
 index 7a3d0d068a..31abfb7274 100644
 --- a/package/network/config/qosify/files/qosify.conf
@@ -764,15 +777,14 @@ index c41efd4f60..5a27432a9c 100644
  		[ -n "$wps_not_configured" ] && wps_state=1
  
 diff --git a/package/network/services/odhcpd/files/odhcpd-update b/package/network/services/odhcpd/files/odhcpd-update
-index c1814e00b0..b2f92bf10d 100755
+index e777fcbb07..7c5ce5b8d4 100755
 --- a/package/network/services/odhcpd/files/odhcpd-update
 +++ b/package/network/services/odhcpd/files/odhcpd-update
-@@ -1,6 +1,8 @@
- #!/bin/sh
+@@ -2,6 +2,7 @@
  # Make dnsmasq reread hostfile by sending SIGHUP signal
  
+ initscript=$0
 +logger -t odhcpd "*** ODHCPD triggers DNSMASQ reload ***"
-+
+ 
  . /lib/functions/procd.sh
  
- procd_send_signal dnsmasq
