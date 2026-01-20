@@ -1,10 +1,10 @@
-main-r31597-ddd82c8b3d-20251026-1554
+main-r32674-16422510b5-20260118-0946
 
 ######################################################
 
 origin	https://git.openwrt.org/openwrt/openwrt.git (fetch)
 * main
-2025-10-26 ddd82c8 realtek: add 10G_QXGMII serdes mode suppo
+2026-01-17 1642251 qualcommax: ipq60xx: add JDCloud RE-SS-01
 A  .config.init
 M  .gitignore
 M  feeds.conf.default
@@ -14,6 +14,7 @@ A  files/etc/checksettings.sh
 A  files/etc/config/fstab
 A  files/etc/hotplug.d/ntp/20-ntpd-logger
 A  files/etc/lan-repeater.sh
+A  files/etc/profile.d/show-uptime.sh
 A  files/etc/saveHNsettings.sh
 A  files/etc/wifi-suite.sh
 A  hnscripts/copyPackages2tmp.sh
@@ -27,10 +28,10 @@ A  hnscripts/timestampVersion.sh
 A  hnscripts/updateNmake.sh
 M  package/base-files/files/bin/config_generate
 M  package/base-files/files/etc/rc.button/reset
-M  package/libs/elfutils/Makefile
 M  package/network/config/qosify/files/qosify.conf
 M  package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
 M  package/network/services/odhcpd/files/odhcpd-update
+?? .config.init23112025
 ?? .config.init24032025
 ?? .config.init24072025
 ?? .config.init29072025
@@ -42,17 +43,16 @@ M  package/network/services/odhcpd/files/odhcpd-update
 
 origin	https://git.openwrt.org/project/luci.git (fetch)
 * master
-2025-10-26 ab7018c build: Fix variable usage in i18n-update.
+2026-01-18 31949c1 treewide: sync translations - i18n
 M  applications/luci-app-statistics/root/etc/config/luci_statistics
 M  modules/luci-base/root/etc/config/luci
-M  themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
 M  themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020
 
 ######################################################
 
 origin	https://git.openwrt.org/feed/packages.git (fetch)
 * master
-2025-10-25 657f326 php8: update to 8.4.14
+2026-01-18 cd4e1a0 v2ray-geodata: Update to latest version
 M  net/adblock/files/adblock.conf
 M  net/bcp38/files/bcp38.config
 A  net/sqm-scripts/patches/010-ipq806x-default-wan-eth0.patch

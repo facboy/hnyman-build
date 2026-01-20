@@ -75,19 +75,6 @@ index 46947ae4c1..f922d3d44b 100644
  	option display 1.5
 +
 +
-diff --git a/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material b/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
-index 7f07239ec0..e7c376df80 100755
---- a/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
-+++ b/themes/luci-theme-material/root/etc/uci-defaults/30_luci-theme-material
-@@ -4,7 +4,7 @@ if [ "$PKG_UPGRADE" != 1 ]; then
- 	uci get luci.themes.Material >/dev/null 2>&1 || \
- 	uci batch <<-EOF
- 		set luci.themes.Material=/luci-static/material
--		set luci.main.mediaurlbase=/luci-static/material
-+#		set luci.main.mediaurlbase=/luci-static/material
- 		commit luci
- 	EOF
- fi
 diff --git a/themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020 b/themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020
 index 7c49acfda9..07d87b3951 100755
 --- a/themes/luci-theme-openwrt-2020/root/etc/uci-defaults/30_luci-theme-openwrt-2020

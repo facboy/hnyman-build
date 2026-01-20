@@ -1,6 +1,6 @@
 diff --git a/.config.init b/.config.init
 new file mode 100644
-index 0000000000..59cac0e88f
+index 0000000000..e71789dad3
 --- /dev/null
 +++ b/.config.init
 @@ -0,0 +1,152 @@
@@ -138,9 +138,9 @@ index 0000000000..59cac0e88f
 +####CONFIG_PACKAGE_kmod-chaoskey=y
 +
 +## Build and include qosify, if the LLVM toolchain has been downloaded and
-+## extracted to the buildroot before the build config is started.
++## tar extracted to the buildroot before the build config is started.
 +## The file can be downloaded from buildbot snapshot target downloads.
-+## https://downloads.openwrt.org/snapshots/targets/ipq806x/generic/llvm-bpf-18.1.7.Linux-x86_64.tar.zst
++## https://downloads.openwrt.org/snapshots/targets/ipq806x/generic/llvm-bpf-21.1.6.Linux-x86_64.tar.zst
 +##
 +CONFIG_USE_LLVM_PREBUILT=y
 +CONFIG_PACKAGE_qosify=y
@@ -196,16 +196,16 @@ index 05f5c8c47c..4c03e92d72 100644
  #src-link custom /usr/src/openwrt/custom-feed
 diff --git a/files/etc/Compile_info.txt b/files/etc/Compile_info.txt
 new file mode 100644
-index 0000000000..86074fca3c
+index 0000000000..d53b8ea6e8
 --- /dev/null
 +++ b/files/etc/Compile_info.txt
 @@ -0,0 +1,6 @@
-+OpenWrt main r31597-ddd82c8b3d / 2025-10-26 15:38
++OpenWrt main r32674-16422510b5 / 2026-01-18 09:31
 +---
-+openwrt   2025-10-26 ddd82c8 realtek: add 10G_QXGMII serdes mode suppo
-+luci      2025-10-26 ab7018c build: Fix variable usage in i18n-update.
-+packages  2025-10-25 657f326 php8: update to 8.4.14
-+routing   2025-10-26 149ea45 Merge pull request #1143 from ecsv/batadv
++openwrt   2026-01-17 1642251 qualcommax: ipq60xx: add JDCloud RE-SS-01
++luci      2026-01-18 31949c1 treewide: sync translations - i18n
++packages  2026-01-18 cd4e1a0 v2ray-geodata: Update to latest version
++routing   2026-01-12 bdf571c bird3: update to 3.2.0
 diff --git a/files/etc/applyHNsettings.sh b/files/etc/applyHNsettings.sh
 new file mode 100755
 index 0000000000..d49760d772
@@ -303,6 +303,13 @@ index 0000000000..97533bb6a7
 +/etc/init.d/dnsmasq disable
 +/etc/init.d/miniupnpd disable
 +
+diff --git a/files/etc/profile.d/show-uptime.sh b/files/etc/profile.d/show-uptime.sh
+new file mode 100755
+index 0000000000..12403fb9ce
+--- /dev/null
++++ b/files/etc/profile.d/show-uptime.sh
+@@ -0,0 +1 @@
++uptime
 diff --git a/files/etc/saveHNsettings.sh b/files/etc/saveHNsettings.sh
 new file mode 100755
 index 0000000000..a6696cd51c
@@ -669,7 +676,7 @@ index 0000000000..8c69627fe6
 +
 diff --git a/hnscripts/updateNmake.sh b/hnscripts/updateNmake.sh
 new file mode 100755
-index 0000000000..77d20f2f8c
+index 0000000000..b877af5de4
 --- /dev/null
 +++ b/hnscripts/updateNmake.sh
 @@ -0,0 +1,20 @@
@@ -689,7 +696,7 @@ index 0000000000..77d20f2f8c
 +echo "...make defconfig..."
 +make defconfig
 +echo "...download new source packages..."
-+make download
++make -j 3 download
 +echo "...make the firmware..."
 +hnscripts/parallelcompile.sh
 +
@@ -732,19 +739,6 @@ index 8465133471..6f30c6ed84 100755
  ;;
  esac
  
-diff --git a/package/libs/elfutils/Makefile b/package/libs/elfutils/Makefile
-index bbf665d657..4bb13e39f5 100644
---- a/package/libs/elfutils/Makefile
-+++ b/package/libs/elfutils/Makefile
-@@ -87,6 +87,8 @@ TARGET_CFLAGS += \
- 	-D_GNU_SOURCE \
- 	-Wno-unused-result \
- 	-Wno-format-nonliteral \
-+	-Wno-error=expansion-to-defined \
-+	-Wno-error=nonnull-compare \
- 	-Wno-error=use-after-free
- 
- define Build/InstallDev
 diff --git a/package/network/config/qosify/files/qosify.conf b/package/network/config/qosify/files/qosify.conf
 index 7a3d0d068a..31abfb7274 100644
 --- a/package/network/config/qosify/files/qosify.conf
@@ -761,10 +755,10 @@ index 7a3d0d068a..31abfb7274 100644
  	# defaults:
  	option ingress 1
 diff --git a/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh b/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
-index c41efd4f60..5a27432a9c 100644
+index 81ebebbe2b..43ed45ae31 100644
 --- a/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
 +++ b/package/network/config/wifi-scripts/files/lib/netifd/hostapd.sh
-@@ -811,6 +811,11 @@ hostapd_set_bss_options() {
+@@ -823,6 +823,11 @@ hostapd_set_bss_options() {
  		set_default wps_manufacturer "www.openwrt.org"
  		set_default wps_independent 1
  
